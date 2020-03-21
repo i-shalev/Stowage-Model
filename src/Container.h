@@ -25,7 +25,11 @@ class Container {
 
         void setId(string id);
         void setDest(string dest);
+
+        bool checkId(string id);
 };
+
+int letterToInt(char ch);
 
 
 #endif //STOWAGE_MODEL_CONTAINER_H

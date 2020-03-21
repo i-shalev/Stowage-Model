@@ -3,6 +3,7 @@
 
 int main(){
     Container c1(5, "hew", "hey");
+    std::cout << c1.checkId("CSQU3054383") << std::endl;
     std::cout << c1.getWeight() << std::endl;
     std::cout << c1.getId() << std::endl;
 }
