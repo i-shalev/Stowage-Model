@@ -4,9 +4,11 @@
 
 #include "ShipRoute.h"
 
+#include <utility>
+
 ShipRoute::ShipRoute(vector<string> _dstList)
 {
-    this->dstList = _dstList;
+    this->dstList = std::move(_dstList);
     for( int i = 0; i <this->dstList.size(); i++)
     {
         if(checkDestination(this->dstList.at(i)))
@@ -14,7 +16,7 @@ ShipRoute::ShipRoute(vector<string> _dstList)
     }
 }
 
-ShipRoute::ShipRoute(){}
+ShipRoute::ShipRoute()= default;
 
 void ShipRoute::addDstAtEnd(string dst)
 {
@@ -24,21 +26,21 @@ void ShipRoute::addDstAtEnd(string dst)
 
 void ShipRoute::deleteFirst()
 {
-    if(this->dstList.size() > 0)
+    if(!this->dstList.empty())
         this->dstList.erase(this->dstList.begin());
 }
 
 string ShipRoute::getHead()
 {
-    if(this->dstList.size() > 0)
+    if(!this->dstList.empty())
         this->dstList.at(0);
 }
 
 void ShipRoute::printList()
 {
-    for( int i = 0; i <this->dstList.size(); i++)
+    for(const auto & i : this->dstList)
     {
-        std::cout << this->dstList.at(i) << std::endl;
+        std::cout << i << std::endl;
     }
 }
 
