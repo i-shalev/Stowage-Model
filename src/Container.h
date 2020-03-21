@@ -11,20 +11,18 @@ class Container {
         int weight;
         const string dest;
         const string id;
+        bool valid;
 
     public:
         Container(int _weight, const string _dest, const string _id);
 
         int getWeight();
-
         string getDest();
-
         string getId();
+        bool getValid();
 
         void setWeight(int weight);
 
-        void setId(string id);
-        void setDest(string dest);
 
     public: //only for tests reason, need to be private
         bool checkId();

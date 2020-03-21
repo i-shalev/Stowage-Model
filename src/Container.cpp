@@ -1,6 +1,9 @@
 #include "Container.h"
 
-Container::Container(int _weight, const string _dest, const string _id): dest(_dest), id(_id), weight(_weight){}
+Container::Container(int _weight, const string _dest, const string _id): dest(_dest), id(_id), weight(_weight)
+{
+    this->valid = checkId() && checkDestination();
+}
 
 int Container::getWeight()
 {
@@ -15,6 +18,11 @@ string Container::getDest()
 string Container::getId()
 {
     return this->id;
+}
+
+bool Container::getValid()
+{
+    return this->valid;
 }
 
 void Container::setWeight(int weight)
@@ -54,6 +62,17 @@ bool Container::checkId()
     return digitCheck == (id.at(10) - '0');
 }
 
+bool Container::checkDestination(){
+    if(dest.length() != 5)
+        return false;
+    for(int i = 0; i < 5; i++) {
+        char ch = dest.at(i);
+        if (!(ch >= 'A' && ch <= 'Z'))
+            return false;
+    }
+    return true;
+}
+
 int letterToInt(char ch)
 {
     if(ch == 'A')
@@ -65,15 +84,4 @@ int letterToInt(char ch)
     if(ch >= 'V' && ch <= 'Z')
         return 13 + (ch - 'A');
     return 0;
-}
-
-bool Container::checkDestination(){
-    if(dest.length() != 5)
-        return false;
-    for(int i = 0; i < 5; i++) {
-        char ch = dest.at(i);
-        if (!(ch >= 'A' && ch <= 'Z'))
-            return false;
-    }
-    return true;
 }
