@@ -4,21 +4,19 @@
 
 #include "ShipRoute.h"
 
-#include <utility>
-
-ShipRoute::ShipRoute(vector<string> _dstList)
+ShipRoute::ShipRoute(const vector<string>& _dstList)
 {
-    this->dstList = std::move(_dstList);
-    for( int i = 0; i <this->dstList.size(); i++)
+    this->dstList = _dstList;
+    for(const auto & i : _dstList)
     {
-        if(checkDestination(this->dstList.at(i)))
-            this->dstList.erase(this->dstList.begin()+i);
+        if(checkDestination(i))
+            this->addDstAtEnd(i);
     }
 }
 
 ShipRoute::ShipRoute()= default;
 
-void ShipRoute::addDstAtEnd(string dst)
+void ShipRoute::addDstAtEnd(const string& dst)
 {
     if(checkDestination(dst))
         this->dstList.push_back(dst);
@@ -34,6 +32,7 @@ string ShipRoute::getHead()
 {
     if(!this->dstList.empty())
         this->dstList.at(0);
+    return "";
 }
 
 void ShipRoute::printList()
