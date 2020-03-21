@@ -12,11 +12,12 @@ class Floor{
     int length;
     int width;
     Container*** floorMap = nullptr;
-    Floor(int index, int length, int width);
-    ~Floor();
-    Floor(const Floor& f) = delete; // disable copy constr'. need deep copy
-    Container* get(int i, int j);
-    void set(int i, int j, Container* value);
+    public:
+        Floor(int index, int length, int width);
+        ~Floor();
+        Floor(const Floor& f) = delete; // disable copy constr'. need deep copy
+        Container* get(int i, int j);
+        void set(int i, int j, Container* value);
 
 
 };
