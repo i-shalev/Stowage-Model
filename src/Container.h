@@ -13,7 +13,7 @@ class Container {
         const string id;
 
     public:
-        Container(int weight, const string dest, const string id);
+        Container(int _weight, const string _dest, const string _id);
 
         int getWeight();
 

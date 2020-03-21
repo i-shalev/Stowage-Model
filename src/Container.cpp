@@ -1,6 +1,6 @@
 #include "Container.h"
 
-Container::Container(int _weight, string _dest, string _id): dest(_dest), id(_id), weight(_weight){}
+Container::Container(int _weight, const string _dest, const string _id): dest(_dest), id(_id), weight(_weight){}
 
 int Container::getWeight()
 {
