@@ -2,6 +2,7 @@
 #include "Container.h"
 #include "ShipRoute.h"
 #include "Floor.h"
+#include "tests.h"
 
 int main(){
     Container c1(5, "ISRAE", "CSQU3054383");
@@ -32,5 +33,6 @@ int main(){
         }
     }
 
+    runTests();
 
 }
