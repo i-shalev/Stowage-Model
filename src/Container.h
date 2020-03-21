@@ -26,7 +26,9 @@ class Container {
         void setId(string id);
         void setDest(string dest);
 
-        bool checkId(string id);
+    public: //only for tests reason, need to be private
+        bool checkId();
+        bool checkDestination();
 };
 
 int letterToInt(char ch);

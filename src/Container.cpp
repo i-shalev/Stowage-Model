@@ -22,13 +22,15 @@ void Container::setWeight(int weight)
     this->weight = weight;
 }
 
-bool Container::checkId(string id)
+bool Container::checkId()
 {
     int result = 0;
     int mul = 1;
     int digitCheck;
     char ch;
     if(id.length() != 11)
+        return false;
+    if(id.at(3)!='U' && id.at(3)!='J' && id.at(3)!='Z')
         return false;
     for(int i = 0; i < 4; i++)
     {
@@ -49,7 +51,6 @@ bool Container::checkId(string id)
     digitCheck = result % 11;
     if(digitCheck == 10)
         digitCheck = 0;
-    std::cout << digitCheck << std::endl;
     return digitCheck == (id.at(10) - '0');
 }
 
@@ -64,4 +65,15 @@ int letterToInt(char ch)
     if(ch >= 'V' && ch <= 'Z')
         return 13 + (ch - 'A');
     return 0;
+}
+
+bool Container::checkDestination(){
+    if(dest.length() != 5)
+        return false;
+    for(int i = 0; i < 5; i++) {
+        char ch = dest.at(i);
+        if (!(ch >= 'A' && ch <= 'Z'))
+            return false;
+    }
+    return true;
 }
