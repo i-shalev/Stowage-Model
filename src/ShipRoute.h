@@ -13,10 +13,10 @@ class ShipRoute {
         vector<string> dstList;
 
     public:
-        ShipRoute(vector<string> _dstList);
+        explicit ShipRoute(const vector<string>& _dstList);
         ShipRoute();
 
-        void addDstAtEnd(string dst);
+        void addDstAtEnd(const string& dst);
         void deleteFirst();
         string getHead();
         void printList();

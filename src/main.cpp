@@ -12,6 +12,8 @@ int main(){
     std::cout << " " << std::endl;
     ShipRoute s1;
     s1.addDstAtEnd("ISRAE");
+    s1.deleteFirst();
+    s1.deleteFirst();
     s1.addDstAtEnd("ISRAA");
     s1.addDstAtEnd("ISAAA");
     s1.printList();
