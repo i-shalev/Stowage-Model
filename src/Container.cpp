@@ -1,15 +1,6 @@
-//
-// Created by itay on 21/03/2020.
-//
-
 #include "Container.h"
 
-Container::Container(int weight, string dest, string id)
-{
-    this->weight    = weight;
-    this->dest      = dest;
-    this->id        = id;
-}
+Container::Container(int _weight, string _dest, string _id): dest(_dest), id(_id), weight(_weight){}
 
 int Container::getWeight()
 {
@@ -29,14 +20,4 @@ string Container::getId()
 void Container::setWeight(int weight)
 {
     this->weight = weight;
-}
-
-void Container::setId(string id)
-{
-    this->id = id;
-}
-
-void Container::setDest(string dest)
-{
-    this->dest = dest;
 }

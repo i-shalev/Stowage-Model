@@ -9,11 +9,11 @@ using namespace std;
 class Container {
     private:
         int weight;
-        string dest;
-        string id;
+        const string dest;
+        const string id;
 
     public:
-        Container(int weight, string dest, string id);
+        Container(int weight, const string dest, const string id);
 
         int getWeight();
 
