@@ -2,5 +2,6 @@
 #include "Container.h"
 
 int main(){
-    std::cout << "hello world"<< std::endl;
+    Container c1(5, "hew", "hey");
+    std::cout << c1.getWeight() << std::endl;
 }

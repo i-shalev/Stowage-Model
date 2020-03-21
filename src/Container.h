@@ -1,11 +1,11 @@
 //
 // Created by itay on 21/03/2020.
 //
-
+#include <iostream>
 #ifndef STOWAGE_MODEL_CONTAINER_H
 #define STOWAGE_MODEL_CONTAINER_H
 
-
+using namespace std;
 class Container {
     private:
         int weight;
@@ -23,9 +23,8 @@ class Container {
 
         void setWeight(int weight);
 
-        void setId(string id)ף
-
-        void setDest(string dest)
+        void setId(string id);
+        void setDest(string dest);
 };
 
 
