@@ -8,16 +8,18 @@
 
 using namespace std;
 class Floor{
-    int index;
-    int length;
-    int width;
-    Container*** floorMap = nullptr;
+    private:
+        int index;
+        int length;
+        int width;
+        Container*** floorMap = nullptr;
+
     public:
         Floor(int index, int length, int width);
         ~Floor();
         Floor(const Floor& f) = delete; // disable copy constr'. need deep copy
-        Container* get(int i, int j);
-        void set(int i, int j, Container* value);
+        Container* getContainerAtPosition(int i, int j);
+        void setContainerAtPosition(int i, int j, Container* value);
 
 
 };

@@ -23,12 +23,14 @@ Floor::~Floor() {
     }
     delete[] floorMap;
 }
-Container* Floor::get(int i, int j){
+
+Container* Floor::getContainerAtPosition(int i, int j){
     if(i<0 | j<0 | i>length | j>width)
         return nullptr;
     return this->floorMap[i][j];
 }
-void Floor::set(int i, int j, Container* value) {
+
+void Floor::setContainerAtPosition(int i, int j, Container* value) {
     if(i<0 | j<0 | i>length | j>width)
         return;
     floorMap[i][j] = value;
