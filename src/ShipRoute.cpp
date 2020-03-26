@@ -43,6 +43,14 @@ void ShipRoute::printList()
     }
 }
 
+bool ShipRoute::willVisit(string dest){
+    for(const auto i : this->dstList)
+    {
+        if(i.compare(dest)==0){return true;}
+    }
+    return false;
+}
+
 bool checkDestination(string dest){
     if(dest.length() != 5)
         return false;

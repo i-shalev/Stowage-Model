@@ -20,7 +20,7 @@ class ShipRoute {
         void deleteFirst();
         string getHead();
         void printList();
-
+        bool willVisit(string dest);
 };
 bool checkDestination(string dest);
 
