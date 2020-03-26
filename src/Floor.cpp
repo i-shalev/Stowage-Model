@@ -8,9 +8,9 @@ Floor::Floor(int index, int length, int width) {
     this->index = index;
     this->length=length;
     this->width=width;
-    this->floorMap = (Container***) malloc(length * sizeof(Container**));
+    this->floorMap = new Container**[length];
     for(int i=0; i<length; i++){
-        floorMap[i] = (Container**) malloc(width * sizeof(Container*));
+        floorMap[i] = new Container*[width];
         for(int j=0; j<width; j++){
             floorMap[i][j] = nullptr;
         }
