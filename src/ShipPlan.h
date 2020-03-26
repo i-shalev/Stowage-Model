@@ -13,7 +13,7 @@ class ShipPlan {
         int numFloors;
         int  length;
         int width;
-        Floor* floors;
+        Floor** floors;
 
     public:
         ShipPlan(int numFloors, int length, int width);
@@ -21,7 +21,7 @@ class ShipPlan {
         int getNumFloors();
         int getLength();
         int getWidth();
-        Floor* getFloors();
+        Floor* getFloor(int i);
 
 };
 
