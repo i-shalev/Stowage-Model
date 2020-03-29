@@ -37,3 +37,22 @@ Floor* ShipPlan::getFloor(int i){
     return this->floors[i];
 }
 
+bool ShipPlan::isValid(){
+    bool free;
+    for(int i=0; i<length; i++){
+        for(int j=0; j<width; j++){
+            free = false;
+            for(int level=0; level<numFloors; level++){
+                if(!free){
+                    if(!(this->getFloor(level)->getContainerAtPosition(i,j)->getBlocked()))
+                        free = true;
+                }
+                else{
+                    if(this->getFloor(level)->getContainerAtPosition(i,j)->getBlocked())
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+}

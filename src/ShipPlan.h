@@ -24,6 +24,7 @@ class ShipPlan {
         int getWidth();
         Floor* getFloor(int i);
 
+    bool isValid();
 };
 
 

@@ -3,6 +3,7 @@
 #include "Ship.h"
 
 int main(){
+    /*
     Container* c1 = new Container(5, "ISRAE", "CSQU3054383"); // place on stack!!! to allocate on heap, see below
     std::cout << c1->checkDestination() << std::endl;
     std::cout << c1->checkId() << std::endl;
@@ -29,18 +30,13 @@ int main(){
         }
     }
 
-    ShipPlan* sp = new ShipPlan(3,2,2);
-    sp->getFloor(0)->setContainerAtPosition(0,0,c1);
-    sp->getFloor(0)->setContainerAtPosition(0,1,c2);
-    Ship* ship = new Ship(s1,sp);
-    printf("%d\n\n",ship->getPlan().getFloor(0)->getContainerAtPosition(0,1)->getWeight());
     delete c1;
     delete c2;
     delete c3;
     delete c4;
     delete s1;
     delete f1;
-    delete sp;
-//    runTests();
 
+//    runTests();
+*/
 }

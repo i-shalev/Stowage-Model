@@ -21,7 +21,7 @@ class Container {
         string getDest();
         string getId();
         bool getValid();
-
+        bool getBlocked(){return this->blocked;}
         void setWeight(int weight);
 
 
