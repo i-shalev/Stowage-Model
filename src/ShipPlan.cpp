@@ -45,12 +45,13 @@ bool ShipPlan::isValid(){
         for(int j=0; j<width; j++){
             free = false;
             for(int level=0; level<numFloors; level++){
+                Container* current = this->getFloor(level)->getContainerAtPosition(i,j);
                 if(!free){
-                    if(!(this->getFloor(level)->getContainerAtPosition(i,j)->getBlocked()))
+                    if(current== nullptr || !(current->getBlocked()))
                         free = true;
                 }
                 else{
-                    if(this->getFloor(level)->getContainerAtPosition(i,j)->getBlocked())
+                    if(current != nullptr && current->getBlocked())
                         return false;
                 }
             }
