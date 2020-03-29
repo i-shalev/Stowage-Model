@@ -4,7 +4,7 @@
 
 #include "ShipPlan.h"
 
-ShipPlan::ShipPlan(int numFloors, int length, int width)
+ShipPlan::ShipPlan(int numFloors, int length, int width, int*** blocks)
 {
     this->numFloors = numFloors;
     this->length = length;

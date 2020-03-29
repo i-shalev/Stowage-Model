@@ -12,9 +12,10 @@ class Container {
         const string dest;
         const string id;
         bool valid;
+        bool blocked;
 
     public:
-        Container(int _weight, const string _dest, const string _id);
+        Container(int _weight, const string _dest, const string _id, bool _blocked = false);
 
         int getWeight();
         string getDest();

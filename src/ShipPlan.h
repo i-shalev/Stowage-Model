@@ -13,10 +13,11 @@ class ShipPlan {
         int numFloors;
         int  length;
         int width;
-        Floor** floors;
+        Floor** floors = nullptr;
 
     public:
-        ShipPlan(int numFloors, int length, int width);
+        ShipPlan::ShipPlan(int numFloors, int length, int width, int*** blocks);
+        ShipPlan(const ShipPlan& s) = delete; // disable copy constr'. need deep copy
         ~ShipPlan();
         int getNumFloors();
         int getLength();
