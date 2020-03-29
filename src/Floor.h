@@ -15,7 +15,7 @@ class Floor{
         Container*** floorMap = nullptr;
 
     public:
-        Floor(int index, int length, int width, int** blocks);
+        Floor(int index, int length, int width, vector<vector<int>> blocks);
         ~Floor();
         Floor(const Floor& f) = delete; // disable copy constr'. need deep copy
         Container* getContainerAtPosition(int i, int j);
