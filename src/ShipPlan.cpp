@@ -4,9 +4,9 @@
 
 #include "ShipPlan.h"
 
-ShipPlan::ShipPlan(int numFloors, int length, int width, int*** blocks)
+ShipPlan::ShipPlan(int numFloors, int length, int width, const vector<vector<vector<int>>>& blocks)
 {
-    int** floorBlocks;
+    vector<vector<int>> floorBlocks;
     this->numFloors = numFloors;
     this->length = length;
     this->width = width;
@@ -14,7 +14,7 @@ ShipPlan::ShipPlan(int numFloors, int length, int width, int*** blocks)
 
     for(int i=0; i<numFloors; i++)
     {
-        floorBlocks = blocks[i];
+        floorBlocks = blocks.at(i);
         this->floors[i] = new Floor(i, length, width, floorBlocks);
     }
 }
