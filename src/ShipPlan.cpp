@@ -6,6 +6,7 @@
 
 ShipPlan::ShipPlan(int numFloors, int length, int width, int*** blocks)
 {
+    int** floorBlocks;
     this->numFloors = numFloors;
     this->length = length;
     this->width = width;
@@ -13,7 +14,8 @@ ShipPlan::ShipPlan(int numFloors, int length, int width, int*** blocks)
 
     for(int i=0; i<numFloors; i++)
     {
-        this->floors[i] = new Floor(i, length, width);
+        floorBlocks = blocks[i];
+        this->floors[i] = new Floor(i, length, width, floorBlocks);
     }
 }
 
