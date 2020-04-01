@@ -1,20 +1,32 @@
 #include <iostream>
 #include "tests.h"
 #include "Ship.h"
+#include "Files.h"
 
 int main(){
-    Container* c1 = new Container(5, "ISRAE", "CSQU3054383"); // place on stack!!! to allocate on heap, see below
-    std::cout << c1->checkDestination() << std::endl;
-    std::cout << c1->checkId() << std::endl;
-    std::cout << c1->getWeight() << std::endl;
-    std::cout << c1->getId() << std::endl;
-    std::cout << " " << std::endl;
-    ShipRoute* s1 = new ShipRoute();
-    s1->addDstAtEnd("ISRAE");
-    s1->addDstAtEnd("ISRAA");
-    s1->addDstAtEnd("ISAAA");
-    s1->addDstAtEnd("ZIVCO");
-    s1->addDstAtEnd("ABCDE");
+//    Container* c1 = new Container(5, "ISRAE", "CSQU3054383"); // place on stack!!! to allocate on heap, see below
+//    std::cout << c1->checkDestination() << std::endl;
+//    std::cout << c1->checkId() << std::endl;
+//    std::cout << c1->getWeight() << std::endl;
+//    std::cout << c1->getId() << std::endl;
+//    std::cout << " " << std::endl;
+//    ShipRoute* s1 = new ShipRoute();
+//    s1->addDstAtEnd("ISRAE");
+//    s1->addDstAtEnd("ISRAA");
+//    s1->addDstAtEnd("ISAAA");
+//    s1->addDstAtEnd("ZIVCO");
+//    s1->addDstAtEnd("ABCDE");
+    int numFloors=0 , length=0, width=0;
+    string path = R"(C:\Users\itay\Desktop\exmaple1.csv)";
+    vector<vector<vector<int>>> blocks = readShipPlan(path, numFloors, length, width);
+    for(auto & block : blocks) {
+        for(auto & j : block) {
+            for (int k : j) {
+                std::cout << k << std::endl;
+            }
+        }
+    }
+
 //    Floor* f1 = new Floor(0,2,2);
 //    Container* c2 = new Container(1005, "ISRAE", "CSQU3054383");
 //    Container* c3 = new Container(2, "ISRAE", "CSQU3054383");
