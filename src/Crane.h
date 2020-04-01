@@ -5,7 +5,6 @@
 #ifndef STOWAGE_MODEL_CRANE_H
 #define STOWAGE_MODEL_CRANE_H
 
-#include "ShipPlan.h"
 #include "Ship.h"
 #include <list>
 
