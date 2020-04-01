@@ -2,4 +2,4 @@ project(Stowage-Model)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Stowage-Model main.cpp Files.cpp tests.cpp ShipPlan.cpp Container.cpp Floor.cpp ShipRoute.cpp Ship.cpp Ship.h)
+add_executable(Stowage-Model main.cpp Files.cpp tests.cpp ShipPlan.cpp Container.cpp Floor.cpp ShipRoute.cpp Ship.cpp Ship.h Crane.cpp Crane.h)
