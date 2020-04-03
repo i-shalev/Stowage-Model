@@ -2,6 +2,7 @@
 #include "tests.h"
 #include "Crane.h"
 #include "Files.h"
+#include "Port.h"
 
 int main(){
 //    Container* c1 = new Container(5, "ISRAE", "CSQU3054383"); // place on stack!!! to allocate on heap, see below
@@ -16,6 +17,17 @@ int main(){
 //    s1->addDstAtEnd("ISAAA");
 //    s1->addDstAtEnd("ZIVCO");
 //    s1->addDstAtEnd("ABCDE");
+    Port port("ISRAEE",0);
+    Container* c2 = new Container(1005, "ISRAE", "CSQU3054383");
+    Container* c3 = new Container(2, "ISRAE", "CSQU3054383");
+    Container* c4 = new Container(3, "ISRAE", "CSQU3054383");
+    port.addContainer(c2);
+    port.addContainer(c3);
+    port.addContainer(c4);
+    std::cout << port.removeContainer()->getWeight() << std::endl;
+    std::cout << port.removeContainer()->getWeight() << std::endl;
+    std::cout << port.removeContainer()->getWeight() << std::endl;
+    std::cout << port.removeContainer()->getWeight() << std::endl;
     int numFloors=0 , length=0, width=0;
     string path = R"(C:\Users\zivco\Downloads\exmaple1.csv)";
 
@@ -28,9 +40,7 @@ int main(){
 
     readShipPlan(*blocks, path);
     ShipPlan* shipPlan = new ShipPlan(numFloors, length, width, blocks);
-    Container* c2 = new Container(1005, "ISRAE", "CSQU3054383");
-    Container* c3 = new Container(2, "ISRAE", "CSQU3054383");
-    Container* c4 = new Container(3, "ISRAE", "CSQU3054383");
+
     ShipRoute* sr = new ShipRoute();
     sr->addDstAtEnd("ABCDE");
     sr->addDstAtEnd("ISRAE");
