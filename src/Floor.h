@@ -12,7 +12,7 @@ class Floor{
         int index;
         int length;
         int width;
-        Container*** floorMap = nullptr;
+        vector<vector<Container*>>* floorMap;
 
     public:
         Floor(int index, int length, int width, vector<vector<int>> blocks);
