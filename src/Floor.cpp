@@ -4,20 +4,11 @@
 
 #include "Floor.h"
 
-Floor::Floor(int index, int length, int width, vector<vector<int>> blocks) {
+Floor::Floor(int index, int length, int width) {
     this->index = index;
     this->length=length;
     this->width=width;
     this->floorMap = new vector<vector<Container*>>(length, vector<Container*>(width, nullptr));
-    int wid, len;
-    for(auto & block : blocks) {
-        wid = block.at(0);
-        len = block.at(1);
-        if(wid!=-1 & len!=-1)
-            floorMap->at(len).at(wid) = new Container(-1, "blocked", "blocked", true);
-    }
-
-
 }
 Floor::~Floor() {
     delete floorMap;

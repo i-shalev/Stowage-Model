@@ -4,7 +4,10 @@
 #include "Files.h"
 
 int main(){
-
+    vector<vector<int>> vec = {{1,0,4},{1,1,2}};
+    ShipPlan* sp = new ShipPlan(5,2,2,vec);
+    sp -> printShipPlan();
+/*
     int numFloors=0 , length=0, width=0, numLines;
     string pathToShipPlan   = R"(C:\Users\itay\Desktop\ShipPort.csv)";
     string pathToShipPorts  = R"(C:\Users\itay\Desktop\Ports.csv)";
@@ -29,7 +32,7 @@ int main(){
     shipRoute->printList();
     delete shipRoute;
 //    delete shipPlan;
-
+*/
 //    std::cout << ports->size() << std::endl;
 //    for(const auto & port : *ports) {
 //        std::cout << port << std::endl;
