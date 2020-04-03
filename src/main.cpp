@@ -17,7 +17,7 @@ int main(){
 //    s1->addDstAtEnd("ZIVCO");
 //    s1->addDstAtEnd("ABCDE");
     int numFloors=0 , length=0, width=0;
-    string path = R"(C:\Users\itay\Desktop\exmaple1.csv)";
+    string path = R"(C:\Users\zivco\Downloads\exmaple1.csv)";
 
     getSizesShipPlan(path, numFloors, length, width);
     vector<vector<vector<int>>>* blocks = new vector<vector<vector<int>>>(numFloors, vector< vector<int>>(length * width, vector<int>(2, {-1})));
@@ -28,9 +28,18 @@ int main(){
 
     readShipPlan(*blocks, path);
     ShipPlan* shipPlan = new ShipPlan(numFloors, length, width, blocks);
-    delete(blocks);
+    Container* c2 = new Container(1005, "ISRAE", "CSQU3054383");
+    Container* c3 = new Container(2, "ISRAE", "CSQU3054383");
+    Container* c4 = new Container(3, "ISRAE", "CSQU3054383");
+    delete blocks;
     shipPlan->printShipPlan();
-
+    shipPlan->getFloor(0)->setContainerAtPosition(1,0,c2);
+    shipPlan->printShipPlan();
+    std::cout << shipPlan->isValid() << std::endl;
+    delete shipPlan;
+    delete c2;
+    delete c4;
+    delete c3;
 //    for(auto & block : *blocks) {
 //        for(auto & j : block) {
 //            for (int k : j) {
