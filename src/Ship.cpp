@@ -4,7 +4,12 @@
 
 #include "Ship.h"
 
-Ship::Ship(ShipRoute* sr, ShipPlan* sp): route(sr), plan(sp){};
+Ship::Ship(ShipRoute* sr, ShipPlan* sp): route(sr), plan(sp){
+    if(!this->plan->isValid()){
+        std::cout << "invalid plan!" << std::endl;
+    }
+
+};
 ShipPlan& Ship::getPlan() { return *(this->plan);}
 //const ShipRoute& Ship::getRoute() {return *(this->route);}
 bool Ship::willVisit(string dest) {
