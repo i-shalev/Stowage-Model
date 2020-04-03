@@ -10,11 +10,6 @@ Floor::Floor(int index, int length, int width, vector<vector<int>> blocks) {
     this->width=width;
     this->floorMap = new vector<vector<Container*>>(length, vector<Container*>(width, nullptr));
     int wid, len;
-    for(int i=0; i<length; i++){
-        for(int j=0; j<width; j++){
-            floorMap->at(i).push_back(nullptr);
-        }
-    }
     for(auto & block : blocks) {
         wid = block.at(0);
         len = block.at(1);
