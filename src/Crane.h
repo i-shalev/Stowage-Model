@@ -9,11 +9,12 @@
 #include <list>
 
 using namespace std;
-enum result{ SUCCESS=0, DEST_NOT_IN_LIST, INVALID_INDEX, FULL_PLACE, EMPTY_BELOW, CONTAINER_ABOVE, WRONG_CONTAINER};
+enum result{ SUCCESS=0, DEST_NOT_IN_LIST=1, INVALID_INDEX=2, FULL_PLACE=3, EMPTY_BELOW=4, CONTAINER_ABOVE=5, WRONG_CONTAINER=6};
 class Crane{
     Ship* curShip;
 public:
     Crane(Ship* ship): curShip(ship){}
+    Crane(){}
     Crane(const Crane& crane)  = delete;
     result Load(Container* cont, int level, int i, int j);
     result Unload(string contId, int level, int i, int j, Container** answer);

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "tests.h"
-#include "Ship.h"
+#include "Crane.h"
 #include "Files.h"
 
 int main(){
@@ -31,11 +31,19 @@ int main(){
     Container* c2 = new Container(1005, "ISRAE", "CSQU3054383");
     Container* c3 = new Container(2, "ISRAE", "CSQU3054383");
     Container* c4 = new Container(3, "ISRAE", "CSQU3054383");
+    ShipRoute* sr = new ShipRoute();
+    sr->addDstAtEnd("ABCDE");
+    sr->addDstAtEnd("ISRAE");
+    Ship* ship = new Ship(sr, shipPlan);
+    Crane* crane = new Crane(ship);
+    ship->getPlan().printShipPlan();
+    std::cout << crane->Load(c2,0,0,1) <<std::endl;
+    Container* res;
+    std::cout << crane->Unload("CSQU3054383",0,0,1,&res) << std::endl;
+    std::cout << res->getWeight() << std::endl;
+    std::cout << (ship->getPlan().getFloor(0)->getContainerAtPosition(0,1) == nullptr) << std::endl;
+    ship->getPlan().printShipPlan();
     delete blocks;
-    shipPlan->printShipPlan();
-    shipPlan->getFloor(0)->setContainerAtPosition(1,0,c2);
-    shipPlan->printShipPlan();
-    std::cout << shipPlan->isValid() << std::endl;
     delete shipPlan;
     delete c2;
     delete c4;
