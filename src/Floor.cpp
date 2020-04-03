@@ -14,7 +14,7 @@ Floor::Floor(int index, int length, int width, vector<vector<int>> blocks) {
         wid = block.at(0);
         len = block.at(1);
         if(wid!=-1 & len!=-1)
-            floorMap->at(wid).at(len) = new Container(-1, "blocked", "blocked", true);
+            floorMap->at(len).at(wid) = new Container(-1, "blocked", "blocked", true);
     }
 
 

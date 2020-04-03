@@ -70,7 +70,6 @@ void ShipPlan::printShipPlan() {
             for(int k=0; k < width; k++){
                 Container* container = this->getFloor(i)->getContainerAtPosition(j, k);
                 if(container != nullptr) {
-                    std::cout << "here" << std::endl;
                     if(container->getBlocked()) {
                         std::cout << "(" << j << "," << k << ") ";
                     }
