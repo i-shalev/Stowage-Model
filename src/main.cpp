@@ -5,29 +5,29 @@
 
 int main(){
 
-    int numFloors=0 , length=0, width=0, numPorts, numLines;
-    string pathToShipPlan = R"(C:\Users\itay\Desktop\exmaple1.csv)";
-    string pathToShipPorts = R"(C:\Users\itay\Desktop\exmaple1.csv)";
+    int numFloors=0 , length=0, width=0, numLines;
+    string pathToShipPlan   = R"(C:\Users\itay\Desktop\ShipPort.csv)";
+    string pathToShipPorts  = R"(C:\Users\itay\Desktop\Ports.csv)";
 
     // read the shipPlan file and get the sizes of the shipPlan
     getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines);
 
-    vector<vector<int>>* blocks = new vector<vector<int>>(numLines-1);
+    // create the ShipPlanVector
+    auto* blocks = new vector<vector<int>>(numLines-1);
     readShipPlan(*blocks, pathToShipPlan);
 
-//    vector<string>* ports = new vector<string>(numPorts,{""});
-//
-//    readShipPlan(*blocks, pathToShipPlan);
-//    readShipPorts(*ports, pathToShipPorts, numFloors);
-//    ShipRoute* shipRoute = new ShipRoute(*ports);
+    getNumberOfNonEmtpyLines(pathToShipPorts, numLines);
+    auto* ports = new vector<string>();
+    readShipPorts(*ports, pathToShipPorts);
+
+    ShipRoute* shipRoute = new ShipRoute(*ports);
 //    ShipPlan* shipPlan = new ShipPlan(numFloors, length, width, blocks);
-//    delete blocks;
-//    delete ports;
+    delete blocks;
+    delete ports;
+
 //    shipPlan->printShipPlan();
-//   std::cout << "start" << std::endl;
-//    shipRoute->printList();
-//    std::cout << "end" << std::endl;
-//    delete shipRoute;
+    shipRoute->printList();
+    delete shipRoute;
 //    delete shipPlan;
 
 //    std::cout << ports->size() << std::endl;
@@ -35,11 +35,11 @@ int main(){
 //        std::cout << port << std::endl;
 //    }
 
-    for(auto & block : *blocks) {
-        std::cout << "(" << block.at(0) << ", ";
-        std::cout << block.at(1) << ", ";
-        std::cout << block.at(2) << ")" << std::endl;
-    }
+//    for(auto & block : *blocks) {
+//        std::cout << "(" << block.at(0) << ", ";
+//        std::cout << block.at(1) << ", ";
+//        std::cout << block.at(2) << ")" << std::endl;
+//    }
 
 //    Floor* f1 = new Floor(0,2,2);
 //    Container* c2 = new Container(1005, "ISRAE", "CSQU3054383");

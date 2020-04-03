@@ -84,26 +84,42 @@ bool readShipPlan(vector<vector<int>>& blocks, const string& path) {
     return true;
 }
 
-void readShipPorts(vector<string>& ports, const string& path, const int numFloors) {
+bool getNumberOfNonEmtpyLines(const string &path, int &numLines){
     ifstream fin;
-    fin.open(path, ios::in);
+    try{
+        fin.open(path, ios::in);
+    } catch (const std::exception& e) {
+        std::cout << "ERROR: Failed to open file" << std::endl;
+        return false;
+    }
 
-    vector<string> row;
-    string line, word, temp;
-    int i = 0;
+    numLines = 0;
+    string line;
 
-    while (getline(fin, line) and i <= 2 + numFloors) {
-        i++;
-
-        if (i > numFloors + 1 )
-        {
-            stringstream s(line);
-            int j = 0;
-            while (getline(s, word, ',') and j < ports.size()) {
-                ports.at(j) = word;
-                j++;
-            }
+    while(getline(fin, line)) {
+        if(!line.empty()) {
+            numLines++;
         }
     }
     fin.close();
+    return true;
+}
+
+bool readShipPorts(vector<string>& ports, const string& path) {
+    ifstream fin;
+    try{
+        fin.open(path, ios::in);
+    } catch (const std::exception& e) {
+        std::cout << "ERROR: Failed to open file" << std::endl;
+        return false;
+    }
+
+    string line;
+    while (getline(fin, line)) {
+        if(!line.empty()) {
+            ports.push_back(line);
+        }
+    }
+    fin.close();
+    return true;
 }

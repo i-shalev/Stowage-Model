@@ -15,7 +15,8 @@ class Files {
 
 bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines);
 bool readShipPlan(vector<vector<int>>& blocks, const string& path);
-void readShipPorts(vector<string>& ports, const string& path, int numFloors);
+bool getNumberOfNonEmtpyLines(const string &path, int &numLines);
+bool readShipPorts(vector<string>& ports, const string& path);
 
 
 #endif //STOWAGE_MODEL_FILES_H
