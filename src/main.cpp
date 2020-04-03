@@ -18,14 +18,25 @@ int main(){
 //    s1->addDstAtEnd("ABCDE");
     int numFloors=0 , length=0, width=0;
     string path = R"(C:\Users\itay\Desktop\exmaple1.csv)";
-    vector<vector<vector<int>>> blocks = readShipPlan(path, numFloors, length, width);
-    for(auto & block : blocks) {
-        for(auto & j : block) {
-            for (int k : j) {
-                std::cout << k << std::endl;
-            }
-        }
-    }
+
+    getSizesShipPlan(path, numFloors, length, width);
+    vector<vector<vector<int>>>* blocks = new vector<vector<vector<int>>>(numFloors, vector< vector<int>>(length * width, vector<int>(2, {-1})));
+
+    std::cout << numFloors << std::endl;
+    std::cout << length << std::endl;
+    std::cout << width << std::endl;
+
+    readShipPlan(*blocks, path);
+    ShipPlan* shipPlan = new ShipPlan(numFloors, length, width, blocks);
+    shipPlan->printShipPlan();
+
+//    for(auto & block : *blocks) {
+//        for(auto & j : block) {
+//            for (int k : j) {
+//                std::cout << k << std::endl;
+//            }
+//        }
+//    }
 
 //    Floor* f1 = new Floor(0,2,2);
 //    Container* c2 = new Container(1005, "ISRAE", "CSQU3054383");

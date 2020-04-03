@@ -13,6 +13,7 @@ class Files {
 
 };
 
-vector<vector<vector<int>>> readShipPlan(const string& path, int& numFloors, int& length, int& width);
+void readShipPlan(vector<vector<vector<int>>>& allBlocks, const string& path);
+void getSizesShipPlan(const string& path, int& numFloors, int& length, int& width);
 
 #endif //STOWAGE_MODEL_FILES_H

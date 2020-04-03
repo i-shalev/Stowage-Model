@@ -16,13 +16,14 @@ class ShipPlan {
         Floor** floors = nullptr;
 
     public:
-        ShipPlan(int numFloors, int length, int width, const vector<vector<vector<int>>>& blocks);
+        ShipPlan(int numFloors, int length, int width, const vector<vector<vector<int>>>* blocks);
         ShipPlan(const ShipPlan& s) = delete; // disable copy constr'. need deep copy
         ~ShipPlan();
         int getNumFloors();
         int getLength();
         int getWidth();
         Floor* getFloor(int i);
+        void printShipPlan();
 
     bool isValid();
 };

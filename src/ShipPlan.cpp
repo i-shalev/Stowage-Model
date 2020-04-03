@@ -4,7 +4,7 @@
 
 #include "ShipPlan.h"
 
-ShipPlan::ShipPlan(int numFloors, int length, int width, const vector<vector<vector<int>>>& blocks)
+ShipPlan::ShipPlan(int numFloors, int length, int width, const vector<vector<vector<int>>>* blocks)
 {
     vector<vector<int>> floorBlocks;
     this->numFloors = numFloors;
@@ -14,7 +14,7 @@ ShipPlan::ShipPlan(int numFloors, int length, int width, const vector<vector<vec
 
     for(int i=0; i<numFloors; i++)
     {
-        floorBlocks = blocks.at(i);
+        floorBlocks = (*blocks).at(i);
         this->floors[i] = new Floor(i, length, width, floorBlocks);
     }
 }
@@ -56,6 +56,27 @@ bool ShipPlan::isValid(){
                 }
             }
         }
-        return true;
+    }
+    return true;
+}
+
+void ShipPlan::printShipPlan() {
+    std::cout << "num Floors: " << this->numFloors  << std::endl;
+    std::cout << "length: "     << this->length     << std::endl;
+    std::cout << "width: "      << this->width      << std::endl;
+    for (int i=0; i < numFloors; i++) {
+        std::cout << "Floor "     << i << ": ";
+        for(int j=0; j < length ; j++ ) {
+            for(int k=0; k < width; k++){
+                Container* container = this->getFloor(i)->getContainerAtPosition(j, k);
+                if(container != nullptr) {
+                    std::cout << "here" << std::endl;
+                    if(container->getBlocked()) {
+                        std::cout << "(" << j << "," << k << ") ";
+                    }
+                }
+            }
+        }
+        std::cout <<  std::endl;
     }
 }
