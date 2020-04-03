@@ -28,6 +28,7 @@ int main(){
 
     readShipPlan(*blocks, path);
     ShipPlan* shipPlan = new ShipPlan(numFloors, length, width, blocks);
+    delete(blocks);
     shipPlan->printShipPlan();
 
 //    for(auto & block : *blocks) {

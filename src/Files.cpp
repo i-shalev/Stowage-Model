@@ -72,10 +72,15 @@ void readShipPlan(vector<vector<vector<int>>>& allBlocks, const string& path) {
         }
         if (i != 1)
         {
+
 //            std::cout << "i != 1" << std::endl;
 //            std::cout << "row size = " << row.size() << std::endl;
             for (int j = 0 ; j < row.size() ; j+=2) {
                 word = row.at(j);
+//                std::cout << " : " << word << std::endl;
+                if(word.empty()) {
+                    continue;
+                }
 
                 vector<int> block;
 //                block.push_back(stoi(word.substr(1, word.size())));
