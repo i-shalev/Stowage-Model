@@ -6,11 +6,9 @@
 
 ShipRoute::ShipRoute(const vector<string>& _dstList)
 {
-    this->dstList = _dstList;
     for(const auto & i : _dstList)
     {
-        if(checkDestination(i))
-            this->addDstAtEnd(i);
+        this->addDstAtEnd(i);
     }
 }
 

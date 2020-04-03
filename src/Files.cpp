@@ -6,108 +6,104 @@
 #include <sstream>
 #include <istream>
 #include "Files.h"
-#include <string.h>
 
-void getSizesShipPlan(const string& path, int& numFloors, int& length, int& width) {
+bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines) {
     ifstream fin;
-    fin.open(path, ios::in);
+    try{
+        fin.open(path, ios::in);
+    } catch (const std::exception& e) {
+        std::cout << "ERROR: Failed to open file" << std::endl;
+        return false;
+    }
 
     vector<string> row;
     string line, word;
     int i = 0;
 
     if (getline(fin, line)) {
-//        std::cout << "loop1" << std::endl;
-
-        vector<vector<int>> floorBlocks;
-        row.clear();
-//        std::cout << "line:" << line << std::endl;
-
-        // used for breaking words
+        numLines = 1;
         stringstream s(line);
-
-        // read every column data of a row and
-        // store it in a string variable, 'word'
         while (getline(s, word, ',')) {
-            // add all the column data
-            // of a row to a vector
             row.push_back(word);
         }
-
+        try{
             numFloors = stoi(row[0]);
             length = stoi(row[1]);
             width = stoi(row[2]);
+        } catch (const std::exception& e) {
+            std::cout << "ERROR: One of the parameters is not a number" << std::endl;
+            return false;
+        }
+    } else {
+        std::cout << "ERROR: Failed to read line" << std::endl;
+       return false;
+    }
 
+    while(getline(fin, line)) {
+        numLines++;
     }
 
     fin.close();
+    return true;
 }
 
-void readShipPlan(vector<vector<vector<int>>>& allBlocks, const string& path) {
+bool readShipPlan(vector<vector<int>>& blocks, const string& path) {
     ifstream fin;
-    fin.open(path, ios::in);
-
-
+    try{
+        fin.open(path, ios::in);
+    } catch (const std::exception& e) {
+        std::cout << "ERROR: Failed to open file" << std::endl;
+        return false;
+    }
 
     vector<string> row;
     string line, word, temp;
     int i = 0;
 
     while (getline(fin, line)) {
-//        std::cout << "loop1" << std::endl;
-        i++;
-        vector<vector<int>> floorBlocks;
-        row.clear();
-//        std::cout << "line:" << line << std::endl;
 
-        // used for breaking words
-        stringstream s(line);
 
-        // read every column data of a row and
-        // store it in a string variable, 'word'
-        while (getline(s, word, ',')) {
-            // add all the column data
-            // of a row to a vector
-            row.push_back(word);
-        }
-        if (i != 1)
+        if (i != 0)
         {
+            row.clear();
+            stringstream s(line);
 
-//            std::cout << "i != 1" << std::endl;
-//            std::cout << "row size = " << row.size() << std::endl;
-            for (int j = 0 ; j < row.size() ; j+=2) {
-                word = row.at(j);
-//                std::cout << " : " << word << std::endl;
-                if(word.empty()) {
-                    continue;
+            while (getline(s, word, ',')) {
+                try {
+                    blocks.at(i - 1).push_back(stoi(word));
+                } catch (const std::exception& e) {
+                    std::cout << "ERROR: One of the parameters is not a number" << std::endl;
+                    blocks.at(i - 1).push_back(-1);
                 }
-
-                vector<int> block;
-//                block.push_back(stoi(word.substr(1, word.size())));
-//                std::cout << "try to push to floor: " << i-2 << std::endl;
-//                std::cout << "at place: " << j/2 << std::endl;
-//                std::cout << "first: " << stoi(word.substr(1, word.size())) << std::endl;
-                allBlocks.at(i-2).at(j/2).at(0) = (stoi(word.substr(1, word.size())));
-//                std::cout << "Done!" << std::endl;
-                word = row.at(j+1);
-
-//                std::cout << "second: " << stoi(word.substr(0, word.size() - 1)) << std::endl;
-                allBlocks.at(i-2).at(j/2).at(1) = (stoi(word.substr(0, word.size() - 1)));
-//                std::cout << "Done!" << std::endl;
-//                block.push_back(stoi(word.substr(0, word.size() - 1)));
-//                    std::cout << "else - j = " << j << std::endl;
-//                    std::cout << word << std::endl;
-//                    std::cout << "int: " << word.substr(0, word.size() - 1) << std::endl;
-//                    std::cout << "int: " << stoi(word.substr(0, word.size() - 1)) << std::endl;
-//                    std::cout << "first: " << word.substr(0, word.size() - 2) << std::endl;
-//                    std::cout << "second: " << word.substr(1, word.size() - 1) << std::endl;
-
-//                allBlocks.at(i-1).at(j/2).push_back(1);
             }
-//            exit(0);
-//            allBlocks.push_back(floorBlocks);
+
+        }
+        i++;
+    }
+    fin.close();
+    return true;
+}
+
+void readShipPorts(vector<string>& ports, const string& path, const int numFloors) {
+    ifstream fin;
+    fin.open(path, ios::in);
+
+    vector<string> row;
+    string line, word, temp;
+    int i = 0;
+
+    while (getline(fin, line) and i <= 2 + numFloors) {
+        i++;
+
+        if (i > numFloors + 1 )
+        {
+            stringstream s(line);
+            int j = 0;
+            while (getline(s, word, ',') and j < ports.size()) {
+                ports.at(j) = word;
+                j++;
+            }
         }
     }
     fin.close();
-//    return allBlocks;
 }

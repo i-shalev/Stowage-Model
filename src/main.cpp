@@ -4,40 +4,42 @@
 #include "Files.h"
 
 int main(){
-//    Container* c1 = new Container(5, "ISRAE", "CSQU3054383"); // place on stack!!! to allocate on heap, see below
-//    std::cout << c1->checkDestination() << std::endl;
-//    std::cout << c1->checkId() << std::endl;
-//    std::cout << c1->getWeight() << std::endl;
-//    std::cout << c1->getId() << std::endl;
-//    std::cout << " " << std::endl;
-//    ShipRoute* s1 = new ShipRoute();
-//    s1->addDstAtEnd("ISRAE");
-//    s1->addDstAtEnd("ISRAA");
-//    s1->addDstAtEnd("ISAAA");
-//    s1->addDstAtEnd("ZIVCO");
-//    s1->addDstAtEnd("ABCDE");
-    int numFloors=0 , length=0, width=0;
-    string path = R"(C:\Users\itay\Desktop\exmaple1.csv)";
 
-    getSizesShipPlan(path, numFloors, length, width);
-    vector<vector<vector<int>>>* blocks = new vector<vector<vector<int>>>(numFloors, vector< vector<int>>(length * width, vector<int>(2, {-1})));
+    int numFloors=0 , length=0, width=0, numPorts, numLines;
+    string pathToShipPlan = R"(C:\Users\itay\Desktop\exmaple1.csv)";
+    string pathToShipPorts = R"(C:\Users\itay\Desktop\exmaple1.csv)";
 
-    std::cout << numFloors << std::endl;
-    std::cout << length << std::endl;
-    std::cout << width << std::endl;
+    // read the shipPlan file and get the sizes of the shipPlan
+    getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines);
 
-    readShipPlan(*blocks, path);
-    ShipPlan* shipPlan = new ShipPlan(numFloors, length, width, blocks);
-    delete(blocks);
-    shipPlan->printShipPlan();
+    vector<vector<int>>* blocks = new vector<vector<int>>(numLines-1);
+    readShipPlan(*blocks, pathToShipPlan);
 
-//    for(auto & block : *blocks) {
-//        for(auto & j : block) {
-//            for (int k : j) {
-//                std::cout << k << std::endl;
-//            }
-//        }
+//    vector<string>* ports = new vector<string>(numPorts,{""});
+//
+//    readShipPlan(*blocks, pathToShipPlan);
+//    readShipPorts(*ports, pathToShipPorts, numFloors);
+//    ShipRoute* shipRoute = new ShipRoute(*ports);
+//    ShipPlan* shipPlan = new ShipPlan(numFloors, length, width, blocks);
+//    delete blocks;
+//    delete ports;
+//    shipPlan->printShipPlan();
+//   std::cout << "start" << std::endl;
+//    shipRoute->printList();
+//    std::cout << "end" << std::endl;
+//    delete shipRoute;
+//    delete shipPlan;
+
+//    std::cout << ports->size() << std::endl;
+//    for(const auto & port : *ports) {
+//        std::cout << port << std::endl;
 //    }
+
+    for(auto & block : *blocks) {
+        std::cout << "(" << block.at(0) << ", ";
+        std::cout << block.at(1) << ", ";
+        std::cout << block.at(2) << ")" << std::endl;
+    }
 
 //    Floor* f1 = new Floor(0,2,2);
 //    Container* c2 = new Container(1005, "ISRAE", "CSQU3054383");
