@@ -21,6 +21,7 @@ class ShipRoute {
         string getHead();
         void printList();
         bool willVisit(string dest);
+        int getRouteLength();
 };
 bool checkDestination(string dest);
 

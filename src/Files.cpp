@@ -31,7 +31,7 @@ bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &widt
             length = stoi(row[1]);
             width = stoi(row[2]);
         } catch (const std::exception& e) {
-            std::cout << "ERROR: One of the parameters is not a number" << std::endl;
+            std::cout << "Warning: One of the parameters is not a number" << std::endl;
             return false;
         }
     } else {
@@ -72,7 +72,7 @@ bool readShipPlan(vector<vector<int>>& blocks, const string& path) {
                 try {
                     blocks.at(i - 1).push_back(stoi(word));
                 } catch (const std::exception& e) {
-                    std::cout << "ERROR: One of the parameters is not a number" << std::endl;
+                    std::cout << "Warning: One of the parameters is not a number" << std::endl;
                     blocks.at(i - 1).push_back(-1);
                 }
             }

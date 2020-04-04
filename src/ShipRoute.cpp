@@ -49,6 +49,10 @@ bool ShipRoute::willVisit(string dest){
     return false;
 }
 
+int ShipRoute::getRouteLength() {
+    return this->dstList.size();
+}
+
 bool checkDestination(string dest){
     if(dest.length() != 5)
         return false;
