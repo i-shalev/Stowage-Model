@@ -23,5 +23,7 @@ bool readShipPlan(vector<vector<int>>& blocks, const string& path);
 bool getNumberOfNonEmtpyLines(const string &path, int &numLines);
 bool readPortContainers(Port*& port, const string& path);
 bool readShipPorts(vector<string>& ports, const string& path);
+string removeLeadingAndTrailingWhitespaces(string line);
+bool isCommentLine(string line);
 
 #endif //STOWAGE_MODEL_FILES_H
