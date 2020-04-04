@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <istream>
+#include <filesystem>
 #include "Container.h"
 
 #ifndef STOWAGE_MODEL_FILES_H
