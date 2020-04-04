@@ -2,6 +2,7 @@
 // Created by itay on 29/03/2020.
 //
 
+#include <dirent.h>
 #include "Files.h"
 
 bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines) {
@@ -198,4 +199,29 @@ bool isCommentLine(string line) {
         return true;
     line = removeLeadingAndTrailingWhitespaces(line);
     return line.at(0) == '#';
+}
+
+bool hasEnding (std::string const &fullString, std::string const &ending) {
+    if (fullString.length() >= ending.length()) {
+        return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
+    } else {
+        return false;
+    }
+}
+
+void getCargoData(const char *path, vector<string>& res){
+    DIR *dir = opendir(path);
+    struct dirent *entry = readdir(dir);
+    string name = "";
+    while (entry != NULL)
+    {
+        name = entry->d_name;
+        if(hasEnding(name, "cargo_data")) {
+            res.push_back(name.substr(0, name.size() - 11));
+        }
+        entry = readdir(dir);
+    }
+
+    closedir(dir);
+
 }

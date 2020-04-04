@@ -5,7 +5,6 @@
 #include <fstream>
 #include <sstream>
 #include <istream>
-#include <filesystem>
 #include "Container.h"
 #include "Port.h"
 
@@ -25,5 +24,6 @@ bool readPortContainers(Port*& port, const string& path);
 bool readShipPorts(vector<string>& ports, const string& path);
 string removeLeadingAndTrailingWhitespaces(string line);
 bool isCommentLine(string line);
+void getCargoData(const char *path, vector<string>& res);
 
 #endif //STOWAGE_MODEL_FILES_H
