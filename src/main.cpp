@@ -6,8 +6,6 @@
 #include "main.h"
 
 int main(){
-//    Port p1("AAAAA",0);
-//    std::cout << p1.getSymbol() << std::endl;
     simulate( R"(C:\Users\itay\Desktop\)");
 }
 
@@ -21,7 +19,6 @@ int simulate(const string &pathToDir) {
     if(! getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines)) {
         return -1;
     }
-
 
     // create the ShipPlanVector
     auto* blocks = new vector<vector<int>>(numLines-1);
@@ -40,11 +37,6 @@ int simulate(const string &pathToDir) {
     auto* shipRoute = new ShipRoute(*ports);
     auto* mapPortVisits = new map<string, int>();
     createMapOfPortAndNumberOfVisits(ports, mapPortVisits);
-
-//    for(auto elem : *mapPortVisits)
-//    {
-//        std::cout << elem.first << " " << elem.second << endl;
-//    }
 
     delete ports;
 
@@ -70,8 +62,8 @@ int simulate(const string &pathToDir) {
 
 
 //  debugging prints
-//    shipPlan->printShipPlan();
-//    shipRoute->printList();
+    shipPlan->printShipPlan();
+    shipRoute->printList();
 
 
     delete shipRoute;

@@ -3,8 +3,6 @@
 //
 
 #include "Files.h"
-#include <stdio.h>
-#include <dirent.h>
 
 bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines) {
     ifstream fin;
@@ -19,11 +17,17 @@ bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &widt
     string line, word;
     int i = 0;
 
-    if (getline(fin, line)) {
+    while(getline(fin, line)) {
+        if(!isCommentLine(line)) {
+            break;
+        }
+    }
+
+    if (!isCommentLine(line)) {
         numLines = 1;
         stringstream s(line);
         while (getline(s, word, ',')) {
-            row.push_back(word);
+            row.push_back(removeLeadingAndTrailingWhitespaces(word));
         }
 
         if (row.size() >= 3) {
@@ -36,17 +40,18 @@ bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &widt
                 return false;
             }
         } else {
-                std::cout << "ERROR: Not enough parameters in the first line" << std::endl;
-                return false;
+            std::cout << "ERROR: Not enough parameters in the first line" << std::endl;
+            return false;
         }
-
     } else {
-        std::cout << "ERROR: Failed to read line" << std::endl;
+        std::cout << "ERROR: Failed to read the line with the parameters" << std::endl;
        return false;
     }
 
     while(getline(fin, line)) {
-        numLines++;
+        if(!isCommentLine(line)) {
+            numLines++;
+        }
     }
 
     fin.close();
@@ -67,12 +72,15 @@ bool readShipPlan(vector<vector<int>>& blocks, const string& path) {
     int i = 0;
 
     while (getline(fin, line)) {
+        if(isCommentLine(line)) {
+            continue;
+        }
         if (i != 0)
         {
             row.clear();
             stringstream s(line);
             while (getline(s, word, ',')) {
-                row.push_back(word);
+                row.push_back(removeLeadingAndTrailingWhitespaces(word));
             }
             if (row.size() >= 3) {
                 for(int j=0; j < 3; j++){
@@ -109,7 +117,7 @@ bool getNumberOfNonEmtpyLines(const string &path, int &numLines){
     string line;
 
     while(getline(fin, line)) {
-        if(!line.empty()) {
+        if(! isCommentLine(line)) {
             numLines++;
         }
     }
@@ -128,8 +136,8 @@ bool readShipPorts(vector<string>& ports, const string& path) {
 
     string line;
     while (getline(fin, line)) {
-        if(!line.empty()) {
-            ports.push_back(line);
+        if(! isCommentLine(line)) {
+            ports.push_back(removeLeadingAndTrailingWhitespaces(line));
         }
     }
     fin.close();
@@ -148,11 +156,11 @@ bool readPortContainers(Port*& port, const string& path) {
     string line, word, temp;
 
     while (getline(fin, line)) {
-        if(!line.empty()) {
+        if(! isCommentLine(line)) {
             stringstream s(line);
             row.clear();
             while (getline(s, word, ',')) {
-                row.push_back(word);
+                row.push_back(removeLeadingAndTrailingWhitespaces(word));
             }
             if(row.size() < 3) {
                 std::cout << "Warning: not all the information about container was given" << std::endl;
@@ -178,27 +186,16 @@ bool readPortContainers(Port*& port, const string& path) {
     return true;
 }
 
-bool hasEnding (std::string const &fullString, std::string const &ending) {
-    if (fullString.length() >= ending.length()) {
-        return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
-    } else {
-        return false;
-    }
+string removeLeadingAndTrailingWhitespaces(string line) {
+    const char* t = " \t\n\r\f\v";
+    line.erase(0, line.find_first_not_of(t));
+    line.erase(line.find_last_not_of(t) + 1);
+    return line;
 }
 
-void getCargoData(const char *path, vector<string>& res){
-    DIR *dir = opendir(path);
-    struct dirent *entry = readdir(dir);
-    string name = "";
-    while (entry != NULL)
-    {
-        name = entry->d_name;
-        if(hasEnding(name, "cargo_data")) {
-            res.push_back(name.substr(0, name.size() - 11));
-        }
-        entry = readdir(dir);
-    }
-
-    closedir(dir);
-
+bool isCommentLine(string line) {
+    if(line.empty())
+        return true;
+    line = removeLeadingAndTrailingWhitespaces(line);
+    return line.at(0) == '#';
 }
