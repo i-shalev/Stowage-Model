@@ -5,27 +5,39 @@
 #ifndef STOWAGE_MODEL_PORT_H
 #define STOWAGE_MODEL_PORT_H
 
-#include <queue>
+#include <map>
 #include "Container.h"
 #include "vector"
 class Port{
     const std::string symbol;
     int number;
-    queue<Container*> ContainersAwaiting;
+    map<std::string, Container*>* ContainersAwaiting;
 
 public:
-    Port(const std::string& symbol, int number): symbol(symbol), number(number){}
-    const std::string& getSymbol() const { return symbol; }
-    void addContainer(Container* container){ ContainersAwaiting.push(container);}
-    Container* removeContainer(){
-        if(!ContainersAwaiting.empty()) {
-            Container *res = ContainersAwaiting.front();
-            ContainersAwaiting.pop();
-            return res;
-        }
-        return nullptr;
+    Port(const std::string& symbol, int number): symbol(symbol), number(number){
+        ContainersAwaiting = new map<std::string, Container*>;
     }
-    bool hasContainers(){return !ContainersAwaiting.empty();}
+    const std::string& getSymbol() const { return symbol; }
+    void addContainer(Container* container){
+        auto res = ContainersAwaiting->find(container->getId());
+        if(!ContainersAwaiting->empty() && res!=ContainersAwaiting->end()){
+            std::cout << "Warning: the port already have this container";
+            return;
+        }
+        ContainersAwaiting->insert({container->getId(),container});
+    }
+    Container* removeContainer(const std::string& id){
+        auto res = ContainersAwaiting->find(id);
+        Container* ans = res->second;
+        if(res == ContainersAwaiting->end()){
+            std::cout << "Warning: container not exists in the port";
+            return nullptr;
+        }
+        ContainersAwaiting->erase(id);
+        return ans;
+
+    }
+    bool hasContainers(){return !ContainersAwaiting->empty();}
 };
 
 
