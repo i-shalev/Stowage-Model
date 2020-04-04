@@ -16,7 +16,7 @@ int simulate(const string &pathToDir) {
     string pathToPortContainers = pathToDir + R"(\PortContainers.csv)";
     char pathToDirChar[pathToDir.size()+1];
     stringToCharStar(pathToDirChar, pathToDir);
-    std::cout << pathToDirChar << std::endl;
+//    std::cout << pathToDirChar << std::endl;
 
     // read the shipPlan file and get the sizes of the shipPlan
     if(! getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines)) {
