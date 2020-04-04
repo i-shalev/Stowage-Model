@@ -23,5 +23,6 @@ public:
     ShipPlan& getPlan();//TODO: make sure we really cant change the route from outside
     bool willVisit(string dest);
 
-
+private:
+    void getContainerPosition(const string &id, vector<int> &res);
 };
