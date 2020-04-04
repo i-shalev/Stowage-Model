@@ -5,7 +5,8 @@
 #include "Port.h"
 
 int main(){
-
+    Port p1("AAAAA",0);
+    std::cout << p1.getSymbol() << std::endl;
     int numFloors=0 , length=0, width=0, numLines;
     string pathToShipPlan       = R"(C:\Users\zivco\Downloads\ShipPort.csv)";
     string pathToShipPorts      = R"(C:\Users\zivco\Downloads\Ports.csv)";
