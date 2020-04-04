@@ -219,7 +219,7 @@ void stringToCharStar(char* chatStar, string str) {
     chatStar[str.size()] = '\0';
 }
 
-bool is_file(const char* path) {
+bool isFile(const char* path) {
     struct stat buf;
     stat(path, &buf);
     return S_ISREG(buf.st_mode);
@@ -246,7 +246,7 @@ void getCargoData(const char *path, vector<string>& res){
         fullPath[strlen(path)+name.size()+1] = '\0';
 
         if(hasEnding(name, "cargo_data")) {
-            if(is_file(fullPath)) {
+            if(isFile(fullPath)) {
                 res.push_back(name.substr(0, name.size() - 11));
             }
         }

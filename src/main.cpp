@@ -41,7 +41,7 @@ int simulate(const string &pathToDir) {
     auto* mapPortVisits = new map<string, int>();
     createMapOfPortAndNumberOfVisits(ports, mapPortVisits);
 
-    delete ports;
+
 
 
     vector<string> namesOfFilesEndsWithCargoData;
@@ -64,13 +64,14 @@ int simulate(const string &pathToDir) {
             }
         }
     }
+    findMissingPortFiles(mapPortVisits, ports, pathToDir);
 
 
 //  debugging prints
 //    shipPlan->printShipPlan();
 //    shipRoute->printList();
 
-
+    delete ports;
     delete shipRoute;
     delete shipPlan;
     delete portsVector;
@@ -114,11 +115,21 @@ void createMapOfPortAndNumberOfVisits(vector<string>* portList, map<string, int>
     }
 }
 
-void findMissingPortFiles(map<string, int> *mapPortVisits, vector<Port*> portVector) {
-    int sum = 0;
-    for(const auto& elem : *mapPortVisits)
+void findMissingPortFiles(map<string, int> *mapPortVisits, vector<string> *portVector, const string &path) {
+    for(auto elem : *mapPortVisits)
     {
-        sum += elem.second;
+        for(int i = 0; i < elem.second; i++)
+        {
+            string fullPath = path + "\\" + elem.first + "_" + to_string(i) + ".cargo_data";
+            char pathChar[fullPath.size()+1];
+            stringToCharStar(pathChar, fullPath);
+            if(!isFile(pathChar)){
+                if(portVector->at(portVector->size()-1) == elem.first and i == elem.second-1){
+                    // the last port - dont need to do anything for now
+                } else {
+                    std::cout << "Warning: the file " << elem.first + "_" + to_string(i) << ".cargo_data is missing." << std::endl;
+                }
+            }
+        }
     }
-
 }

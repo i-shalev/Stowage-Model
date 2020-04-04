@@ -26,5 +26,6 @@ string removeLeadingAndTrailingWhitespaces(string line);
 bool isCommentLine(string line);
 void getCargoData(const char *path, vector<string>& res);
 void stringToCharStar(char* chatStar, string str);
+bool isFile(const char* path);
 
 #endif //STOWAGE_MODEL_FILES_H
