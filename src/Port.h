@@ -9,12 +9,13 @@
 #include "Container.h"
 #include "vector"
 class Port{
-    std::string symbol;
+    const std::string symbol;
     int number;
     queue<Container*> ContainersAwaiting;
 
 public:
     Port(const std::string& symbol, int number): symbol(symbol), number(number){}
+    const std::string& getSymbol() const { return symbol; }
     void addContainer(Container* container){ ContainersAwaiting.push(container);}
     Container* removeContainer(){
         if(!ContainersAwaiting.empty()) {

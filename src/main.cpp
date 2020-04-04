@@ -7,9 +7,9 @@
 int main(){
 
     int numFloors=0 , length=0, width=0, numLines;
-    string pathToShipPlan       = R"(C:\Users\itay\Desktop\ShipPort.csv)";
-    string pathToShipPorts      = R"(C:\Users\itay\Desktop\Ports.csv)";
-    string pathToPortContainers = R"(C:\Users\itay\Desktop\PortContainers.csv)";
+    string pathToShipPlan       = R"(C:\Users\zivco\Downloads\ShipPort.csv)";
+    string pathToShipPorts      = R"(C:\Users\zivco\Downloads\Ports.csv)";
+    string pathToPortContainers = R"(C:\Users\zivco\Downloads\PortContainers.csv)";
 
     // read the shipPlan file and get the sizes of the shipPlan
     getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines);
