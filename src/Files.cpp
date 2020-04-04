@@ -150,6 +150,7 @@ bool readPortContainers(vector<Container*>& containers, const string& path) {
                     if (container->getValid()) {
                         containers.push_back(container);
                     } else {
+                        delete container;
                         std::cout << "Warning: ID or destination is not valid " << std::endl;
                     }
                 } catch (const std::exception& e) {
