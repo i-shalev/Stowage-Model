@@ -30,7 +30,7 @@ public:
         auto res = ContainersAwaiting->find(id);
         Container* ans = res->second;
         if(res == ContainersAwaiting->end()){
-            std::cout << "Warning: container not exists in the port";
+            std::cout << "Warning: container not exists in the port" << std::endl;
             return nullptr;
         }
         ContainersAwaiting->erase(id);
