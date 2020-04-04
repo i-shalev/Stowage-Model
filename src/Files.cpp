@@ -134,7 +134,7 @@ bool readShipPorts(vector<string>& ports, const string& path) {
     return true;
 }
 
-bool readPortContainers(vector<Container*>& containers, const string& path) {
+bool readPortContainers(Port*& port, const string& path) {
     ifstream fin;
     try{
         fin.open(path, ios::in);
@@ -160,7 +160,7 @@ bool readPortContainers(vector<Container*>& containers, const string& path) {
                    int weight = stoi(row[1]);
                     auto *container = new Container(weight, row[2], row[0], false);
                     if (container->getValid()) {
-                        containers.push_back(container);
+                        port->addContainer(container);
                     } else {
                         delete container;
                         std::cout << "Warning: ID or destination is not valid " << std::endl;

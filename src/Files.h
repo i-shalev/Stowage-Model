@@ -7,6 +7,7 @@
 #include <istream>
 #include <filesystem>
 #include "Container.h"
+#include "Port.h"
 
 #ifndef STOWAGE_MODEL_FILES_H
 #define STOWAGE_MODEL_FILES_H
@@ -20,7 +21,7 @@ class Files {
 bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines);
 bool readShipPlan(vector<vector<int>>& blocks, const string& path);
 bool getNumberOfNonEmtpyLines(const string &path, int &numLines);
+bool readPortContainers(Port*& port, const string& path);
 bool readShipPorts(vector<string>& ports, const string& path);
-bool readPortContainers(vector<Container*>& containers, const string& path);
 
 #endif //STOWAGE_MODEL_FILES_H
