@@ -41,36 +41,42 @@ int simulate(const string &pathToDir) {
     auto* mapPortVisits = new map<string, int>();
     createMapOfPortAndNumberOfVisits(ports, mapPortVisits);
 
-    for(auto elem : *mapPortVisits)
-    {
-        std::cout << elem.first << " " << elem.second << " " << elem.second << "\n";
-    }
+//    for(auto elem : *mapPortVisits)
+//    {
+//        std::cout << elem.first << " " << elem.second << endl;
+//    }
 
     delete ports;
 
 
-    vector<string> names = {"AAAAA_0", "AAAAA_1", "AAAAA_2"};
+    vector<string> names = {"AAAAA_0", "AAAAA_1", "AAAAA_2", "AAAAA_3", "AAAAB_0"};
     auto* portsVector = new vector<Port*>();
     int indexNumber;
     string portName;
     for (const auto& name: names) {
-        if(handleNameOfFile(name, portName, indexNumber)) {
-            Port* port = new Port(portName, indexNumber);
-            if(readPortContainers(port, pathToDir + '\\' + name +R"(.cargo_data)")) {
-                portsVector->push_back(port);
-                std::cout << "port name: " << portName << " index: " << indexNumber << std::endl;
+        if (handleNameOfFile(name, portName, indexNumber)) {
+            auto res = mapPortVisits->find(portName);
+            if(res !=  mapPortVisits->end() and res->second > indexNumber) {
+                Port *port = new Port(portName, indexNumber);
+                if (readPortContainers(port, pathToDir + '\\' + name + R"(.cargo_data)")) {
+                    portsVector->push_back(port);
+//                    std::cout << "port name: " << portName << " index: " << indexNumber << std::endl;
+                }
+            } else {
+                std::cout << "Warning: the file " << name << ".cargo_data is not necessary" << std::endl;
             }
         }
     }
 
 
 //  debugging prints
-    shipPlan->printShipPlan();
-    shipRoute->printList();
+//    shipPlan->printShipPlan();
+//    shipRoute->printList();
 
 
     delete shipRoute;
     delete shipPlan;
+    delete portsVector;
 
     return 0;
 }
@@ -104,6 +110,7 @@ void createMapOfPortAndNumberOfVisits(vector<string>* portList, map<string, int>
             ans = 0;
         } else {
             ans = res->second;
+            mapPortVisits->erase(port);
         }
         mapPortVisits->insert({port, ans+1});
     }
