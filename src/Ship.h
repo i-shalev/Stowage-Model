@@ -25,4 +25,6 @@ public:
 
 private:
     void getContainerPosition(const string &id, vector<int> &res);
+
+    void getAllContainersWithDest(const string &dest, vector<Container*> &res);
 };
