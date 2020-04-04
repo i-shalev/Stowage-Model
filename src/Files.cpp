@@ -4,7 +4,6 @@
 
 #include "Files.h"
 
-
 bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines) {
     ifstream fin;
     try{
@@ -24,14 +23,21 @@ bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &widt
         while (getline(s, word, ',')) {
             row.push_back(word);
         }
-        try{
-            numFloors = stoi(row[0]);
-            length = stoi(row[1]);
-            width = stoi(row[2]);
-        } catch (const std::exception& e) {
-            std::cout << "Warning: One of the parameters is not a number" << std::endl;
-            return false;
+
+        if (row.size() >= 3) {
+            try{
+                numFloors = stoi(row[0]);
+                length = stoi(row[1]);
+                width = stoi(row[2]);
+            } catch (const std::exception& e) {
+                std::cout << "Warning: One of the parameters is not a number" << std::endl;
+                return false;
+            }
+        } else {
+                std::cout << "ERROR: Not enough parameters in the first line" << std::endl;
+                return false;
         }
+
     } else {
         std::cout << "ERROR: Failed to read line" << std::endl;
        return false;
@@ -59,22 +65,28 @@ bool readShipPlan(vector<vector<int>>& blocks, const string& path) {
     int i = 0;
 
     while (getline(fin, line)) {
-
-
         if (i != 0)
         {
             row.clear();
             stringstream s(line);
-
             while (getline(s, word, ',')) {
-                try {
-                    blocks.at(i - 1).push_back(stoi(word));
-                } catch (const std::exception& e) {
-                    std::cout << "Warning: One of the parameters is not a number" << std::endl;
-                    blocks.at(i - 1).push_back(-1);
-                }
+                row.push_back(word);
             }
-
+            if (row.size() >= 3) {
+                for(int j=0; j < 3; j++){
+                    try {
+                        blocks.at(i - 1).push_back(stoi(word));
+                    } catch (const std::exception& e) {
+                        std::cout << "Warning: One of the parameters is not a number" << std::endl;
+                        blocks.at(i - 1).push_back(-1);
+                    }
+                }
+            } else {
+                std::cout << "Warning: Not enough parameters - expected 3 parameters per line" << std::endl;
+                blocks.at(i - 1).push_back(-1);
+                blocks.at(i - 1).push_back(-1);
+                blocks.at(i - 1).push_back(-1);
+            }
         }
         i++;
     }

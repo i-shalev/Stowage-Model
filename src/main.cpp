@@ -12,11 +12,16 @@ int main(){
     string pathToPortContainers = R"(C:\Users\itay\Desktop\PortContainers.csv)";
 
     // read the shipPlan file and get the sizes of the shipPlan
-    getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines);
+    if(! getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines)) {
+        exit(-1);
+    }
+
 
     // create the ShipPlanVector
     auto* blocks = new vector<vector<int>>(numLines-1);
-    readShipPlan(*blocks, pathToShipPlan);
+    if(! readShipPlan(*blocks, pathToShipPlan)) {
+        exit(-1);
+    }
 
     auto* shipPlan = new ShipPlan(numFloors, length, width, *blocks);
     delete blocks;
