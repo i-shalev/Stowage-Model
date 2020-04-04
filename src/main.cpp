@@ -1,12 +1,12 @@
 #include <iostream>
-#include "tests.h"
+#include <bits/stdc++.h>
 #include "Ship.h"
 #include "Files.h"
 #include "Port.h"
 #include "main.h"
 
 int main(){
-    simulate( R"(C:\Users\itay\Desktop\)");
+    simulate( R"(C:\Users\itay\Desktop\ex)");
 }
 
 int simulate(const string &pathToDir) {
@@ -14,6 +14,9 @@ int simulate(const string &pathToDir) {
     string pathToShipPlan       = pathToDir + R"(\ShipPort.csv)";
     string pathToShipPorts      = pathToDir + R"(\Ports.csv)";
     string pathToPortContainers = pathToDir + R"(\PortContainers.csv)";
+    char pathToDirChar[pathToDir.size()+1];
+    stringToCharStar(pathToDirChar, pathToDir);
+    std::cout << pathToDirChar << std::endl;
 
     // read the shipPlan file and get the sizes of the shipPlan
     if(! getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines)) {
@@ -41,11 +44,13 @@ int simulate(const string &pathToDir) {
     delete ports;
 
 
-    vector<string> names = {"AAAAA_0", "AAAAA_1", "AAAAA_2", "AAAAA_3", "AAAAB_0"};
+    vector<string> namesOfFilesEndsWithCargoData;
+    getCargoData(pathToDirChar, namesOfFilesEndsWithCargoData);
+
     auto* portsVector = new vector<Port*>();
     int indexNumber;
     string portName;
-    for (const auto& name: names) {
+    for (const auto& name: namesOfFilesEndsWithCargoData) {
         if (handleNameOfFile(name, portName, indexNumber)) {
             auto res = mapPortVisits->find(portName);
             if(res !=  mapPortVisits->end() and res->second > indexNumber) {
@@ -62,13 +67,14 @@ int simulate(const string &pathToDir) {
 
 
 //  debugging prints
-    shipPlan->printShipPlan();
-    shipRoute->printList();
+//    shipPlan->printShipPlan();
+//    shipRoute->printList();
 
 
     delete shipRoute;
     delete shipPlan;
     delete portsVector;
+
 
     return 0;
 }
@@ -106,4 +112,13 @@ void createMapOfPortAndNumberOfVisits(vector<string>* portList, map<string, int>
         }
         mapPortVisits->insert({port, ans+1});
     }
+}
+
+void findMissingPortFiles(map<string, int> *mapPortVisits, vector<Port*> portVector) {
+    int sum = 0;
+    for(const auto& elem : *mapPortVisits)
+    {
+        sum += elem.second;
+    }
+
 }

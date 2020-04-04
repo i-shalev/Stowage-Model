@@ -3,6 +3,9 @@
 //
 
 #include <dirent.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include "Files.h"
 
 bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines) {
@@ -37,11 +40,11 @@ bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &widt
                 length = stoi(row[1]);
                 width = stoi(row[2]);
             } catch (const std::exception& e) {
-                std::cout << "Warning: One of the parameters is not a number" << std::endl;
+                std::cout << "Warning: One of the parameters is not a number, in line: " << line << std::endl;
                 return false;
             }
         } else {
-            std::cout << "ERROR: Not enough parameters in the first line" << std::endl;
+            std::cout << "ERROR: Not enough parameters in the first line, in line: " << line << std::endl;
             return false;
         }
     } else {
@@ -88,12 +91,12 @@ bool readShipPlan(vector<vector<int>>& blocks, const string& path) {
                     try {
                         blocks.at(i - 1).push_back(stoi(word));
                     } catch (const std::exception& e) {
-                        std::cout << "Warning: One of the parameters is not a number" << std::endl;
+                        std::cout << "Warning: One of the parameters is not a number, in line: " << line << std::endl;
                         blocks.at(i - 1).push_back(-1);
                     }
                 }
             } else {
-                std::cout << "Warning: Not enough parameters - expected 3 parameters per line" << std::endl;
+                std::cout << "Warning: Not enough parameters - expected 3 parameters per line, in line: " << line << std::endl;
                 blocks.at(i - 1).push_back(-1);
                 blocks.at(i - 1).push_back(-1);
                 blocks.at(i - 1).push_back(-1);
@@ -164,7 +167,7 @@ bool readPortContainers(Port*& port, const string& path) {
                 row.push_back(removeLeadingAndTrailingWhitespaces(word));
             }
             if(row.size() < 3) {
-                std::cout << "Warning: not all the information about container was given" << std::endl;
+                std::cout << "Warning: not all the information about container was given, in line: " << line << std::endl;
             }
             else {
                 try{
@@ -174,10 +177,10 @@ bool readPortContainers(Port*& port, const string& path) {
                         port->addContainer(container);
                     } else {
                         delete container;
-                        std::cout << "Warning: ID or destination is not valid " << std::endl;
+                        std::cout << "Warning: ID or destination is not valid , in line: " << line << std::endl;
                     }
                 } catch (const std::exception& e) {
-                    std::cout << "Warning: weight is not int" << std::endl;
+                    std::cout << "Warning: weight is not int, in line: " << line << std::endl;
                     continue;
                 }
             }
@@ -209,6 +212,19 @@ bool hasEnding (std::string const &fullString, std::string const &ending) {
     }
 }
 
+void stringToCharStar(char* chatStar, string str) {
+    for (int i = 0; i < str.size(); i++) {
+        chatStar[i] = str.at(i);
+    }
+    chatStar[str.size()] = '\0';
+}
+
+bool is_file(const char* path) {
+    struct stat buf;
+    stat(path, &buf);
+    return S_ISREG(buf.st_mode);
+}
+
 void getCargoData(const char *path, vector<string>& res){
     DIR *dir = opendir(path);
     struct dirent *entry = readdir(dir);
@@ -216,12 +232,27 @@ void getCargoData(const char *path, vector<string>& res){
     while (entry != NULL)
     {
         name = entry->d_name;
+        string pathString(path);
+        char fullPath[strlen(path)+name.size()+2];
+
+        for (int i = 0; i < strlen(path); i++) {
+            fullPath[i] = path[i];
+        }
+        fullPath[strlen(path)] = '\\';
+
+        for (int i = 0; i < name.size(); i++) {
+            fullPath[i+strlen(path)+1] = name.at(i);
+        }
+        fullPath[strlen(path)+name.size()+1] = '\0';
+
         if(hasEnding(name, "cargo_data")) {
-            res.push_back(name.substr(0, name.size() - 11));
+            if(is_file(fullPath)) {
+                res.push_back(name.substr(0, name.size() - 11));
+            }
         }
         entry = readdir(dir);
     }
 
     closedir(dir);
-
 }
+

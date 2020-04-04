@@ -25,5 +25,6 @@ bool readShipPorts(vector<string>& ports, const string& path);
 string removeLeadingAndTrailingWhitespaces(string line);
 bool isCommentLine(string line);
 void getCargoData(const char *path, vector<string>& res);
+void stringToCharStar(char* chatStar, string str);
 
 #endif //STOWAGE_MODEL_FILES_H
