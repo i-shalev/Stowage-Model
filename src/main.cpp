@@ -2,11 +2,9 @@
 #include "tests.h"
 #include "Ship.h"
 #include "Files.h"
+#include "Port.h"
 
 int main(){
-//    vector<vector<int>> vec = {{1,0,4},{1,1,2}};
-//    ShipPlan* sp = new ShipPlan(5,2,2,vec);
-//    sp -> printShipPlan();
 
     int numFloors=0 , length=0, width=0, numLines;
     string pathToShipPlan       = R"(C:\Users\itay\Desktop\ShipPort.csv)";
@@ -47,7 +45,58 @@ int main(){
     delete shipRoute;
     delete shipPlan;
 
+//    Port p1("ABCD",5);
+//    Container* c2 = new Container(1005, "ISRAE", "CSQU3054383");
+//    Container* c3 = new Container(2, "ISRAE", "ggg");
+//    Container* c4 = new Container(3, "ISRAE", "CSQU3054383");
+//    p1.addContainer(c2);
+//    p1.addContainer(c3);
+//    for(auto item : p1.getContainersMap()){
+//        std::cout << item.second->getWeight() << std::endl;
+//    }
+//    delete c2;
+//    delete c3;
 /*
+    int numFloors=0 , length=0, width=0, numLines;
+    string pathToShipPlan       = R"(C:\Users\itay\Desktop\ShipPort.csv)";
+    string pathToShipPorts      = R"(C:\Users\itay\Desktop\Ports.csv)";
+    string pathToPortContainers = R"(C:\Users\itay\Desktop\PortContainers.csv)";
+
+    // read the shipPlan file and get the sizes of the shipPlan
+    getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines);
+
+    // create the ShipPlanVector
+    auto* blocks = new vector<vector<int>>(numLines-1);
+    readShipPlan(*blocks, pathToShipPlan);
+
+    auto* shipPlan = new ShipPlan(numFloors, length, width, *blocks);
+    delete blocks;
+
+    // read the shipPorts file
+//    getNumberOfNonEmtpyLines(pathToShipPorts, numLines);
+    auto* ports = new vector<string>();
+    readShipPorts(*ports, pathToShipPorts);
+
+    auto* shipRoute = new ShipRoute(*ports);
+    delete ports;
+
+    // read the portContainers file
+//    getNumberOfNonEmtpyLines(pathToPortContainers, numLines);
+    auto* portContainers = new vector<Container*>();
+    readPortContainers(*portContainers, pathToPortContainers);
+
+    // debugging prints
+    shipPlan->printShipPlan();
+    shipRoute->printList();
+
+    for(const auto &container: *portContainers) {
+        (*container).printContainer();
+    }
+
+    delete shipRoute;
+    delete shipPlan;
+
+
     std::cout << ports->size() << std::endl;
     for(const auto & port : *ports) {
         std::cout << port << std::endl;
