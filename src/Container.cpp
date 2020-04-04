@@ -73,6 +73,10 @@ bool Container::checkDestination(){
     return true;
 }
 
+void Container::printContainer() const {
+    std::cout << "ID: " << this->id << ", " << "dest: " << this->dest << ", " <<"weight: " << this->weight << ", " << "blocked: " << this->blocked <<  endl;
+}
+
 int letterToInt(char ch)
 {
     if(ch == 'A')

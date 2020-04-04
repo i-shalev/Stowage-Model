@@ -2,10 +2,8 @@
 // Created by itay on 29/03/2020.
 //
 
-#include <fstream>
-#include <sstream>
-#include <istream>
 #include "Files.h"
+
 
 bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines) {
     ifstream fin;
@@ -118,6 +116,47 @@ bool readShipPorts(vector<string>& ports, const string& path) {
     while (getline(fin, line)) {
         if(!line.empty()) {
             ports.push_back(line);
+        }
+    }
+    fin.close();
+    return true;
+}
+
+bool readPortContainers(vector<Container*>& containers, const string& path) {
+    ifstream fin;
+    try{
+        fin.open(path, ios::in);
+    } catch (const std::exception& e) {
+        std::cout << "ERROR: Failed to open file" << std::endl;
+        return false;
+    }
+    vector<string> row;
+    string line, word, temp;
+
+    while (getline(fin, line)) {
+        if(!line.empty()) {
+            stringstream s(line);
+            row.clear();
+            while (getline(s, word, ',')) {
+                row.push_back(word);
+            }
+            if(row.size() < 3) {
+                std::cout << "Warning: not all the information about container was given" << std::endl;
+            }
+            else {
+                try{
+                   int weight = stoi(row[1]);
+                    auto *container = new Container(weight, row[2], row[0], false);
+                    if (container->getValid()) {
+                        containers.push_back(container);
+                    } else {
+                        std::cout << "Warning: ID or destination is not valid " << std::endl;
+                    }
+                } catch (const std::exception& e) {
+                    std::cout << "Warning: weight is not int" << std::endl;
+                    continue;
+                }
+            }
         }
     }
     fin.close();

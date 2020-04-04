@@ -9,8 +9,9 @@ int main(){
 //    sp -> printShipPlan();
 
     int numFloors=0 , length=0, width=0, numLines;
-    string pathToShipPlan   = R"(C:\Users\itay\Desktop\ShipPort.csv)";
-    string pathToShipPorts  = R"(C:\Users\itay\Desktop\Ports.csv)";
+    string pathToShipPlan       = R"(C:\Users\itay\Desktop\ShipPort.csv)";
+    string pathToShipPorts      = R"(C:\Users\itay\Desktop\Ports.csv)";
+    string pathToPortContainers = R"(C:\Users\itay\Desktop\PortContainers.csv)";
 
     // read the shipPlan file and get the sizes of the shipPlan
     getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines);
@@ -19,23 +20,29 @@ int main(){
     auto* blocks = new vector<vector<int>>(numLines-1);
     readShipPlan(*blocks, pathToShipPlan);
 
-    getNumberOfNonEmtpyLines(pathToShipPorts, numLines);
+    auto* shipPlan = new ShipPlan(numFloors, length, width, *blocks);
+    delete blocks;
+
+    // read the shipPorts file
+//    getNumberOfNonEmtpyLines(pathToShipPorts, numLines);
     auto* ports = new vector<string>();
     readShipPorts(*ports, pathToShipPorts);
 
-    ShipRoute* shipRoute = new ShipRoute(*ports);
-    ShipPlan* shipPlan = new ShipPlan(numFloors, length, width, *blocks);
-
-    for(int i=0; i<shipRoute->getRouteLength(); i++) {
-
-    }
-
-    delete blocks;
+    auto* shipRoute = new ShipRoute(*ports);
     delete ports;
 
+    // read the portContainers file
+//    getNumberOfNonEmtpyLines(pathToPortContainers, numLines);
+    auto* portContainers = new vector<Container*>();
+    readPortContainers(*portContainers, pathToPortContainers);
+
+    // debugging prints
     shipPlan->printShipPlan();
     shipRoute->printList();
 
+    for(const auto &container: *portContainers) {
+        (*container).printContainer();
+    }
 
     delete shipRoute;
     delete shipPlan;

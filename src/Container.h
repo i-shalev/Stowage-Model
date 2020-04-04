@@ -23,6 +23,7 @@ class Container {
         bool getValid();
         bool getBlocked(){return this->blocked;}
         void setWeight(int weight);
+        void printContainer() const;
 
 
     public: //only for tests reason, need to be private
