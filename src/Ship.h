@@ -22,7 +22,7 @@ public:
     //const ShipRoute& getRoute();
     ShipPlan& getPlan();//TODO: make sure we really cant change the route from outside
     bool willVisit(string dest);
-
+    bool calculateBalanceAfter(const string& opcode, const string& containerId){ return true;}
 private:
     void getContainerPosition(const string &id, vector<int> &res);
 
