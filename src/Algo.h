@@ -13,7 +13,9 @@ class Algo{
 public:
     Algo(Ship* _ship): ship(_ship){}
     void getInstructionForCargo(Port& port);
-
+private:
+    int emptyPlacesInPosition(int i, int j, string portSymbol);
+    bool checkContainer(Container *cont);
 };
 
 
