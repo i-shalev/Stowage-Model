@@ -9,39 +9,17 @@ int main(){
 }
 
 int simulate(const string &pathToDir) {
-    int numFloors=0 , length=0, width=0, numLines;
-    string pathToShipPlan       = pathToDir + R"(\ShipPort.csv)";
-    string pathToShipPorts      = pathToDir + R"(\Ports.csv)";
-    string pathToPortContainers = pathToDir + R"(\PortContainers.csv)";
+
     char pathToDirChar[pathToDir.size()+1];
     stringToCharStar(pathToDirChar, pathToDir);
 //    std::cout << pathToDirChar << std::endl;
 
-    // read the shipPlan file and get the sizes of the shipPlan
-    if(! getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines)) {
-        return -1;
-    }
+    auto* shipPlan = createShipPlan(pathToDir + R"(\ShipPort.csv)");
+//    shipPlan->printShipPlan();
 
-    // create the ShipPlanVector
-    auto* blocks = new vector<vector<int>>(numLines-1);
-    if(! readShipPlan(*blocks, pathToShipPlan)) {
-        return -1;
-    }
-
-    auto* shipPlan = new ShipPlan(numFloors, length, width, *blocks);
-    delete blocks;
-
-    // read the shipPorts file
-//    getNumberOfNonEmtpyLines(pathToShipPorts, numLines);
-    auto* ports = new vector<string>();
-    readShipPorts(*ports, pathToShipPorts);
-
-    auto* shipRoute = new ShipRoute(*ports);
-    auto* mapPortVisits = new map<string, int>();
-    createMapOfPortAndNumberOfVisits(ports, mapPortVisits);
-
-
-
+    auto* shipRoute = createShipRoute(pathToDir + R"(\Ports.csv)");
+    auto* mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());
+//    shipRoute->printList();
 
     vector<string> namesOfFilesEndsWithCargoData;
     getCargoData(pathToDirChar, namesOfFilesEndsWithCargoData);
@@ -63,14 +41,14 @@ int simulate(const string &pathToDir) {
             }
         }
     }
-    findMissingPortFiles(mapPortVisits, ports, pathToDir);
+    findMissingPortFiles(mapPortVisits, shipRoute->getDstList(), pathToDir);
 
 
 //  debugging prints
 //    shipPlan->printShipPlan();
 //    shipRoute->printList();
 
-    delete ports;
+    delete mapPortVisits;
     delete shipRoute;
     delete shipPlan;
     delete portsVector;
@@ -100,7 +78,8 @@ bool handleNameOfFile (const string& fileName, string& portName, int & indexNumb
     return true;
 }
 
-void createMapOfPortAndNumberOfVisits(vector<string>* portList, map<string, int> *mapPortVisits) {
+map<string, int>* createMapOfPortAndNumberOfVisits(vector<string>* portList) {
+    auto* mapPortVisits = new map<string, int>();
     for(const auto& port : *portList) {
         auto res = mapPortVisits->find(port);
         int ans;
@@ -112,6 +91,7 @@ void createMapOfPortAndNumberOfVisits(vector<string>* portList, map<string, int>
         }
         mapPortVisits->insert({port, ans+1});
     }
+    return mapPortVisits;
 }
 
 void findMissingPortFiles(map<string, int> *mapPortVisits, vector<string> *portVector, const string &path) {
@@ -131,4 +111,30 @@ void findMissingPortFiles(map<string, int> *mapPortVisits, vector<string> *portV
             }
         }
     }
+}
+
+ShipPlan* createShipPlan(const string& pathToShipPlan) {
+    int numFloors=0 , length=0, width=0, numLines;
+    if(! getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines)) {
+        return nullptr;
+    }
+
+    // create the ShipPlanVector
+    auto* blocks = new vector<vector<int>>(numLines-1);
+    if(! readShipPlan(*blocks, pathToShipPlan)) {
+        return nullptr;
+    }
+
+    auto* shipPlan = new ShipPlan(numFloors, length, width, *blocks);
+    delete blocks;
+    return  shipPlan;
+}
+
+ShipRoute *createShipRoute(const string &pathToShipPorts) {
+    auto* ports = new vector<string>();
+    readShipPorts(*ports, pathToShipPorts);
+    auto* shipRoute = new ShipRoute(ports);
+
+    delete ports;
+    return shipRoute;
 }

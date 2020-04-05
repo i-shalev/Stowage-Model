@@ -10,18 +10,19 @@
 using namespace std;
 class ShipRoute {
     private:
-        vector<string> dstList;
+        vector<string>* dstList;
 
     public:
-        explicit ShipRoute(const vector<string>& _dstList);
+        explicit ShipRoute(const vector<string>* _dstList);
         ShipRoute();
-
+        ~ShipRoute();
         void addDstAtEnd(const string& dst);
         void deleteFirst();
         string getHead();
         void printList();
         bool willVisit(string dest);
         int getRouteLength();
+        vector<string>* getDstList();
 };
 bool checkDestination(string dest);
 

@@ -13,7 +13,9 @@ class main {
 int main();
 int simulate(const string &pathToDir);
 bool handleNameOfFile (const string& fileName, string& portName, int & indexNumber);
-void createMapOfPortAndNumberOfVisits(vector<string> *portList, map<string, int> *mapPortVisits);
+map<string, int>* createMapOfPortAndNumberOfVisits(vector<string>* portList);
 void findMissingPortFiles(map<string, int> *mapPortVisits, vector<string> *portVector, const string &path);
+ShipPlan* createShipPlan(const string& pathToShipPlan);
+ShipRoute *createShipRoute(const string &pathToShipPorts);
 
 #endif //STOWAGE_MODEL_MAIN_H
