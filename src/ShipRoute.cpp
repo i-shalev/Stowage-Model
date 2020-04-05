@@ -4,9 +4,8 @@
 
 #include "ShipRoute.h"
 
-ShipRoute::ShipRoute(const vector<string>* _dstList)
+ShipRoute::ShipRoute(const vector<string>* _dstList): dstList(new vector<string>())
 {
-    this->dstList = new vector<string>();
     for(const auto & i : *_dstList)
     {
         this->addDstAtEnd(i);
@@ -33,8 +32,9 @@ void ShipRoute::deleteFirst()
 
 string ShipRoute::getHead()
 {
-    if(!this->dstList->empty())
+    if(!this->dstList->empty()) {
         return this->dstList->at(0);
+    }
     return "";
 }
 
@@ -47,9 +47,11 @@ void ShipRoute::printList()
 }
 
 bool ShipRoute::willVisit(string dest){
-    for(const auto i : *this->dstList)
+    for(const auto& i : *this->dstList)
     {
-        if(i.compare(dest)==0){return true;}
+        if(i==dest){
+            return true;
+        }
     }
     return false;
 }
