@@ -8,8 +8,14 @@ Ship::Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port> *map) : route(sr), pla
     if(!this->plan->isValid()){
         std::cout << "invalid plan!" << std::endl;
     }
-
 };
+
+Ship::~Ship() {
+    delete this->mapPortNameToPort;
+    delete this->plan;
+    delete this->route;
+}
+
 ShipPlan& Ship::getPlan() { return *(this->plan);}
 //const ShipRoute& Ship::getRoute() {return *(this->route);}
 bool Ship::willVisit(string dest) {
@@ -17,13 +23,13 @@ bool Ship::willVisit(string dest) {
 }
 
 void Ship::getContainerPosition(const string& id, std::vector<int>& res){
-    if(res.size()!=0){
+    if(!res.empty()){
         std::cout << "Warning: incorrect use of getContainerPosition" << std::endl;
     }
     for(int level=0; level<this->plan->getNumFloors(); level++){
         for(int i=0; i<this->plan->getLength(); i++){
             for(int j=0; j<this->plan->getWidth(); j++ ){
-                if(this->plan->getFloor(level)->getContainerAtPosition(i,j)->getId().compare(id)==0){
+                if(this->plan->getFloor(level)->getContainerAtPosition(i,j)->getId()==id){
                     res.push_back(level);
                     res.push_back(i);
                     res.push_back(j);
@@ -39,13 +45,13 @@ void Ship::getContainerPosition(const string& id, std::vector<int>& res){
 }
 
 void Ship::getAllContainersWithDest(const string& dest, std::vector<Container*>& res) {
-    if (res.size() != 0) {
+    if (!res.empty()) {
         std::cout << "Warning: incorrect use of getAllContainersWithDest" << std::endl;
     }
     for (int level = 0; level < this->plan->getNumFloors(); level++) {
         for (int i = 0; i < this->plan->getLength(); i++) {
             for (int j = 0; j < this->plan->getWidth(); j++) {
-                if (this->plan->getFloor(level)->getContainerAtPosition(i, j)->getDest().compare(dest) == 0) {
+                if (this->plan->getFloor(level)->getContainerAtPosition(i, j)->getDest() == dest) {
                     res.push_back(plan->getFloor(level)->getContainerAtPosition(i, j));
                 }
             }
