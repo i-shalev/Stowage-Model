@@ -63,6 +63,10 @@ void Algo::getInstructionForCargo(Port &port) {
             }
         }
     }
+    while(!toLoad.empty()) {
+        std::cout << "R " << toLoad.back()->getId() << std::endl;
+        toLoad.pop_back();
+    }
 
 }
 int Algo::emptyPlacesInPosition(int i, int j, string portSymbol){
