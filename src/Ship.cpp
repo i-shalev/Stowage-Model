@@ -4,17 +4,20 @@
 
 #include "Ship.h"
 
-Ship::Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port*> *map) : route(sr), plan(sp), mapPortNameToPort(map){
+Ship::Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port*> *mapPortToPort) : route(sr), plan(sp), mapPortNameToPort(mapPortToPort), mapPortNameToNumberOfVisitsUntilNow(new map<string,int>){
     if(!this->plan->isValid()){
         std::cout << "invalid plan!" << std::endl;
     }
+    addOneVisitToMap();
 };
 
 Ship::~Ship() {
     this->mapPortNameToPort->clear();
+    this->mapPortNameToNumberOfVisitsUntilNow->clear();
     delete this->mapPortNameToPort;
     delete this->plan;
     delete this->route;
+    delete this->mapPortNameToNumberOfVisitsUntilNow;
 }
 
 ShipPlan& Ship::getPlan() { return *(this->plan);}
@@ -69,4 +72,20 @@ void Ship::moveToNextPort() {
     if(finishRoute())
         return;
     this->route->deleteFirst();
+    addOneVisitToMap();
+}
+
+void Ship::addOneVisitToMap() {
+    int ans = 0;
+    auto res = mapPortNameToNumberOfVisitsUntilNow->find(this->route->getHead());
+    if(!mapPortNameToNumberOfVisitsUntilNow->empty() && res!=mapPortNameToNumberOfVisitsUntilNow->end()){
+        ans = res->second+1;
+        mapPortNameToNumberOfVisitsUntilNow->erase(this->route->getHead());
+    }
+    mapPortNameToNumberOfVisitsUntilNow->insert({this->route->getHead(), ans});
+}
+
+int Ship::getIndexOfPort() {
+    auto res = mapPortNameToNumberOfVisitsUntilNow->find(this->route->getHead());
+    return res->second;
 }
