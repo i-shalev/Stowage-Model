@@ -34,7 +34,7 @@ void ShipRoute::deleteFirst()
 string ShipRoute::getHead()
 {
     if(!this->dstList->empty())
-        this->dstList->at(0);
+        return this->dstList->at(0);
     return "";
 }
 
