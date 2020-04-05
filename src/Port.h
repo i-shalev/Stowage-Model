@@ -37,7 +37,15 @@ public:
         return ans;
 
     }
+
     bool hasContainers(){return !ContainersAwaiting->empty();}
+
+    void getVectorOfContainers(vector<Container*>& vector) {
+        for(const auto& elem : *this->ContainersAwaiting )
+        {
+            vector.push_back(elem.second);
+        }
+    }
 };
 
 
