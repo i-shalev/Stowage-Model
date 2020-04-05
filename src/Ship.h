@@ -20,7 +20,7 @@ private:
     map<string, Port*> *mapPortNameToPort;
 
 public:
-    Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port*> *map);
+    Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port*>* map);
     ~Ship();
     Ship(const Ship &ship) = delete; //disable copy constr'. the deafult is not good, need deep copy.
     //const ShipRoute& getRoute();

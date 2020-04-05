@@ -10,8 +10,8 @@ int main(){
 
 int simulate(const string &pathToDir) {
 
-    createShip(pathToDir);
-
+    auto* ship = createShip(pathToDir);
+    delete ship;
     return 0;
 }
 
@@ -52,29 +52,6 @@ map<string, int>* createMapOfPortAndNumberOfVisits(vector<string>* portList) {
     return mapPortVisits;
 }
 
-void addPortsWithNoFile(map<string, int> *mapPortVisits, vector<string> *portVector, const string &path, map<string, Port*>* mapPortNameToPort) {
-
-    for(auto elem : *mapPortVisits)
-    {
-        for(int i = 0; i < elem.second; i++)
-        {
-            if(false){
-
-            }
-            string fullPath = path + "\\" + elem.first + "_" + to_string(i) + ".cargo_data";
-            char pathChar[fullPath.size()+1];
-            stringToCharStar(pathChar, fullPath);
-            if(!isFile(pathChar)){
-                if(portVector->at(portVector->size()-1) == elem.first and i == elem.second-1){
-                    // the last port - dont need to do anything for now
-                } else {
-                    std::cout << "Warning: the file " << elem.first + "_" + to_string(i) << ".cargo_data is missing." << std::endl;
-                }
-            }
-        }
-    }
-}
-
 ShipPlan* createShipPlan(const string& pathToShipPlan) {
     int numFloors=0 , length=0, width=0, numLines;
     if(! getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines)) {
@@ -101,15 +78,75 @@ ShipRoute* createShipRoute(const string &pathToShipPorts) {
     return shipRoute;
 }
 
-map<string, Port*>* createPortNameToPortMap(const string &pathToDir, map<string, int>* mapPortVisits) {
+Ship* createShip(const string &pathToDir){
+
+
+    auto* shipPlan = createShipPlan(pathToDir + R"(\ShipPort.csv)");
+    auto* shipRoute = createShipRoute(pathToDir + R"(\Ports.csv)");
+    auto* mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());
+
+    if(shipPlan == nullptr or shipRoute == nullptr or shipRoute->getRouteLength() == 0){
+        return nullptr;
+    }
+
+    map<string, Port*>* portNameToPortMap = createPortNameToPortMap(pathToDir, mapPortVisits, shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1));
+
+    auto* ship = new Ship(shipRoute, shipPlan, portNameToPortMap);
+
+    return ship;
+}
+
+map<string, Port*>* createPortNameToPortMap(const string &pathToDir, map<string, int>* mapPortVisits, const string& lastPort) {
+
+    auto* mapPortNameToPort = new map<string, Port*>();
+    addPortsWithFileToMap(pathToDir, mapPortVisits, mapPortNameToPort);
+
+    for(const auto& elem : *mapPortNameToPort)
+    {
+        std::cout << elem.first << " " << elem.second->getSymbol() << endl;
+    }
+
+    // add Ports with no file
+
+    addPortsWithNoFileToMap(mapPortVisits, lastPort, pathToDir, mapPortNameToPort);
+
+//    for(const auto& elem : *mapPortNameToPort)
+//    {
+//        std::cout << elem.first << " " << elem.second->getSymbol() << endl;
+//    }
+
+    return mapPortNameToPort;
+}
+
+void addPortsWithNoFileToMap(map<string, int> *mapPortVisits, const string& lastPort, const string &path, map<string, Port*>* mapPortNameToPort) {
+
+    for(const auto& elem : *mapPortVisits)
+    {
+        for(int i = 0; i < elem.second; i++)
+        {
+            string port_index = elem.first + "_" + to_string(i);
+            auto res = mapPortNameToPort->find(port_index);
+            if(!mapPortNameToPort->empty() && res!=mapPortNameToPort->end()){
+                continue;
+            }
+
+            if(lastPort == elem.first and i == elem.second - 1){
+                // the last port - dont need to do anything for now
+            } else {
+                std::cout << "Warning: the file " << elem.first + "_" + to_string(i) << ".cargo_data is missing." << std::endl;
+            }
+            Port *port = new Port(elem.first, i);
+            mapPortNameToPort->insert({port_index, port});
+        }
+    }
+}
+
+void addPortsWithFileToMap(const string &pathToDir, map<string, int> *mapPortVisits, map<string, Port*>* mapPortNameToPort) {
     char pathToDirChar[pathToDir.size()+1];
     stringToCharStar(pathToDirChar, pathToDir);
-    auto* mapPortNameToPort = new map<string, Port*>();
-
     vector<string> namesOfFilesEndsWithCargoData;
     getCargoData(pathToDirChar, namesOfFilesEndsWithCargoData);
 
-//    auto* portsVector = new vector<Port*>();
     int indexNumber;
     string portName;
 
@@ -121,45 +158,10 @@ map<string, Port*>* createPortNameToPortMap(const string &pathToDir, map<string,
                 Port *port = new Port(portName, indexNumber);
                 if (readPortContainers(port, pathToDir + '\\' + name + R"(.cargo_data)")) {
                     mapPortNameToPort->insert({name, port});
-//                    portsVector->push_back(port);
-//                    std::cout << "port name: " << portName << " index: " << indexNumber << std::endl;
                 }
             } else {
                 std::cout << "Warning: the file " << name << ".cargo_data is not necessary" << std::endl;
             }
         }
     }
-
-    // add Ports with no file
-
-
-
-    for(const auto& elem : *mapPortNameToPort)
-    {
-        std::cout << elem.first << " " << elem.second->getSymbol() << endl;
-    }
-
-//    addPortsWithNoFile(mapPortVisits, shipRoute->getDstList(), pathToDir);
-
-    return mapPortNameToPort;
-}
-
-
-Ship* createShip(const string &pathToDir){
-
-
-    auto* shipPlan = createShipPlan(pathToDir + R"(\ShipPort.csv)");
-    auto* shipRoute = createShipRoute(pathToDir + R"(\Ports.csv)");
-    auto* mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());
-
-    createPortNameToPortMap(pathToDir, mapPortVisits);
-
-
-
-    delete mapPortVisits;
-    delete shipRoute;
-    delete shipPlan;
-//    delete portsVector;
-
-    return nullptr;
 }

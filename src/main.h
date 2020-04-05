@@ -18,5 +18,8 @@ void addPortsWithNoFile(map<string, int> *mapPortVisits, vector<string> *portVec
 ShipPlan* createShipPlan(const string& pathToShipPlan);
 ShipRoute *createShipRoute(const string &pathToShipPorts);
 Ship* createShip(const string &pathToDir);
+map<string, Port*>* createPortNameToPortMap(const string &pathToDir, map<string, int>* mapPortVisits, const string& lastPort);
+void addPortsWithNoFileToMap(map<string, int> *mapPortVisits, const string& lastPort, const string &path, map<string, Port*>* mapPortNameToPort);
+void addPortsWithFileToMap(const string &pathToDir, map<string, int> *mapPortVisits, map<string, Port*>* mapPortNameToPort);
 
 #endif //STOWAGE_MODEL_MAIN_H
