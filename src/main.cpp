@@ -97,6 +97,11 @@ ShipRoute* createShipRoute(const string &pathToShipPorts) {
     return shipRoute;
 }
 
+map<string, Port>* createPortNameToPortMap(){
+    auto* mapPortNameToPort = new map<string, Port>();
+
+    return mapPortNameToPort;
+}
 
 
 Ship* createShip(const string &pathToDir){
@@ -128,6 +133,8 @@ Ship* createShip(const string &pathToDir){
         }
     }
     findMissingPortFiles(mapPortVisits, shipRoute->getDstList(), pathToDir);
+
+//    std::cout <<  shipRoute->getHead() << std::endl;
 
     delete mapPortVisits;
     delete shipRoute;
