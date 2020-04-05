@@ -51,9 +51,9 @@ void Algo::getInstructionForCargo(Port &port) {
             emptyPlacesAtPosition  = this->emptyPlacesInPosition(i,j,port.getSymbol());
             for(int level = ship->getPlan().getNumFloors() - emptyPlacesAtPosition; level<ship->getPlan().getNumFloors() && !done; level++){
                 if(checkContainer(toLoad.back()))
-                    std::cout << "L" << toLoad.back()->getId() << " " << level << " " << i << " " << j << std::endl;
+                    std::cout << "L " << toLoad.back()->getId() << " " << level << " " << i << " " << j << std::endl;
                 else{
-                    std::cout << "R" << toLoad.back()->getId() << std::endl;
+                    std::cout << "R " << toLoad.back()->getId() << std::endl;
                     level--;
                 }
                 toLoad.pop_back();
@@ -68,8 +68,9 @@ void Algo::getInstructionForCargo(Port &port) {
 int Algo::emptyPlacesInPosition(int i, int j, string portSymbol){
     int sum = 0;
     for(int level=0; level<ship->getPlan().getNumFloors(); level++){
-        if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)!= nullptr &&
-                !ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked() ){
+        if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)== nullptr ||
+                !ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked() ||
+                ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest().compare(portSymbol)==0){
             sum++;
         }
     }
