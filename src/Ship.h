@@ -30,5 +30,7 @@ public:
     void getAllContainersWithDest(const string &dest, vector<Container*> &res);
     const string getCurrentDestination(){return route->getHead();}
     void getContainerPosition(const string &id, vector<int> &res);
+    bool finishRoute();
+    void moveToNextPort();
 
 };

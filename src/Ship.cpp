@@ -60,3 +60,13 @@ void Ship::getAllContainersWithDest(const string& dest, std::vector<Container*>&
     }
     //res may stay empty!
 }
+
+bool Ship::finishRoute() {
+    return this->route->getRouteLength() == 0;
+}
+
+void Ship::moveToNextPort() {
+    if(finishRoute())
+        return;
+    this->route->deleteFirst();
+}

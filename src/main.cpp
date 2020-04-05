@@ -15,6 +15,12 @@ int simulate(const string &pathToDir) {
         delete ship;
         return EXIT_FAILURE;
     }
+
+//    while(!ship->finishRoute()){
+//        std::cout << ship->getCurrentDestination() << std::endl;
+//        ship->moveToNextPort();
+//    }
+
     delete ship;
     return EXIT_SUCCESS;
 }

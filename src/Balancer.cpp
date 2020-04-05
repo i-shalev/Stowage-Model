@@ -4,8 +4,8 @@
 
 #include "Balancer.h"
 
-bool tryOperation(char loadUnload, int kg, int x, int y) {
-    return true;
+BalanceStatus tryOperation(char loadUnload, int kg, int x, int y) {
+    return APPROVED;
 }
 int tryOperation(string path) {
     return -1;

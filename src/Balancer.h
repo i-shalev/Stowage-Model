@@ -7,12 +7,14 @@
 
 #include <string>
 
+enum BalanceStatus  {APPROVED, X_IMBALANCED , Y_IMBALANCED , X_Y_IMBALANCED  };
+
 using namespace std;
 class Balancer {
 
 };
 
-bool tryOperation(char loadUnload, int kg, int x, int y);
+BalanceStatus tryOperation(char loadUnload, int kg, int x, int y);
 int tryOperation(string path);
 
 #endif //STOWAGE_MODEL_BALANCER_H
