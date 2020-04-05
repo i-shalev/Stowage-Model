@@ -50,4 +50,11 @@ result Crane::Unload(string contId, int level, int i, int j, Container** answer)
     curShip->getPlan().getFloor(level)->setContainerAtPosition(i,j,nullptr);
     return SUCCESS;
 }
+result Crane::Move(Container *cont, int level, int i, int j, int toLevel, int toi, int toj) {
+   Container* result;
+   int rc = Unload(cont->getId(), level, i, j, &result) !=SUCCESS;
+   if(rc !=SUCCESS)
+       return static_cast<enum result>(rc);
+   return Load(result,toLevel, toi, toj);
+}
 
