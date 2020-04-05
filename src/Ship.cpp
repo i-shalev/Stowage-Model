@@ -4,7 +4,7 @@
 
 #include "Ship.h"
 
-Ship::Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port> *map) : route(sr), plan(sp), mapPortNameToPort(map){
+Ship::Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port*> *map) : route(sr), plan(sp), mapPortNameToPort(map){
     if(!this->plan->isValid()){
         std::cout << "invalid plan!" << std::endl;
     }
