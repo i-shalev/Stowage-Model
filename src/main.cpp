@@ -99,21 +99,10 @@ Ship* createShip(const string &pathToDir){
 map<string, Port*>* createPortNameToPortMap(const string &pathToDir, map<string, int>* mapPortVisits, const string& lastPort) {
 
     auto* mapPortNameToPort = new map<string, Port*>();
+
     addPortsWithFileToMap(pathToDir, mapPortVisits, mapPortNameToPort);
 
-    for(const auto& elem : *mapPortNameToPort)
-    {
-        std::cout << elem.first << " " << elem.second->getSymbol() << endl;
-    }
-
-    // add Ports with no file
-
     addPortsWithNoFileToMap(mapPortVisits, lastPort, pathToDir, mapPortNameToPort);
-
-//    for(const auto& elem : *mapPortNameToPort)
-//    {
-//        std::cout << elem.first << " " << elem.second->getSymbol() << endl;
-//    }
 
     return mapPortNameToPort;
 }
@@ -150,7 +139,6 @@ void addPortsWithFileToMap(const string &pathToDir, map<string, int> *mapPortVis
     int indexNumber;
     string portName;
 
-    // add Ports with file
     for (const auto& name: namesOfFilesEndsWithCargoData) {
         if (handleNameOfFile(name, portName, indexNumber)) {
             auto res = mapPortVisits->find(portName);

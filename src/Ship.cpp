@@ -11,6 +11,7 @@ Ship::Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port*> *map) : route(sr), pl
 };
 
 Ship::~Ship() {
+    this->mapPortNameToPort->clear();
     delete this->mapPortNameToPort;
     delete this->plan;
     delete this->route;
