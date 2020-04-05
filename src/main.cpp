@@ -16,10 +16,10 @@ int simulate(const string &pathToDir) {
         return EXIT_FAILURE;
     }
 
-//    while(!ship->finishRoute()){
-//        std::cout << ship->getCurrentDestination() << std::endl;
-//        ship->moveToNextPort();
-//    }
+    while(!ship->finishRoute()){
+        std::cout << ship->getCurrentDestination() << ship->getIndexOfPort() <<std::endl;
+        ship->moveToNextPort();
+    }
 
     delete ship;
     return EXIT_SUCCESS;

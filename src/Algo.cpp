@@ -26,7 +26,9 @@ void Algo::getInstructionForCargo(Port &port) {
                     continue;
                 if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked())
                     break;
-                if(tryOperation('U',ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getWeight(), i,j)!=APPROVED){
+                if(tryOperation('U', ship->getPlan().getFloor(level)->getContainerAtPosition(i, j)->getWeight(), 0, i,
+                                j, 0,
+                                0, 0) != APPROVED){
                     std::cout <<"unbalance..." << std::endl;
                 }
                 std::cout << "U "<< ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId() << " " << level << " " << i << " " << j <<std::endl;
@@ -39,7 +41,7 @@ void Algo::getInstructionForCargo(Port &port) {
                 loadBackLevel++;
             }
             while(!(temporaryUnloaded.empty())){
-                if(tryOperation('L',temporaryUnloaded.back()->getWeight(), i,j)!=APPROVED){
+                if(tryOperation('L', temporaryUnloaded.back()->getWeight(), 0, i, j, 0, 0, 0) != APPROVED){
                     std::cout <<"unbalance..." << std::endl;
                 }
                 std::cout << "L "<< temporaryUnloaded.back()->getId() << " " << loadBackLevel << " " << i << " " << j <<std::endl;
@@ -58,7 +60,7 @@ void Algo::getInstructionForCargo(Port &port) {
             emptyPlacesAtPosition  = this->emptyPlacesInPosition(i,j,port.getSymbol());
             for(int level = ship->getPlan().getNumFloors() - emptyPlacesAtPosition; level<ship->getPlan().getNumFloors() && !done; level++){
                 if(checkContainer(toLoad.back())) {
-                    if (tryOperation('L', toLoad.back()->getWeight(), i, j)!=APPROVED) {
+                    if (tryOperation('L', toLoad.back()->getWeight(), 0, i, j, 0, 0, 0) != APPROVED) {
                         std::cout << "unbalance..." << std::endl;
                     }
                     std::cout << "L " << toLoad.back()->getId() << " " << level << " " << i << " " << j << std::endl;
