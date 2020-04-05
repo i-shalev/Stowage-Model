@@ -21,7 +21,7 @@ public:
     void addContainer(Container* container){
         auto res = ContainersAwaiting->find(container->getId());
         if(!ContainersAwaiting->empty() && res!=ContainersAwaiting->end()){
-            std::cout << "Warning: the port already have this container";
+            std::cout << "Warning: the port already have this container" << std::endl;
             return;
         }
         ContainersAwaiting->insert({container->getId(),container});
