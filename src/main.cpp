@@ -11,8 +11,12 @@ int main(){
 int simulate(const string &pathToDir) {
 
     auto* ship = createShip(pathToDir);
+    if(ship == nullptr) {
+        delete ship;
+        return EXIT_FAILURE;
+    }
     delete ship;
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 bool handleNameOfFile (const string& fileName, string& portName, int & indexNumber) {
