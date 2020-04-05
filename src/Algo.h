@@ -12,7 +12,7 @@ class Algo{
     //BalanceCalc* calc;
 public:
     Algo(Ship* _ship): ship(_ship){}
-    void getInstructionForCargo(Port& port);
+    void getInstructionForCargo(Port& port, const std::string& outputPath);
 private:
     int emptyPlacesInPosition(int i, int j, string portSymbol);
     bool checkContainer(Container *cont);
