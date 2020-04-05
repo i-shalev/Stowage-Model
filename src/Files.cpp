@@ -3,9 +3,7 @@
 //
 
 #include <dirent.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #include "Files.h"
 
 bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines) {
