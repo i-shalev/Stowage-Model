@@ -2,7 +2,7 @@
 #include "main.h"
 
 int main(){
-    simulate( R"(C:\Users\zivco\Desktop\ex)");
+    simulate( R"(C:\Users\itay\Desktop\ex-1)");
 }
 
 int simulate(const string &pathToDir) {
@@ -14,9 +14,9 @@ int simulate(const string &pathToDir) {
     }
     Algo alg(ship);
     while(!ship->finishRoute()){
-        alg.getInstructionForCargo(R"(C:\Users\zivco\Desktop\ex\foo.txt)");
+        alg.getInstructionForCargo(pathToDir +  R"(\foo.txt)");
         Crane c1(ship);
-        c1.executeOperationList(R"(C:\Users\zivco\Desktop\ex\foo.txt)");
+        c1.executeOperationList(pathToDir +  R"(\foo.txt)");
         ship->moveToNextPort();
     }
 
