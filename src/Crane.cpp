@@ -4,7 +4,13 @@
 
 #include "Crane.h"
 
-result Crane::Load(Container *cont, int level, int i, int j) {
+result Crane::Load(string contId, int level, int i, int j) {
+    /*---------------need to implement! -------------------------*/
+    Container* cont; // = getContainerByIdFromCurrentPort(contId);
+    /*---------------need to implement! -------------------------*/
+
+
+
     //check the container target is in the ship's destination list
     if(!curShip->willVisit(cont->getDest())){
         return DEST_NOT_IN_LIST;
@@ -50,11 +56,60 @@ result Crane::Unload(string contId, int level, int i, int j, Container** answer)
     curShip->getPlan().getFloor(level)->setContainerAtPosition(i,j,nullptr);
     return SUCCESS;
 }
-result Crane::Move(Container *cont, int level, int i, int j, int toLevel, int toi, int toj) {
+result Crane::Move(string id, int level, int i, int j, int toLevel, int toi, int toj) {
    Container* result;
-   int rc = Unload(cont->getId(), level, i, j, &result) !=SUCCESS;
+   int rc = Unload(id, level, i, j, &result) !=SUCCESS;
    if(rc !=SUCCESS)
        return static_cast<enum result>(rc);
-   return Load(result,toLevel, toi, toj);
+   return Load(id,toLevel, toi, toj);
+}
+
+int Crane::executeOperationList(const string& path) {
+    int price = 0;
+    ifstream fin;
+    try{
+        fin.open(path, ios::in);
+    } catch (const std::exception& e) {
+        std::cout << "ERROR: Failed to open file" << std::endl;
+        return false;
+    }
+    string line, id;
+    size_t sz;
+    size_t last_index = -1;
+    int level, i, j;
+    while(getline(fin, line)) {
+        if( line.at(0) == 'U'){
+            std::cout << "got unload" << std::endl;
+            id =  line.substr(2,11) ;
+            level = std::stoi(line.substr(14,line.length()-1),&sz);
+            last_index = 14 + sz + 1;
+            i =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
+            last_index = last_index + sz + 1;
+            j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
+            Container* ans; // actually redundant....
+            this->Unload(id,level,i,j,&ans);
+            price++;
+        }
+        else if( line.at(0) == 'L'){
+            std::cout << "got unload" << std::endl;
+            id =  line.substr(2,11) ;
+            level = std::stoi(line.substr(14,line.length()-1),&sz);
+            last_index = 14 + sz + 1;
+            i =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
+            last_index = last_index + sz + 1;
+            j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
+            this->Load(id,level,i,j);
+            price++;
+        }
+        else if( line.at(0) == 'R'){
+            std::cout << "got reject" << std::endl;
+            id =  line.substr(2,11);
+            price++; // TODO: make sure it really costs...
+        }
+        else{
+            std::cout << "wrong file format" << std::endl;
+        }
+    }
+    return price;
 }
 
