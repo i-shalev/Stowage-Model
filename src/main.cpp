@@ -113,12 +113,12 @@ map<string, Port*>* createPortNameToPortMap(const string &pathToDir, map<string,
 
     addPortsWithFileToMap(pathToDir, mapPortVisits, mapPortNameToPort);
 
-    addPortsWithNoFileToMap(mapPortVisits, lastPort, pathToDir, mapPortNameToPort);
+    addPortsWithNoFileToMap(mapPortVisits, lastPort, mapPortNameToPort);
 
     return mapPortNameToPort;
 }
 
-void addPortsWithNoFileToMap(map<string, int> *mapPortVisits, const string& lastPort, const string &path, map<string, Port*>* mapPortNameToPort) {
+void addPortsWithNoFileToMap(map<string, int> *mapPortVisits, const string &lastPort, map<string, Port *> *mapPortNameToPort) {
 
     for(const auto& elem : *mapPortVisits)
     {
@@ -142,7 +142,7 @@ void addPortsWithNoFileToMap(map<string, int> *mapPortVisits, const string& last
 }
 
 void addPortsWithFileToMap(const string &pathToDir, map<string, int> *mapPortVisits, map<string, Port*>* mapPortNameToPort) {
-    char pathToDirChar[pathToDir.size()+1];
+    char* pathToDirChar = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
     stringToCharStar(pathToDirChar, pathToDir);
     vector<string> namesOfFilesEndsWithCargoData;
     getCargoData(pathToDirChar, namesOfFilesEndsWithCargoData);
@@ -168,4 +168,5 @@ void addPortsWithFileToMap(const string &pathToDir, map<string, int> *mapPortVis
             }
         }
     }
+    delete pathToDirChar;
 }
