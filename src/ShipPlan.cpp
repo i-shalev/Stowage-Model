@@ -12,7 +12,7 @@ void printvec(const vector<vector<int>> vec){
 }
 ShipPlan::ShipPlan(int numFloors, int length, int width, const vector<vector<int>>& blocks)
 {
-    vector<vector<int>> floorBlocks;
+    vector<vector<int>> floorBlocks; //unused
     this->numFloors = numFloors;
     this->length = length;
     this->width = width;
