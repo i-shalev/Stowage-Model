@@ -3,10 +3,6 @@
 //
 
 #include "Algo.h"
-#include "Balancer.h"
-#include <stdio.h>
-#include "fstream"
-#include "Files.h"
 
 void Algo::getInstructionForCargo(Port &port, const std::string& outputPath) {
     char pathToDirChar[outputPath.size()+1];

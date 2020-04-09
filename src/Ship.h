@@ -10,8 +10,6 @@
 #ifndef STOWAGE_MODEL_SHIP_H
 #define STOWAGE_MODEL_SHIP_H
 
-#endif //STOWAGE_MODEL_SHIP_H
-
 using namespace std;
 class Ship {
 private:
@@ -36,3 +34,5 @@ public:
     void addOneVisitToMap();
     int getIndexOfPort();
 };
+
+#endif //STOWAGE_MODEL_SHIP_H

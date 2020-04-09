@@ -4,8 +4,6 @@
 #ifndef STOWAGE_MODEL_FLOOR_H
 #define STOWAGE_MODEL_FLOOR_H
 
-#endif //STOWAGE_MODEL_FLOOR_H
-
 using namespace std;
 class Floor{
     private:
@@ -23,3 +21,4 @@ class Floor{
 
 
 };
+#endif //STOWAGE_MODEL_FLOOR_H
