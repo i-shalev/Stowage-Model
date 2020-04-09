@@ -120,6 +120,7 @@ int Crane::executeOperationList(const string& path) {
             std::cout << "wrong file format" << std::endl;
         }
     }
+    fin.close();
     return price;
 }
 
