@@ -89,3 +89,13 @@ int Ship::getIndexOfPort() {
     auto res = mapPortNameToNumberOfVisitsUntilNow->find(this->route->getHead());
     return res->second;
 }
+
+Port* Ship::getCurrentPort() {
+    int index = getIndexOfPort();
+    string fullName = this->route->getHead() + "_" + to_string(index);
+    auto res = mapPortNameToPort->find(fullName);
+    if(!mapPortNameToPort->empty() && res!=mapPortNameToPort->end()){
+        return res->second;
+    }
+    return nullptr;
+}

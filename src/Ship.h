@@ -33,6 +33,7 @@ public:
     void moveToNextPort();
     void addOneVisitToMap();
     int getIndexOfPort();
+    Port* getCurrentPort();
 };
 
 #endif //STOWAGE_MODEL_SHIP_H
