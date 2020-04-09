@@ -5,7 +5,6 @@
 #include "Algo.h"
 
 void Algo::getInstructionForCargo(const std::string& outputPath) {
-    Port port = *(ship->getCurrentPort());
     char pathToDirChar[outputPath.size()+1];
     stringToCharStar(pathToDirChar, outputPath);
     std::remove(pathToDirChar);
@@ -20,7 +19,7 @@ void Algo::getInstructionForCargo(const std::string& outputPath) {
             for(int level=0;level<ship->getPlan().getNumFloors(); level++){
                 if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j) == nullptr)
                     break;
-                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest().compare(port.getSymbol())==0){
+                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest().compare(ship->getCurrentDestination())==0){
                     //we need to unload all containers above
                     lowestFloor = level;
                     break;
@@ -39,7 +38,7 @@ void Algo::getInstructionForCargo(const std::string& outputPath) {
                     std::cout <<"unbalance..." << std::endl;
                 }
                 fs << "U "<< ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId() << " " << level << " " << i << " " << j <<std::endl;
-                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest().compare(port.getSymbol())!=0){
+                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest().compare(ship->getCurrentDestination())!=0){
                     temporaryUnloaded.push_back(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j));
                 }
             }
@@ -59,12 +58,12 @@ void Algo::getInstructionForCargo(const std::string& outputPath) {
     }
     //now load everything from port to ship. check valid ids and destinations.
     vector<Container*> toLoad;
-    port.getVectorOfContainers(toLoad);
+    ship->getCurrentPort()->getVectorOfContainers(toLoad);
     int emptyPlacesAtPosition;
     bool done = toLoad.empty();
     for(int i=0; i<ship->getPlan().getLength() && !done; i++){
         for(int j=0; j< ship->getPlan().getWidth() && !done; j++){
-            emptyPlacesAtPosition  = this->emptyPlacesInPosition(i,j,port.getSymbol());
+            emptyPlacesAtPosition  = this->emptyPlacesInPosition(i,j,ship->getCurrentDestination());
             for(int level = ship->getPlan().getNumFloors() - emptyPlacesAtPosition; level<ship->getPlan().getNumFloors() && !done; level++){
                 if(checkContainer(toLoad.back())) {
                     if (tryOperation('L', toLoad.back()->getWeight(), 0, i, j, 0, 0, 0) != APPROVED) {
