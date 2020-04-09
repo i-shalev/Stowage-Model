@@ -7,6 +7,8 @@
 result Crane::Load(string contId, int level, int i, int j) {
     Container* cont = curShip->getCurrentPort()->getContainerByID(contId);
     //check the container target is in the ship's destination list
+    if(cont == nullptr)
+        return WRONG_CONTAINER;
     if(!curShip->willVisit(cont->getDest())){
         return DEST_NOT_IN_LIST;
     }
@@ -48,6 +50,10 @@ result Crane::Unload(string contId, int level, int i, int j, Container** answer)
     if(contId.compare(curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId())!=0)
         return WRONG_CONTAINER;
     *answer = curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j);
+    if((*answer)->getDest().compare(curShip->getCurrentDestination()) != 0)
+        curShip->getCurrentPort()->addContainer(*answer);
+    else
+        delete *answer;
     curShip->getPlan().getFloor(level)->setContainerAtPosition(i,j,nullptr);
     return SUCCESS;
 }
