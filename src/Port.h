@@ -17,6 +17,13 @@ public:
     Port(const std::string& symbol, int number): symbol(symbol), number(number){
         ContainersAwaiting = new map<std::string, Container*>;
     }
+//
+//    ~Port() {
+//    this->ContainersAwaiting->clear();
+//    delete this->ContainersAwaiting;
+////        delete ContainersAwaiting;
+//    }
+
     const std::string& getSymbol() const { return symbol; }
     void addContainer(Container* container){
         auto res = ContainersAwaiting->find(container->getId());

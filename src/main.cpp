@@ -2,17 +2,16 @@
 #include "main.h"
 
 int main(){
-    simulate( R"(C:\Users\zivco\Desktop\ex)");
+    simulate( R"(C:\Users\itay\Desktop\ex-1)");
 }
 
 int simulate(const string &pathToDir) {
 
     auto* ship = createShip(pathToDir);
     if(ship == nullptr) {
-        delete ship;
         return EXIT_FAILURE;
     }
-    ship->getPlan().printShipPlan();
+//    ship->getPlan().printShipPlan();
     Algo alg(ship);
     while(!ship->finishRoute()){
         std::cout << "enter to port "<<ship->getCurrentDestination() << std::endl;
@@ -104,7 +103,7 @@ Ship* createShip(const string &pathToDir){
     map<string, Port*>* portNameToPortMap = createPortNameToPortMap(pathToDir, mapPortVisits, shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1));
 
     auto* ship = new Ship(shipRoute, shipPlan, portNameToPortMap);
-
+    delete mapPortVisits;
     return ship;
 }
 
