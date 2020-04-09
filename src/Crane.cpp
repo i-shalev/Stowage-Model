@@ -74,7 +74,6 @@ int Crane::executeOperationList(const string& path) {
     int level, i, j;
     while(getline(fin, line)) {
         if( line.at(0) == 'U'){
-            std::cout << "got unload" << std::endl;
             id =  line.substr(2,11) ;
             level = std::stoi(line.substr(14,line.length()-1),&sz);
             last_index = 14 + sz + 1;
@@ -84,10 +83,10 @@ int Crane::executeOperationList(const string& path) {
             Container* ans; // actually redundant....
             if(this->Unload(id,level,i,j,&ans) != SUCCESS)
                 return -1;
+            std::cout << "unloaded container " << id << " from position " << level << "," << i <<","<< j << std::endl;
             price++;
         }
         else if( line.at(0) == 'L'){
-            std::cout << "got unload" << std::endl;
             id =  line.substr(2,11) ;
             level = std::stoi(line.substr(14,line.length()-1),&sz);
             last_index = 14 + sz + 1;
@@ -96,11 +95,12 @@ int Crane::executeOperationList(const string& path) {
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             if(this->Load(id,level,i,j) != SUCCESS)
                 return -1;
+            std::cout << "loaded container " << id << " to position " << level << "," << i <<","<< j << std::endl;
             price++;
         }
         else if( line.at(0) == 'R'){
-            std::cout << "got reject" << std::endl;
             id =  line.substr(2,11);
+            std::cout << "rejecting container " << id << std::endl;
             price++; // TODO: make sure it really costs...
         }
         else{
