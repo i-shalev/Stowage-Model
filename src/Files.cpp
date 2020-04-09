@@ -86,7 +86,7 @@ bool readShipPlan(vector<vector<int>>& blocks, const string& path) {
             if (row.size() >= 3) {
                 for(int j=0; j < 3; j++){
                     try {
-                        blocks.at(i - 1).push_back(stoi(word));
+                        blocks.at(i - 1).push_back(stoi(row.at(j)));
                     } catch (const std::exception& e) {
                         std::cout << "Warning: One of the parameters is not a number, in line: " << line << std::endl;
                         blocks.at(i - 1).push_back(-1);
