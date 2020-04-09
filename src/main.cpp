@@ -14,9 +14,9 @@ int simulate(const string &pathToDir) {
     }
     Algo alg(ship);
     while(!ship->finishRoute()){
-        alg.getInstructionForCargo(R"(C:\Users\zivco\Desktop\ex\foo.txt)");
+        alg.getInstructionForCargo(pathToDir+"/instructions.txt");
         Crane c1(ship);
-        c1.executeOperationList(R"(C:\Users\zivco\Desktop\ex\foo.txt)");
+        c1.executeOperationList(R"(C:\Users\zivco\Desktop\ex\instructions.txt)");
         ship->moveToNextPort();
     }
 
