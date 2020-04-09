@@ -7,6 +7,7 @@
 
 #include "Ship.h"
 #include <list>
+#include <fstream>
 
 using namespace std;
 enum result{ SUCCESS=0, DEST_NOT_IN_LIST=1, INVALID_INDEX=2, FULL_PLACE=3, EMPTY_BELOW=4, CONTAINER_ABOVE=5, WRONG_CONTAINER=6};
@@ -16,11 +17,12 @@ public:
     Crane(Ship* ship): curShip(ship){}
     Crane(){}
     Crane(const Crane& crane)  = delete;
-    result Load(Container* cont, int level, int i, int j);
+    result Load(string contId, int level, int i, int j);
     result Unload(string contId, int level, int i, int j, Container** answer);
-    result Move(Container* cont, int level, int i, int j, int toLevel, int toi, int toj);
+    result Move(string id, int level, int i, int j, int toLevel, int toi, int toj);
     Ship* getShip(){ return curShip;}
     void setShip(Ship* newShip){ this->curShip=newShip;}
+    int executeOperationList(const string& pathToFile);
 };
 
 

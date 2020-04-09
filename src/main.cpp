@@ -1,7 +1,4 @@
-#include <iostream>
-#include "Ship.h"
-#include "Files.h"
-#include "Port.h"
+
 #include "main.h"
 
 int main(){

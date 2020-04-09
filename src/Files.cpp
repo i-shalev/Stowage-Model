@@ -2,8 +2,7 @@
 // Created by itay on 29/03/2020.
 //
 
-#include <dirent.h>
-#include <sys/stat.h>
+
 #include "Files.h"
 
 bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines) {

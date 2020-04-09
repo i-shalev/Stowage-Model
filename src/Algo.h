@@ -6,13 +6,17 @@
 #define STOWAGE_MODEL_ALGO_H
 
 #include "Ship.h"
+#include "Balancer.h"
+#include <stdio.h>
+#include "fstream"
+#include "Files.h"
 
 class Algo{
     Ship* ship;
     //BalanceCalc* calc;
 public:
     Algo(Ship* _ship): ship(_ship){}
-    void getInstructionForCargo(Port& port);
+    void getInstructionForCargo(Port& port, const std::string& outputPath);
 private:
     int emptyPlacesInPosition(int i, int j, string portSymbol);
     bool checkContainer(Container *cont);

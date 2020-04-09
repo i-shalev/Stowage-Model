@@ -3,8 +3,14 @@
 //
 
 #include "Algo.h"
-#include "Balancer.h"
-void Algo::getInstructionForCargo(Port &port) {
+
+void Algo::getInstructionForCargo(Port &port, const std::string& outputPath) {
+    char pathToDirChar[outputPath.size()+1];
+    stringToCharStar(pathToDirChar, outputPath);
+    std::remove(pathToDirChar);
+    std::fstream fs;
+    fs.open(outputPath, std::ios::out | std::ios::app);
+
     vector<Container*> temporaryUnloaded;
     //first unload from ship all the containers with this destination
     for(int i=0; i<ship->getPlan().getLength();i++){
@@ -31,7 +37,7 @@ void Algo::getInstructionForCargo(Port &port) {
                                 0, 0) != APPROVED){
                     std::cout <<"unbalance..." << std::endl;
                 }
-                std::cout << "U "<< ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId() << " " << level << " " << i << " " << j <<std::endl;
+                fs << "U "<< ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId() << " " << level << " " << i << " " << j <<std::endl;
                 if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest().compare(port.getSymbol())!=0){
                     temporaryUnloaded.push_back(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j));
                 }
@@ -44,7 +50,7 @@ void Algo::getInstructionForCargo(Port &port) {
                 if(tryOperation('L', temporaryUnloaded.back()->getWeight(), 0, i, j, 0, 0, 0) != APPROVED){
                     std::cout <<"unbalance..." << std::endl;
                 }
-                std::cout << "L "<< temporaryUnloaded.back()->getId() << " " << loadBackLevel << " " << i << " " << j <<std::endl;
+                fs << "L "<< temporaryUnloaded.back()->getId() << " " << loadBackLevel << " " << i << " " << j <<std::endl;
                 loadBackLevel++;
                 temporaryUnloaded.pop_back();
             }
@@ -63,10 +69,10 @@ void Algo::getInstructionForCargo(Port &port) {
                     if (tryOperation('L', toLoad.back()->getWeight(), 0, i, j, 0, 0, 0) != APPROVED) {
                         std::cout << "unbalance..." << std::endl;
                     }
-                    std::cout << "L " << toLoad.back()->getId() << " " << level << " " << i << " " << j << std::endl;
+                    fs << "L " << toLoad.back()->getId() << " " << level << " " << i << " " << j << std::endl;
                 }
                 else{
-                    std::cout << "R " << toLoad.back()->getId() << std::endl;
+                    fs << "R " << toLoad.back()->getId() << std::endl;
                     level--;
                 }
                 toLoad.pop_back();
@@ -77,10 +83,10 @@ void Algo::getInstructionForCargo(Port &port) {
         }
     }
     while(!toLoad.empty()) {
-        std::cout << "R " << toLoad.back()->getId() << std::endl;
+        fs << "R " << toLoad.back()->getId() << std::endl;
         toLoad.pop_back();
     }
-
+    fs.close();
 }
 int Algo::emptyPlacesInPosition(int i, int j, string portSymbol){
     int sum = 0;
