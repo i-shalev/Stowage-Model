@@ -39,7 +39,12 @@ public:
     }
 
     bool hasContainers(){return !ContainersAwaiting->empty();}
-
+    Container* getContainerByID(const string& id){
+        auto it = ContainersAwaiting->find(id);
+        if(it!=ContainersAwaiting->end())
+            return it->second;
+        return nullptr;
+    }
     void getVectorOfContainers(vector<Container*>& vector) {
         for(const auto& elem : *this->ContainersAwaiting )
         {

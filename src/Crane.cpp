@@ -87,7 +87,8 @@ int Crane::executeOperationList(const string& path) {
             last_index = last_index + sz + 1;
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             Container* ans; // actually redundant....
-            this->Unload(id,level,i,j,&ans);
+            if(this->Unload(id,level,i,j,&ans) != SUCCESS)
+                return -1;
             price++;
         }
         else if( line.at(0) == 'L'){
@@ -98,7 +99,8 @@ int Crane::executeOperationList(const string& path) {
             i =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             last_index = last_index + sz + 1;
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
-            this->Load(id,level,i,j);
+            if(this->Load(id,level,i,j) != SUCCESS)
+                return -1;
             price++;
         }
         else if( line.at(0) == 'R'){
