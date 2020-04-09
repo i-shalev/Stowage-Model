@@ -4,7 +4,8 @@
 
 #include "Algo.h"
 
-void Algo::getInstructionForCargo(Port &port, const std::string& outputPath) {
+void Algo::getInstructionForCargo(const std::string& outputPath) {
+    Port port = *(ship->getCurrentPort());
     char pathToDirChar[outputPath.size()+1];
     stringToCharStar(pathToDirChar, outputPath);
     std::remove(pathToDirChar);

@@ -2,7 +2,7 @@
 #include "main.h"
 
 int main(){
-    simulate( R"(C:\Users\itay\Desktop\ex)");
+    simulate( R"(C:\Users\zivco\Desktop\ex)");
 }
 
 int simulate(const string &pathToDir) {
@@ -12,9 +12,11 @@ int simulate(const string &pathToDir) {
         delete ship;
         return EXIT_FAILURE;
     }
-
+    Algo alg(ship);
     while(!ship->finishRoute()){
-        std::cout << ship->getCurrentDestination() << ship->getIndexOfPort() <<std::endl;
+        alg.getInstructionForCargo(R"(C:\Users\zivco\Desktop\ex\foo.txt)");
+        Crane c1(ship);
+        c1.executeOperationList(R"(C:\Users\zivco\Desktop\ex\foo.txt)");
         ship->moveToNextPort();
     }
 
