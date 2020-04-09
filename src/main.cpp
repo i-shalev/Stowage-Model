@@ -2,7 +2,7 @@
 #include "main.h"
 
 int main(){
-    simulate( R"(C:\Users\itay\Desktop\ex-1)");
+    simulate( R"(C:\Users\zivco\Desktop\ex)");
 }
 
 int simulate(const string &pathToDir) {
@@ -12,6 +12,7 @@ int simulate(const string &pathToDir) {
         delete ship;
         return EXIT_FAILURE;
     }
+    ship->getPlan().printShipPlan();
     Algo alg(ship);
     while(!ship->finishRoute()){
         alg.getInstructionForCargo(pathToDir +  R"(\instructions.txt)");
