@@ -90,9 +90,9 @@ void ShipPlan::printShipPlan() {
                 Container* container = this->getFloor(i)->getContainerAtPosition(j, k);
                 if(container != nullptr) {
                     if(container->getBlocked()) {
-                        std::cout << "(" << j << "," << k << ") - blocked,  ";
+                        std::cout << " (" << j << "," << k << ") - blocked,  ";
                     } else {
-                        std::cout << "(" << j << "," << k << ")";
+                        std::cout << " (" << j << "," << k << ") - " << container->getId() << " to " << container->getDest() << std::endl;
                     }
                 }
             }

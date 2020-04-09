@@ -87,6 +87,7 @@ int Crane::executeOperationList(const string& path) {
                 std::cout << "Abort operation" << std::endl;
                 return -1;
             }
+            this->curShip->getPlan().printShipPlan();
 
 
             price++;
@@ -104,7 +105,7 @@ int Crane::executeOperationList(const string& path) {
                 std::cout << "Abort operation" << std::endl;
                 return -1;
             }
-
+            this->curShip->getPlan().printShipPlan();
             price++;
         }
         else if( line.at(0) == 'R'){

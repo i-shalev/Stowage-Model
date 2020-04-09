@@ -15,6 +15,7 @@ int simulate(const string &pathToDir) {
     ship->getPlan().printShipPlan();
     Algo alg(ship);
     while(!ship->finishRoute()){
+        std::cout << "enter to port "<<ship->getCurrentDestination() << std::endl;
         alg.getInstructionForCargo(pathToDir +  R"(\instructions.txt)");
         Crane c1(ship);
         c1.executeOperationList(pathToDir +  R"(\instructions.txt)");

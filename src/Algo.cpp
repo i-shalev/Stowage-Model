@@ -93,8 +93,8 @@ int Algo::emptyPlacesInPosition(int i, int j, string portSymbol){
     int sum = 0;
     for(int level=0; level<ship->getPlan().getNumFloors(); level++){
         if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)== nullptr ||
-                !ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked() ||
-                ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest().compare(portSymbol)==0){
+                (!ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked() &&
+                ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest().compare(portSymbol)==0)){
             sum++;
         }
     }
