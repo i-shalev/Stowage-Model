@@ -7,7 +7,7 @@
 
 #include "Ship.h"
 #include "Balancer.h"
-#include <stdio.h>
+#include <cstdio>
 #include "fstream"
 #include "Files.h"
 
@@ -15,10 +15,10 @@ class Algo{
     Ship* ship;
     //BalanceCalc* calc;
 public:
-    Algo(Ship* _ship): ship(_ship){}
+    explicit Algo(Ship* _ship): ship(_ship){}
     void getInstructionForCargo(const std::string& outputPath);
 private:
-    int emptyPlacesInPosition(int i, int j, string portSymbol);
+    int emptyPlacesInPosition(int i, int j, const string& portSymbol);
     bool checkContainer(Container *cont);
 };
 

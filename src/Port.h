@@ -15,7 +15,7 @@ class Port{
     map<std::string, Container*>* ContainersAwaiting;
 
 public:
-    Port(const std::string& symbol, int number): symbol(symbol), number(number){
+    Port(std::string  symbol, int number): symbol(std::move(symbol)), number(number){
         ContainersAwaiting = new map<std::string, Container*>;
     }
 
@@ -30,7 +30,10 @@ public:
         delete this->ContainersAwaiting;
     }
 
-    const std::string& getSymbol() const { return symbol; }
+    const std::string& getSymbol() const {
+        return symbol;
+    }
+
     void addContainer(Container* container){
         auto res = ContainersAwaiting->find(container->getId());
         if(!ContainersAwaiting->empty() && res!=ContainersAwaiting->end()){
@@ -39,6 +42,7 @@ public:
         }
         ContainersAwaiting->insert({container->getId(),container});
     }
+
     Container* removeContainer(const std::string& id){
         auto res = ContainersAwaiting->find(id);
         Container* ans = res->second;
@@ -51,13 +55,17 @@ public:
 
     }
 
-    bool hasContainers(){return !ContainersAwaiting->empty();}
+    bool hasContainers() {
+        return !ContainersAwaiting->empty();
+    }
+
     Container* getContainerByID(const string& id){
         auto it = ContainersAwaiting->find(id);
         if(it!=ContainersAwaiting->end())
             return it->second;
         return nullptr;
     }
+
     void getVectorOfContainers(vector<Container*>& vector) {
         for(const auto& elem : *this->ContainersAwaiting )
         {

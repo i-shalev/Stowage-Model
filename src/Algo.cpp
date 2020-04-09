@@ -19,7 +19,7 @@ void Algo::getInstructionForCargo(const std::string& outputPath) {
             for(int level=0;level<ship->getPlan().getNumFloors(); level++){
                 if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j) == nullptr)
                     break;
-                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest().compare(ship->getCurrentDestination())==0){
+                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()==ship->getCurrentDestination()){
                     //we need to unload all containers above
                     lowestFloor = level;
                     break;
@@ -38,7 +38,7 @@ void Algo::getInstructionForCargo(const std::string& outputPath) {
                     std::cout <<"unbalance..." << std::endl;
                 }
                 fs << "U "<< ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId() << " " << level << " " << i << " " << j <<std::endl;
-                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest().compare(ship->getCurrentDestination())!=0){
+                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()!=ship->getCurrentDestination()){
                     temporaryUnloaded.push_back(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j));
                 }
             }
@@ -88,12 +88,12 @@ void Algo::getInstructionForCargo(const std::string& outputPath) {
     }
     fs.close();
 }
-int Algo::emptyPlacesInPosition(int i, int j, string portSymbol){
+int Algo::emptyPlacesInPosition(int i, int j, const string& portSymbol){
     int sum = 0;
     for(int level=0; level<ship->getPlan().getNumFloors(); level++){
         if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)== nullptr ||
                 (!ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked() &&
-                ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest().compare(portSymbol)==0)){
+                ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()==portSymbol)){
             sum++;
         }
     }
@@ -101,7 +101,5 @@ int Algo::emptyPlacesInPosition(int i, int j, string portSymbol){
     //sum last positions are empty
 }
 bool Algo::checkContainer(Container* cont){
-    if(cont->checkId() && ship->willVisit(cont->getDest()))
-        return true;
-    return false;
+    return cont->checkId() && ship->willVisit(cont->getDest());
 }

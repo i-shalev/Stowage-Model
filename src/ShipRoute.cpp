@@ -12,11 +12,11 @@ ShipRoute::ShipRoute(const vector<string>* _dstList): dstList(new vector<string>
     }
 }
 
+ShipRoute::ShipRoute(): dstList(new vector<string>()){};
+
 ShipRoute::~ShipRoute() {
     delete this->dstList;
 }
-
-ShipRoute::ShipRoute()= default;
 
 void ShipRoute::addDstAtEnd(const string& dst)
 {
@@ -47,7 +47,7 @@ void ShipRoute::printList()
     }
 }
 
-bool ShipRoute::willVisit(string dest){
+bool ShipRoute::willVisit(const string& dest){
     for(const auto& i : *this->dstList)
     {
         if(i==dest){
@@ -64,7 +64,6 @@ int ShipRoute::getRouteLength() {
 vector<string>* ShipRoute::getDstList(){
     return this->dstList;
 }
-
 
 bool checkDestination(string dest){
     if(dest.length() != 5)

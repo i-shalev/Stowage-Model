@@ -4,6 +4,8 @@
 
 #include "Ship.h"
 
+#include <utility>
+
 Ship::Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port*> *mapPortToPort) : route(sr), plan(sp), mapPortNameToPort(mapPortToPort), mapPortNameToNumberOfVisitsUntilNow(new map<string,int>){
     if(!this->plan->isValid()){
         std::cout << "invalid plan!" << std::endl;
@@ -26,7 +28,7 @@ Ship::~Ship() {
 ShipPlan& Ship::getPlan() { return *(this->plan);}
 //const ShipRoute& Ship::getRoute() {return *(this->route);}
 bool Ship::willVisit(string dest) {
-    return this->route->willVisit(dest);
+    return this->route->willVisit(std::move(dest));
 }
 
 void Ship::getContainerPosition(const string& id, std::vector<int>& res){

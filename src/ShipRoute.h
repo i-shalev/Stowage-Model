@@ -20,7 +20,7 @@ class ShipRoute {
         void deleteFirst();
         string getHead();
         void printList();
-        bool willVisit(string dest);
+        bool willVisit(const string& dest);
         int getRouteLength();
         vector<string>* getDstList();
 };

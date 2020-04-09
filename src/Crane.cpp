@@ -4,7 +4,7 @@
 
 #include "Crane.h"
 
-result Crane::Load(string contId, int level, int i, int j) {
+result Crane::Load(const string& contId, int level, int i, int j) {
     Container* cont = curShip->getCurrentPort()->getContainerByID(contId);
     //check the container target is in the ship's destination list
     if(cont == nullptr)
@@ -35,7 +35,7 @@ result Crane::Load(string contId, int level, int i, int j) {
 
 }
 
-result Crane::Unload(string contId, int level, int i, int j) {
+result Crane::Unload(const string& contId, int level, int i, int j) {
     //check index
     if(level > curShip->getPlan().getNumFloors() || level < 0 ||
        i > curShip->getPlan().getLength() || i < 0 ||
@@ -48,10 +48,10 @@ result Crane::Unload(string contId, int level, int i, int j) {
     //check if there is something below
     if(level < curShip->getPlan().getNumFloors() - 1 && curShip->getPlan().getFloor(level+1)->getContainerAtPosition(i,j) != nullptr)
         return CONTAINER_ABOVE;
-    if(contId.compare(curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId())!=0)
+    if(contId!=curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId())
         return WRONG_CONTAINER;
     Container* answer = curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j);
-    if((answer)->getDest().compare(curShip->getCurrentDestination()) != 0)
+    if((answer)->getDest() != curShip->getCurrentDestination())
         curShip->getCurrentPort()->addContainer(answer);
     else
         delete answer;

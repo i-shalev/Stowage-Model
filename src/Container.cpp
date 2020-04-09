@@ -1,13 +1,15 @@
 #include "Container.h"
 
-Container::Container(int _weight, const string _dest, const string _id, bool _blocked): dest(_dest), id(_id), weight(_weight), blocked(_blocked)
+#include <utility>
+
+Container::Container(int _weight, string  _dest, string  _id, bool _blocked): dest(std::move(_dest)), id(std::move(_id)), weight(_weight), blocked(_blocked)
 {
     this->valid = checkId() && checkDestination();
 }
 
-Container::~Container() {
-//    std::cout << "Delete Container: " << this->id << std::endl;
-}
+//Container::~Container() {
+////    std::cout << "Delete Container: " << this->id << std::endl;
+//}
 
 int Container::getWeight()
 {
@@ -29,9 +31,9 @@ bool Container::getValid()
     return this->valid;
 }
 
-void Container::setWeight(int weight)
+void Container::setWeight(int _weight)
 {
-    this->weight = weight;
+    this->weight = _weight;
 }
 
 bool Container::checkId()

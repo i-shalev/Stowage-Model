@@ -15,14 +15,14 @@ class Container {
         bool blocked;
 
     public:
-        Container(int _weight, const string _dest, const string _id, bool _blocked = false);
-        ~Container();
+        Container(int _weight, string  _dest, string  _id, bool _blocked = false);
+//        ~Container();
         int getWeight();
         string getDest();
         string getId();
         bool getValid();
         bool getBlocked(){return this->blocked;}
-        void setWeight(int weight);
+        void setWeight(int _weight);
         void printContainer() const;
 
 

@@ -225,8 +225,8 @@ bool isFile(const char* path) {
 void getCargoData(const char *path, vector<string>& res){
     DIR *dir = opendir(path);
     struct dirent *entry = readdir(dir);
-    string name = "";
-    while (entry != NULL)
+    string name;
+    while (entry != nullptr)
     {
         name = entry->d_name;
         string pathString(path);
