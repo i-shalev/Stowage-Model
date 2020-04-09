@@ -16,8 +16,11 @@ int simulate(const string &pathToDir) {
     while(!ship->finishRoute()){
         std::cout << "enter to port "<<ship->getCurrentDestination() << std::endl;
         alg.getInstructionForCargo(pathToDir +  R"(\instructions.txt)");
+        std::cout << 0.1<< std::endl;
         Crane c1(ship);
+        std::cout << 0.2 << std::endl;
         c1.executeOperationList(pathToDir +  R"(\instructions.txt)");
+        std::cout << 0.3 << std::endl;
         ship->moveToNextPort();
         std::cout << "Moving to the next destination" << std::endl;
     }

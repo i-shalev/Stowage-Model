@@ -26,8 +26,9 @@ void ShipRoute::addDstAtEnd(const string& dst)
 
 void ShipRoute::deleteFirst()
 {
-    if(!this->dstList->empty())
+    if(!this->dstList->empty()) {
         this->dstList->erase(this->dstList->begin());
+    }
 }
 
 string ShipRoute::getHead()
