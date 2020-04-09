@@ -20,12 +20,14 @@ public:
     }
 
     Port(const Port& port)  = delete;
-//
+
     ~Port() {
-        std::cout << "baaaaaa " << this->getSymbol() << std::endl;
-//    this->ContainersAwaiting->clear();
-//    delete this->ContainersAwaiting;
-//        delete ContainersAwaiting;
+//        std::cout << "Delete Port: " << this->getSymbol() << std::endl;
+        for(const auto& elem : *this->ContainersAwaiting ) {
+            delete elem.second;
+        }
+        this->ContainersAwaiting->clear();
+        delete this->ContainersAwaiting;
     }
 
     const std::string& getSymbol() const { return symbol; }

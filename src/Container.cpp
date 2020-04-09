@@ -5,6 +5,10 @@ Container::Container(int _weight, const string _dest, const string _id, bool _bl
     this->valid = checkId() && checkDestination();
 }
 
+Container::~Container() {
+//    std::cout << "Delete Container: " << this->id << std::endl;
+}
+
 int Container::getWeight()
 {
     return this->weight;

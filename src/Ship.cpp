@@ -12,6 +12,9 @@ Ship::Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port*> *mapPortToPort) : rou
 };
 
 Ship::~Ship() {
+    for(const auto& elem : *this->mapPortNameToPort ) {
+        delete elem.second;
+    }
     this->mapPortNameToPort->clear();
     this->mapPortNameToNumberOfVisitsUntilNow->clear();
     delete this->mapPortNameToPort;

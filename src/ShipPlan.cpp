@@ -39,6 +39,9 @@ ShipPlan::ShipPlan(int numFloors, int length, int width, const vector<vector<int
 
 ShipPlan::~ShipPlan() {
     delete blockingContainer;
+    for(int i=0; i<numFloors; i++) {
+       delete this->floors[i];
+    }
     delete[] this->floors;
 }
 

@@ -16,7 +16,7 @@ class Container {
 
     public:
         Container(int _weight, const string _dest, const string _id, bool _blocked = false);
-
+        ~Container();
         int getWeight();
         string getDest();
         string getId();

@@ -16,11 +16,8 @@ int simulate(const string &pathToDir) {
     while(!ship->finishRoute()){
         std::cout << "enter to port "<<ship->getCurrentDestination() << std::endl;
         alg.getInstructionForCargo(pathToDir +  R"(\instructions.txt)");
-        std::cout << 0.1<< std::endl;
         Crane c1(ship);
-        std::cout << 0.2 << std::endl;
         c1.executeOperationList(pathToDir +  R"(\instructions.txt)");
-        std::cout << 0.3 << std::endl;
         ship->moveToNextPort();
         std::cout << "Moving to the next destination" << std::endl;
     }
@@ -152,13 +149,18 @@ void addPortsWithFileToMap(const string &pathToDir, map<string, int> *mapPortVis
 
     int indexNumber;
     string portName;
+    string fullname;
+
 
     for (const auto& name: namesOfFilesEndsWithCargoData) {
         if (handleNameOfFile(name, portName, indexNumber)) {
             auto res = mapPortVisits->find(portName);
             if(res !=  mapPortVisits->end() and res->second > indexNumber) {
                 Port *port = new Port(portName, indexNumber);
-                if (readPortContainers(port, pathToDir + '\\' + name + R"(.cargo_data)")) {
+                fullname =  pathToDir + '\\';
+                fullname += name;
+                fullname += R"(.cargo_data)";
+                if (readPortContainers(port, fullname)) {
                     mapPortNameToPort->insert({name, port});
                 }
             } else {
