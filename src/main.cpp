@@ -18,6 +18,7 @@ int simulate(const string &pathToDir) {
         Crane c1(ship);
         c1.executeOperationList(R"(C:\Users\zivco\Desktop\ex\instructions.txt)");
         ship->moveToNextPort();
+        std::cout << "Moving to the next destination" << std::endl;
     }
 
     delete ship;
