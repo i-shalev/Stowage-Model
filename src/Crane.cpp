@@ -30,11 +30,12 @@ result Crane::Load(string contId, int level, int i, int j) {
 
     //load the container
     curShip->getPlan().getFloor(level)->setContainerAtPosition(i,j,cont);
+    curShip->getCurrentPort()->removeContainer(contId);
     return SUCCESS;
 
 }
 
-result Crane::Unload(string contId, int level, int i, int j, Container** answer) {
+result Crane::Unload(string contId, int level, int i, int j) {
     //check index
     if(level > curShip->getPlan().getNumFloors() || level < 0 ||
        i > curShip->getPlan().getLength() || i < 0 ||
@@ -49,20 +50,20 @@ result Crane::Unload(string contId, int level, int i, int j, Container** answer)
         return CONTAINER_ABOVE;
     if(contId.compare(curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId())!=0)
         return WRONG_CONTAINER;
-    *answer = curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j);
-    if((*answer)->getDest().compare(curShip->getCurrentDestination()) != 0)
-        curShip->getCurrentPort()->addContainer(*answer);
+    Container* answer = curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j);
+    if((answer)->getDest().compare(curShip->getCurrentDestination()) != 0)
+        curShip->getCurrentPort()->addContainer(answer);
     else
-        delete *answer;
+        delete answer;
     curShip->getPlan().getFloor(level)->setContainerAtPosition(i,j,nullptr);
     return SUCCESS;
 }
 result Crane::Move(string id, int level, int i, int j, int toLevel, int toi, int toj) {
-   Container* result;
+   /*Container* result;
    int rc = Unload(id, level, i, j, &result) !=SUCCESS;
    if(rc !=SUCCESS)
        return static_cast<enum result>(rc);
-   return Load(id,toLevel, toi, toj);
+   return Load(id,toLevel, toi, toj);*/
 }
 
 int Crane::executeOperationList(const string& path) {
@@ -86,8 +87,7 @@ int Crane::executeOperationList(const string& path) {
             i =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             last_index = last_index + sz + 1;
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
-            Container* ans; // actually redundant....
-            int rc = this->Unload(id,level,i,j,&ans);
+            int rc = this->Unload(id,level,i,j);
             std::cout << "unloaded container " << id << " from level " << level << " position " << i <<","<< j << std::endl;
             if( rc!= SUCCESS){
                 std::cout << "Abort operation" << std::endl;

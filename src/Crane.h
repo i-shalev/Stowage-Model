@@ -18,7 +18,7 @@ public:
     Crane(){}
     Crane(const Crane& crane)  = delete;
     result Load(string contId, int level, int i, int j);
-    result Unload(string contId, int level, int i, int j, Container** answer);
+    result Unload(string contId, int level, int i, int j);
     result Move(string id, int level, int i, int j, int toLevel, int toi, int toj);
     Ship* getShip(){ return curShip;}
     void setShip(Ship* newShip){ this->curShip=newShip;}
