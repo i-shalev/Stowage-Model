@@ -5,12 +5,7 @@
 #include "Crane.h"
 
 result Crane::Load(string contId, int level, int i, int j) {
-    /*---------------need to implement! -------------------------*/
-    Container* cont; // = getContainerByIdFromCurrentPort(contId);
-    /*---------------need to implement! -------------------------*/
-
-
-
+    Container* cont = curShip->getCurrentPort()->getContainerByID(contId);
     //check the container target is in the ship's destination list
     if(!curShip->willVisit(cont->getDest())){
         return DEST_NOT_IN_LIST;
