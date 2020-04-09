@@ -11,7 +11,7 @@ Ship::Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port*> *mapPortToPort) : rou
         std::cout << "invalid plan!" << std::endl;
     }
     addOneVisitToMap();
-};
+}
 
 Ship::~Ship() {
     for(const auto& elem : *this->mapPortNameToPort ) {

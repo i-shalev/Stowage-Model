@@ -58,7 +58,7 @@ result Crane::Unload(const string& contId, int level, int i, int j) {
     curShip->getPlan().getFloor(level)->setContainerAtPosition(i,j,nullptr);
     return SUCCESS;
 }
-result Crane::Move(string id, int level, int i, int j, int toLevel, int toi, int toj) {
+result Crane::Move(/*string id, int level, int i, int j, int toLevel, int toi, int toj*/) {
    /*Container* result;
    int rc = Unload(id, level, i, j, &result) !=SUCCESS;
    if(rc !=SUCCESS)

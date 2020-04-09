@@ -12,7 +12,7 @@ ShipRoute::ShipRoute(const vector<string>* _dstList): dstList(new vector<string>
     }
 }
 
-ShipRoute::ShipRoute(): dstList(new vector<string>()){};
+ShipRoute::ShipRoute(): dstList(new vector<string>()){}
 
 ShipRoute::~ShipRoute() {
     delete this->dstList;
