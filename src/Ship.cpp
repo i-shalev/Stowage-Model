@@ -72,7 +72,8 @@ void Ship::moveToNextPort() {
     if(finishRoute())
         return;
     this->route->deleteFirst();
-    addOneVisitToMap();
+    if(!finishRoute())
+        addOneVisitToMap();
 }
 
 void Ship::addOneVisitToMap() {

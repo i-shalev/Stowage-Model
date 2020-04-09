@@ -64,6 +64,7 @@ result Crane::Move(string id, int level, int i, int j, int toLevel, int toi, int
    if(rc !=SUCCESS)
        return static_cast<enum result>(rc);
    return Load(id,toLevel, toi, toj);*/
+    return SUCCESS;
 }
 
 int Crane::executeOperationList(const string& path) {
