@@ -30,6 +30,7 @@ result Crane::Load(string contId, int level, int i, int j) {
 
     //load the container
     curShip->getPlan().getFloor(level)->setContainerAtPosition(i,j,cont);
+    curShip->getCurrentPort()->removeContainer(contId);
     return SUCCESS;
 
 }
