@@ -81,9 +81,12 @@ int Crane::executeOperationList(const string& path) {
             last_index = last_index + sz + 1;
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             Container* ans; // actually redundant....
-            if(this->Unload(id,level,i,j,&ans) != SUCCESS)
+            if(this->Unload(id,level,i,j,&ans) != SUCCESS){
+                std::cout << "Abort operation" << std::endl;
                 return -1;
-            std::cout << "unloaded container " << id << " from position " << level << "," << i <<","<< j << std::endl;
+            }
+
+            std::cout << "unloaded container " << id << " from level " << level << " position " << i <<","<< j << std::endl;
             price++;
         }
         else if( line.at(0) == 'L'){
@@ -93,9 +96,11 @@ int Crane::executeOperationList(const string& path) {
             i =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             last_index = last_index + sz + 1;
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
-            if(this->Load(id,level,i,j) != SUCCESS)
+            if(this->Load(id,level,i,j) != SUCCESS){
+                std::cout << "Abort operation" << std::endl;
                 return -1;
-            std::cout << "loaded container " << id << " to position " << level << "," << i <<","<< j << std::endl;
+            }
+            std::cout << "loaded container " << id << " to level " << level << " position " << i <<","<< j << std::endl;
             price++;
         }
         else if( line.at(0) == 'R'){

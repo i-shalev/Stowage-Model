@@ -12,7 +12,6 @@ void printvec(const vector<vector<int>> vec){
 }
 ShipPlan::ShipPlan(int numFloors, int length, int width, const vector<vector<int>>& blocks)
 {
-    printvec(blocks);
     vector<vector<int>> floorBlocks;
     this->numFloors = numFloors;
     this->length = length;
