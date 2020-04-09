@@ -14,9 +14,9 @@ int simulate(const string &pathToDir) {
     }
     Algo alg(ship);
     while(!ship->finishRoute()){
-        alg.getInstructionForCargo(pathToDir +  R"(\foo.txt)");
+        alg.getInstructionForCargo(pathToDir +  R"(\instructions.txt)");
         Crane c1(ship);
-        c1.executeOperationList(pathToDir +  R"(\foo.txt)");
+        c1.executeOperationList(pathToDir +  R"(\instructions.txt)");
         ship->moveToNextPort();
         std::cout << "Moving to the next destination" << std::endl;
     }
