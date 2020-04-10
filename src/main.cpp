@@ -13,7 +13,7 @@ int main(){
 void writeToFile(const string& filename, const string& data) {
     std::ofstream outfile;
     outfile.open(filename, std::ios_base::app);
-    outfile << data << std::endl;
+    outfile << data;
     outfile.close();
 }
 void emptyFile(const string& filename){
