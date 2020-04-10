@@ -178,7 +178,7 @@ void AlgoRunner::addPortsWithNoFileToMap(map<string, int> *mapPortVisits, const 
                 errors->push_back("Warning: the file " + elem.first + "_" + to_string(i) + ".cargo_data is missing.");
 //                std::cout << "Warning: the file " << elem.first + "_" + to_string(i) << ".cargo_data is missing." << std::endl;
             }
-            Port *port = new Port(elem.first, i);
+            Port *port = new Port(elem.first, i, errors);
             mapPortNameToPort->insert({port_index, port});
         }
     }
@@ -199,7 +199,7 @@ void AlgoRunner::addPortsWithFileToMap(const string &pathToDir, map<string, int>
         if (handleNameOfFile(name, portName, indexNumber)) {
             auto res = mapPortVisits->find(portName);
             if(res !=  mapPortVisits->end() and res->second > indexNumber) {
-                Port *port = new Port(portName, indexNumber);
+                Port *port = new Port(portName, indexNumber, errors);
                 fullname =  pathToDir + '/';
                 fullname += name;
                 fullname += R"(.cargo_data)";
@@ -220,8 +220,8 @@ bool validate(Ship* ship){
         return true;
     vector<Container*> vec;
     ship->getCurrentPort()->getVectorOfContainers(vec);
-    for(size_t i=0; i<vec.size(); i++){
-        if(vec.at(i)->checkId() && ship->willVisit(vec.at(i)->getDest()))
+    for(auto & i : vec){
+        if(i->checkId() && ship->willVisit(i->getDest()))
             return false;
     }
     return true;

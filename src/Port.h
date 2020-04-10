@@ -13,9 +13,11 @@ class Port{
     const std::string symbol;
     int number;
     map<std::string, Container*>* ContainersAwaiting;
+    vector<string>* errors;
 
 public:
-    Port(std::string  symbol, int number): symbol(std::move(symbol)), number(number){
+    Port(std::string  symbol, int number, vector<string>* _errors): symbol(std::move(symbol)), number(number){
+        this->errors = _errors;
         ContainersAwaiting = new map<std::string, Container*>;
     }
 
@@ -37,7 +39,8 @@ public:
     void addContainer(Container* container){
         auto res = ContainersAwaiting->find(container->getId());
         if(!ContainersAwaiting->empty() && res!=ContainersAwaiting->end()){
-            std::cout << "Warning: the port already have this container" << std::endl;
+            errors->push_back("Warning: the port already have this container");
+//            std::cout << "Warning: the port already have this container" << std::endl;
             return;
         }
         ContainersAwaiting->insert({container->getId(),container});
@@ -47,7 +50,8 @@ public:
         auto res = ContainersAwaiting->find(id);
         Container* ans = res->second;
         if(res == ContainersAwaiting->end()){
-            std::cout << "Warning: container not exists in the port" << std::endl;
+            errors->push_back("Warning: container not exists in the port");
+//            std::cout << "Warning: container not exists in the port" << std::endl;
             return nullptr;
         }
         ContainersAwaiting->erase(id);

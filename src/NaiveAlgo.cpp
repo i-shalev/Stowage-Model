@@ -35,7 +35,7 @@ void NaiveAlgo::getInstructionForCargo(const std::string& outputPath) {
                 if(tryOperation(/*'U', ship->getPlan().getFloor(level)->getContainerAtPosition(i, j)->getWeight(), 0, i,
                                 j, 0,
                                 0, 0*/) != APPROVED){
-                    std::cout <<"unbalance..." << std::endl;
+//                    std::cout <<"unbalance..." << std::endl;
                 }
                 fs << "U "<< ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId() << " " << level << " " << i << " " << j <<std::endl;
                 if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()!=ship->getCurrentDestination()){
@@ -48,7 +48,7 @@ void NaiveAlgo::getInstructionForCargo(const std::string& outputPath) {
             }
             while(!(temporaryUnloaded.empty())){
                 if(tryOperation(/*'L', temporaryUnloaded.back()->getWeight(), 0, i, j, 0, 0, 0*/) != APPROVED){
-                    std::cout <<"unbalance..." << std::endl;
+//                    std::cout <<"unbalance..." << std::endl;
                 }
                 fs << "L "<< temporaryUnloaded.back()->getId() << " " << loadBackLevel << " " << i << " " << j <<std::endl;
                 loadBackLevel++;
@@ -67,7 +67,7 @@ void NaiveAlgo::getInstructionForCargo(const std::string& outputPath) {
             for(int level = ship->getPlan().getNumFloors() - emptyPlacesAtPosition; level<ship->getPlan().getNumFloors() && !done; level++){
                 if(checkContainer(toLoad.back())) {
                     if (tryOperation(/*'L', toLoad.back()->getWeight(), 0, i, j, 0, 0, 0*/) != APPROVED) {
-                        std::cout << "unbalance..." << std::endl;
+//                        std::cout << "unbalance..." << std::endl;
                     }
                     fs << "L " << toLoad.back()->getId() << " " << level << " " << i << " " << j << std::endl;
                 }
