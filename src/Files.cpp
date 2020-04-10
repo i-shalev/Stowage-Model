@@ -16,7 +16,6 @@ bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &widt
 
     vector<string> row;
     string line, word;
-    int i = 0;
 
     while(getline(fin, line)) {
         if(!isCommentLine(line)) {
@@ -210,7 +209,7 @@ bool hasEnding (std::string const &fullString, std::string const &ending) {
 }
 
 void stringToCharStar(char* chatStar, string str) {
-    for (int i = 0; i < str.size(); i++) {
+    for (size_t i = 0; i < str.size(); i++) {
         chatStar[i] = str.at(i);
     }
     chatStar[str.size()] = '\0';
@@ -230,14 +229,13 @@ void getCargoData(const char *path, vector<string>& res){
     {
         name = entry->d_name;
         string pathString(path);
-        char fullPath[strlen(path)+name.size()+2];
-
-        for (int i = 0; i < strlen(path); i++) {
+        char* fullPath = (char *)(malloc((strlen(path)+name.size()+2) * sizeof(char)));
+        for (size_t i = 0; i < strlen(path); i++) {
             fullPath[i] = path[i];
         }
         fullPath[strlen(path)] = '\\';
 
-        for (int i = 0; i < name.size(); i++) {
+        for (size_t i = 0; i < name.size(); i++) {
             fullPath[i+strlen(path)+1] = name.at(i);
         }
         fullPath[strlen(path)+name.size()+1] = '\0';
@@ -248,6 +246,7 @@ void getCargoData(const char *path, vector<string>& res){
             }
         }
         entry = readdir(dir);
+        delete fullPath;
     }
 
     closedir(dir);

@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <istream>
+#include <cstring>
 #include <dirent.h>
 #include <sys/stat.h>
 #include "Container.h"
