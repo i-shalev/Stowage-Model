@@ -5,7 +5,7 @@
 #include "Algo.h"
 
 void Algo::getInstructionForCargo(const std::string& outputPath) {
-    char pathToDirChar[outputPath.size()+1];
+    char* pathToDirChar = (char *)(malloc((outputPath.size() + 1) * sizeof(char)));
     stringToCharStar(pathToDirChar, outputPath);
     std::remove(pathToDirChar);
     std::fstream fs;
@@ -87,6 +87,7 @@ void Algo::getInstructionForCargo(const std::string& outputPath) {
         toLoad.pop_back();
     }
     fs.close();
+    delete pathToDirChar;
 }
 int Algo::emptyPlacesInPosition(int i, int j, const string& portSymbol){
     int sum = 0;
