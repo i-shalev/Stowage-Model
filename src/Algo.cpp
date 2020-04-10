@@ -32,9 +32,9 @@ void Algo::getInstructionForCargo(const std::string& outputPath) {
                     continue;
                 if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked())
                     break;
-                if(tryOperation('U', ship->getPlan().getFloor(level)->getContainerAtPosition(i, j)->getWeight(), 0, i,
+                if(tryOperation(/*'U', ship->getPlan().getFloor(level)->getContainerAtPosition(i, j)->getWeight(), 0, i,
                                 j, 0,
-                                0, 0) != APPROVED){
+                                0, 0*/) != APPROVED){
                     std::cout <<"unbalance..." << std::endl;
                 }
                 fs << "U "<< ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId() << " " << level << " " << i << " " << j <<std::endl;
@@ -47,7 +47,7 @@ void Algo::getInstructionForCargo(const std::string& outputPath) {
                 loadBackLevel++;
             }
             while(!(temporaryUnloaded.empty())){
-                if(tryOperation('L', temporaryUnloaded.back()->getWeight(), 0, i, j, 0, 0, 0) != APPROVED){
+                if(tryOperation(/*'L', temporaryUnloaded.back()->getWeight(), 0, i, j, 0, 0, 0*/) != APPROVED){
                     std::cout <<"unbalance..." << std::endl;
                 }
                 fs << "L "<< temporaryUnloaded.back()->getId() << " " << loadBackLevel << " " << i << " " << j <<std::endl;
@@ -66,7 +66,7 @@ void Algo::getInstructionForCargo(const std::string& outputPath) {
             emptyPlacesAtPosition  = this->emptyPlacesInPosition(i,j,ship->getCurrentDestination());
             for(int level = ship->getPlan().getNumFloors() - emptyPlacesAtPosition; level<ship->getPlan().getNumFloors() && !done; level++){
                 if(checkContainer(toLoad.back())) {
-                    if (tryOperation('L', toLoad.back()->getWeight(), 0, i, j, 0, 0, 0) != APPROVED) {
+                    if (tryOperation(/*'L', toLoad.back()->getWeight(), 0, i, j, 0, 0, 0*/) != APPROVED) {
                         std::cout << "unbalance..." << std::endl;
                     }
                     fs << "L " << toLoad.back()->getId() << " " << level << " " << i << " " << j << std::endl;
