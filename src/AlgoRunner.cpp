@@ -4,20 +4,28 @@
 
 #include "AlgoRunner.h"
 
-AlgoRunner::AlgoRunner(AlgoType _algoType, string _pathToDir) {
-    this->pathToDir = _pathToDir;
+AlgoRunner::AlgoRunner(AlgoType _algoType, string _pathToRootDir) {
+    this->pathToRootDir = _pathToRootDir;
     this->algoType = _algoType;
     this->sumOperations = 0;
 }
 
 void AlgoRunner::startRun() {
-    auto* dirs = getDirsFromRootDir(pathToDir);
+    auto* dirs = getDirsFromRootDir(pathToRootDir);
+    string resultFileName = R"(/simulation.results)";
+    writeToFile(pathToRootDir +  resultFileName, "NaiveAlgo, ");
     switch(algoType){
         case NaiveAlgoEnum:
-            for(auto dir:*dirs) {
+            for(const auto& dir:*dirs) {
                 std::cout << dir << std::endl;
-                simulateNaive(dir);
+                int numOp = simulateNaive(dir);
+                if(numOp != -1) {
+                    this->sumOperations += simulateNaive(dir);
+                }
+                writeToFile(pathToRootDir +  resultFileName, std::to_string(numOp) + ", ");
+
             }
+            writeToFile(pathToRootDir +  resultFileName, std::to_string(this->sumOperations) + "\n");
             break;
     }
 
@@ -27,9 +35,8 @@ void AlgoRunner::startRun() {
 int AlgoRunner::simulateNaive(const string &pathToDir) {
         auto* ship = createShip(pathToDir);
         if(ship == nullptr) {
-            return EXIT_FAILURE;
+            return -1;
         }
-//    ship->getPlan().printShipPlan();
         NaiveAlgo alg(ship);
         int portOperations, sumOperations=0;
         while(!ship->finishRoute()){
@@ -40,18 +47,17 @@ int AlgoRunner::simulateNaive(const string &pathToDir) {
             if(portOperations<0){
                 std::cout << "NaiveAlgo failure, exiting..." << std::endl;
                 delete ship;
-                return EXIT_FAILURE;
+                return -1;
             }
             sumOperations+=portOperations;
 
             ship->moveToNextPort();
             std::cout << "Moving to the next destination" << std::endl;
         }
-        string msg = "Naive algo done with total " + std::to_string(sumOperations) + " operations.";
-        emptyFile(pathToDir +  R"(/Results.txt)");
-        writeToFile(pathToDir +  R"(/Results.txt)", msg);
+//        string msg = "Naive algo done with total " + std::to_string(sumOperations) + " operations.";
+//        writeToFile(pathToDir +  R"(/Results.txt)", msg);
         delete ship;
-        return EXIT_SUCCESS;
+        return sumOperations;
 }
 
 bool handleNameOfFile (const string& fileName, string& portName, int & indexNumber) {

@@ -34,5 +34,6 @@ int isDirectory(const char *path);
 vector<string>* getDirsFromRootDir(const string &pathToDir);
 void writeToFile(const string& filename, const string& data);
 void emptyFile(const string& filename);
+vector<string>* getDirsNamesFromRootDir(const string &pathToDir);
 
 #endif //STOWAGE_MODEL_FILES_H

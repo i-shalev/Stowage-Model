@@ -17,11 +17,11 @@ enum AlgoType  {NaiveAlgoEnum};
 using namespace std;
 class AlgoRunner {
     AlgoType algoType;
-    string pathToDir;
+    string pathToRootDir;
     int sumOperations;
 
 public:
-    AlgoRunner(AlgoType _algoType, string _pathToDir);
+    AlgoRunner(AlgoType _algoType, string _pathToRootDir);
     AlgoRunner(const AlgoRunner& algoRunner)  = delete;
     void startRun();
     int simulateNaive(const string &pathToDir);

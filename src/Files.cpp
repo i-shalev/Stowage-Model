@@ -308,3 +308,43 @@ void emptyFile(const string& filename){
     outfile.open(filename);
     outfile.close();
 }
+
+vector<string>* getDirsNamesFromRootDir(const string &pathToDir) {
+    {
+        auto* dirs = new vector<string>();
+        char* path = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
+        stringToCharStar(path, pathToDir);
+
+        DIR *dir = opendir(path);
+        struct dirent *entry = readdir(dir);
+        string name;
+        while (entry != nullptr)
+        {
+            name = entry->d_name;
+            entry = readdir(dir);
+            if(name == "." or name == "..") {
+                continue;
+            }
+            string pathString(path);
+            char* fullPath = (char *)(malloc((strlen(path) + name.size() + 2) * sizeof(char)));
+            for (size_t i = 0; i < strlen(path); i++) {
+                fullPath[i] = path[i];
+            }
+            fullPath[strlen(path)] = '/';
+
+            for (size_t i = 0; i < name.size(); i++) {
+                fullPath[i + strlen(path) + 1] = name.at(i);
+            }
+            fullPath[strlen(path) + name.size() + 1] = '\0';
+
+            if(isDirectory(fullPath)) {
+                dirs->push_back(name);
+            }
+
+            delete fullPath;
+        }
+        delete path;
+        closedir(dir);
+        return dirs;
+    }
+}
