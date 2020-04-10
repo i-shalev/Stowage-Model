@@ -36,6 +36,7 @@ public:
     void addOneVisitToMap();
     int getIndexOfPort();
     Port* getCurrentPort();
+    ShipRoute& getRoute(){return *(this->route);}
 };
 
 #endif //STOWAGE_MODEL_SHIP_H

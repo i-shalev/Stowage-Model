@@ -8,6 +8,7 @@
 #include <map>
 #include <utility>
 #include "Container.h"
+#include "ShipRoute.h"
 #include "vector"
 class Port{
     const std::string symbol;
@@ -74,6 +75,18 @@ public:
         for(const auto& elem : *this->ContainersAwaiting )
         {
             vector.push_back(elem.second);
+        }
+    }
+    void getContainersWithDest(const string& dest, vector<Container*>& vec){
+        for(const auto& elem : *(this->ContainersAwaiting) )
+        {
+            if(elem.second->getDest().compare(dest)==0)
+                vec.push_back(elem.second);
+        }
+    }
+    void getContainersByDistance(ShipRoute& sr, vector<Container*>& vec){
+        for(auto elem : *(sr.getDstList())){
+            getContainersWithDest(elem, vec);
         }
     }
 };

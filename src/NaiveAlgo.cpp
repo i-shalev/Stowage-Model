@@ -58,7 +58,7 @@ void NaiveAlgo::getInstructionForCargo(const std::string& outputPath) {
     }
     //now load everything from port to ship. check valid ids and destinations.
     vector<Container*> toLoad;
-    ship->getCurrentPort()->getVectorOfContainers(toLoad);
+    ship->getCurrentPort()->getContainersByDistance(ship->getRoute(),toLoad);
     int emptyPlacesAtPosition;
     bool done = toLoad.empty();
     for(int i=0; i<ship->getPlan().getLength() && !done; i++){
