@@ -2,7 +2,8 @@
 #include "main.h"
 
 int main(){
-    auto* dirs = getDirsFromRootDir(R"(C:\Users\zivco\Desktop\ex)");
+    auto* algoRunner = new AlgoRunner(NaiveAlgo, R"(C:\Users\itay\Desktop\ex)");
+    auto* dirs = getDirsFromRootDir(R"(C:\Users\itay\Desktop\ex)");
     for(auto dir:*dirs) {
         std::cout << dir << std::endl;
         simulate(dir);
