@@ -91,6 +91,14 @@ int Crane::executeOperationList(const string& path) {
             int rc = this->Unload(id,level,i,j);
             std::cout << "unloaded container " << id << " from level " << level << " position " << i <<","<< j << std::endl;
             if( rc!= SUCCESS){
+                switch(rc){
+                    case 2:
+                        std::cout << "Error: index out of range" << std::endl;
+                    case 5:
+                        std::cout << "Error: cant unload container. container above" << std::endl;
+                    case 6:
+                        std::cout << "Error: there is other container in this place" << std::endl;
+                }
                 std::cout << "Abort operation" << std::endl;
                 return -1;
             }
@@ -106,6 +114,18 @@ int Crane::executeOperationList(const string& path) {
             int rc = this->Load(id,level,i,j);
             std::cout << "loaded container " << id << " to level " << level << " position " << i <<","<< j << std::endl;
             if(rc != SUCCESS){
+                switch(rc){
+                    case 1:
+                        std::cout << "Error: cant load the container because the ship will not visit its destination" << std::endl;
+                    case 2:
+                        std::cout << "Error: index out of range" << std::endl;
+                    case 3:
+                        std::cout << "Error: cant load container. the location is full" << std::endl;
+                    case 4:
+                        std::cout << "Error: cant load container. there is nothing below" << std::endl;
+                    case 6:
+                        std::cout << "Error: cant find the container, wrong ID" << std::endl;
+                }
                 std::cout << "Abort operation" << std::endl;
                 return -1;
             }
