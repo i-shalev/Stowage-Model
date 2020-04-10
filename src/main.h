@@ -8,7 +8,7 @@
 #include "Files.h"
 #include "Port.h"
 #include "Crane.h"
-#include "Algo.h"
+#include "NaiveAlgo.h"
 #include "AlgoRunner.h"
 
 using namespace std;

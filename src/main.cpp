@@ -12,12 +12,15 @@ int main(){
 }
 
 void writeToFile(const string& filename, const string& data) {
-    std::cout <<data << std::endl;
     std::ofstream outfile;
     outfile.open(filename, std::ios_base::app);
-    outfile << data << std::endl;
+    outfile << data;
     outfile.close();
-
+}
+void emptyFile(const string& filename){
+    std::ofstream outfile;
+    outfile.open(filename);
+    outfile.close();
 }
 
 int simulate(const string &pathToDir) {
@@ -26,7 +29,7 @@ int simulate(const string &pathToDir) {
         return EXIT_FAILURE;
     }
 //    ship->getPlan().printShipPlan();
-    Algo alg(ship);
+    NaiveAlgo alg(ship);
     int portOperations, sumOperations=0;
     while(!ship->finishRoute()){
         std::cout << "enter to port "<<ship->getCurrentDestination() << std::endl;
@@ -34,7 +37,7 @@ int simulate(const string &pathToDir) {
         Crane c1(ship);
         portOperations = c1.executeOperationList(pathToDir +  R"(/instructions.txt)");
         if(portOperations<0){
-            std::cout << "Algo failure, exiting..." << std::endl;
+            std::cout << "NaiveAlgo failure, exiting..." << std::endl;
             delete ship;
             return EXIT_FAILURE;
         }
@@ -44,6 +47,7 @@ int simulate(const string &pathToDir) {
         std::cout << "Moving to the next destination" << std::endl;
     }
     string msg = "Naive algo done with total " + std::to_string(sumOperations) + " operations.";
+    emptyFile(pathToDir +  R"(/Results.txt)");
     writeToFile(pathToDir +  R"(/Results.txt)", msg);
     delete ship;
     return EXIT_SUCCESS;
