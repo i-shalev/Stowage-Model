@@ -4,8 +4,8 @@
 
 #include "ShipPlan.h"
 void printvec(const vector<vector<int>> vec){
-    for(int i=0; i<vec.size(); i++){
-        for(int j=0; j<vec.at(i).size(); j++)
+    for(size_t i=0; i<vec.size(); i++){
+        for(size_t j=0; j<vec.at(i).size(); j++)
             std::cout << vec.at(i).at(j) << ",";
         std::cout << std::endl;
     }
