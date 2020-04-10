@@ -2,7 +2,12 @@
 #include "main.h"
 
 int main(){
+    auto* dirs = getDirsFromRootDir(R"(C:\Users\itay\Desktop\ex-1)");
+    for(auto dir:*dirs) {
+        std::cout << dir << std::endl;
+    }
     simulate( R"(C:\Users\itay\Desktop\ex-1)");
+    delete dirs;
 }
 
 int simulate(const string &pathToDir) {
