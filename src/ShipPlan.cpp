@@ -10,13 +10,14 @@ void printvec(const vector<vector<int>> vec){
         std::cout << std::endl;
     }
 }
-ShipPlan::ShipPlan(int numFloors, int length, int width, const vector<vector<int>>& blocks)
+ShipPlan::ShipPlan(int numFloors, int length, int width, const vector<vector<int>>& blocks, vector<string>* _errors)
 {
     vector<vector<int>> floorBlocks; //unused
     this->numFloors = numFloors;
     this->length = length;
     this->width = width;
     this->floors = (Floor**) malloc(numFloors * sizeof(Floor*));
+    this->errors = _errors;
 
     for(int i=0; i<numFloors; i++)
     {
@@ -24,11 +25,13 @@ ShipPlan::ShipPlan(int numFloors, int length, int width, const vector<vector<int
     }
     for(auto tripleVec : blocks){
         if(tripleVec.at(0)==-1 || tripleVec[1]==-1 || tripleVec[2]==-1){
-            std::cout << "Warning: problems while reading file" << std::endl;
+            errors->push_back("Warning: problem while reading line in ShipPlan file");
+//            std::cout << "Warning: problems while reading file" << std::endl;
             continue;
         }
         if(tripleVec[0] >= length || tripleVec[1] >= width || tripleVec[2] >= numFloors) {
-            std::cout << "Warning: too big numbers in file" << std::endl;
+            errors->push_back("Warning: too big numbers in ShipPlan file");
+//            std::cout << "Warning: too big numbers in file" << std::endl;
             continue;
         }
         for(int i=0; i<numFloors - tripleVec[2]; i++){

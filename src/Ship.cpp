@@ -6,9 +6,12 @@
 
 #include <utility>
 
-Ship::Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port*> *mapPortToPort) : route(sr), plan(sp), mapPortNameToPort(mapPortToPort), mapPortNameToNumberOfVisitsUntilNow(new map<string,int>){
+Ship::Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port *> *mapPortToPort, vector<string> *_errors)
+        : route(sr), plan(sp), mapPortNameToPort(mapPortToPort), mapPortNameToNumberOfVisitsUntilNow(new map<string,int>){
+    this->errors = _errors;
     if(!this->plan->isValid()){
-        std::cout << "invalid plan!" << std::endl;
+        errors->push_back("Warning: invalid plan");
+//        std::cout << "invalid plan!" << std::endl;
     }
     addOneVisitToMap();
 }
@@ -33,7 +36,8 @@ bool Ship::willVisit(string dest) {
 
 void Ship::getContainerPosition(const string& id, std::vector<int>& res){
     if(!res.empty()){
-        std::cout << "Warning: incorrect use of getContainerPosition" << std::endl;
+        errors->push_back("Warning: incorrect use of getContainerPosition");
+//        std::cout << "Warning: incorrect use of getContainerPosition" << std::endl;
     }
     for(int level=0; level<this->plan->getNumFloors(); level++){
         for(int i=0; i<this->plan->getLength(); i++){
@@ -55,7 +59,8 @@ void Ship::getContainerPosition(const string& id, std::vector<int>& res){
 
 void Ship::getAllContainersWithDest(const string& dest, std::vector<Container*>& res) {
     if (!res.empty()) {
-        std::cout << "Warning: incorrect use of getAllContainersWithDest" << std::endl;
+        errors->push_back("Warning: incorrect use of getAllContainersWithDest");
+//        std::cout << "Warning: incorrect use of getAllContainersWithDest" << std::endl;
     }
     for (int level = 0; level < this->plan->getNumFloors(); level++) {
         for (int i = 0; i < this->plan->getLength(); i++) {

@@ -73,7 +73,8 @@ int Crane::executeOperationList(const string& path) {
     try{
         fin.open(path, ios::in);
     } catch (const std::exception& e) {
-        std::cout << "ERROR: Failed to open file" << std::endl;
+        errors->push_back("ERROR: Failed to open file:" + path);
+//        std::cout << "ERROR: Failed to open file" << std::endl;
         return false;
     }
     string line, id;
@@ -89,17 +90,20 @@ int Crane::executeOperationList(const string& path) {
             last_index = last_index + sz + 1;
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             int rc = this->Unload(id,level,i,j);
-            std::cout << "unloaded container " << id << " from level " << level << " position " << i <<","<< j << std::endl;
+//            std::cout << "unloaded container " << id << " from level " << level << " position " << i <<","<< j << std::endl;
             if( rc!= SUCCESS){
                 switch(rc){
                     case 2:
-                        std::cout << "Error: index out of range" << std::endl;
+                        errors->push_back("Error: index out of range");
+//                        std::cout << "Error: index out of range" << std::endl;
                     case 5:
-                        std::cout << "Error: cant unload container. container above" << std::endl;
+                        errors->push_back("Error: cant unload container. container above");
+//                        std::cout << "Error: cant unload container. container above" << std::endl;
                     case 6:
-                        std::cout << "Error: there is other container in this place" << std::endl;
+                        errors->push_back("Error: there is other container in this place");
+//                        std::cout << "Error: there is other container in this place" << std::endl;
                 }
-                std::cout << "Abort operation" << std::endl;
+//                std::cout << "Abort operation" << std::endl;
                 return -1;
             }
             price++;
@@ -112,32 +116,38 @@ int Crane::executeOperationList(const string& path) {
             last_index = last_index + sz + 1;
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             int rc = this->Load(id,level,i,j);
-            std::cout << "loaded container " << id << " to level " << level << " position " << i <<","<< j << std::endl;
+//            std::cout << "loaded container " << id << " to level " << level << " position " << i <<","<< j << std::endl;
             if(rc != SUCCESS){
                 switch(rc){
                     case 1:
-                        std::cout << "Error: cant load the container because the ship will not visit its destination" << std::endl;
+                        errors->push_back("Error: cant load the container because the ship will not visit its destination");
+//                        std::cout << "Error: cant load the container because the ship will not visit its destination" << std::endl;
                     case 2:
-                        std::cout << "Error: index out of range" << std::endl;
+                        errors->push_back("Error: index out of range");
+//                        std::cout << "Error: index out of range" << std::endl;
                     case 3:
-                        std::cout << "Error: cant load container. the location is full" << std::endl;
+                        errors->push_back("Error: cant load container. the location is full");
+//                        std::cout << "Error: cant load container. the location is full" << std::endl;
                     case 4:
-                        std::cout << "Error: cant load container. there is nothing below" << std::endl;
+                        errors->push_back("Error: cant load container. there is nothing below");
+//                        std::cout << "Error: cant load container. there is nothing below" << std::endl;
                     case 6:
-                        std::cout << "Error: cant find the container, wrong ID" << std::endl;
+                        errors->push_back("Error: cant find the container, wrong ID");
+//                        std::cout << "Error: cant find the container, wrong ID" << std::endl;
                 }
-                std::cout << "Abort operation" << std::endl;
+//                std::cout << "Abort operation" << std::endl;
                 return -1;
             }
             price++;
         }
         else if( line.at(0) == 'R'){
             id =  line.substr(2,11);
-            std::cout << "rejecting container " << id << std::endl;
+//            std::cout << "rejecting container " << id << std::endl;
 //            price++; // TODO: make sure it really costs...
         }
         else{
-            std::cout << "wrong file format" << std::endl;
+            errors->push_back("Error: wrong file format");
+//            std::cout << "wrong file format" << std::endl;
         }
     }
     fin.close();

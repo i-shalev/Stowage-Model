@@ -38,18 +38,6 @@ void AlgoRunner::startRun() {
     delete dirs;
 }
 
-bool validate(Ship* ship){
-   if(ship->isFull())
-       return true;
-   vector<Container*> vec;
-   ship->getCurrentPort()->getVectorOfContainers(vec);
-   for(size_t i=0; i<vec.size(); i++){
-       if(vec.at(i)->checkId() && ship->willVisit(vec.at(i)->getDest()))
-           return false;
-   }
-   return true;
-}
-
 int AlgoRunner::simulateNaive(const string &pathToDir) {
         auto* ship = createShip(pathToDir);
         if(ship == nullptr) {
@@ -60,10 +48,11 @@ int AlgoRunner::simulateNaive(const string &pathToDir) {
         while(!ship->finishRoute()){
 //            std::cout << "enter to port "<<ship->getCurrentDestination() << std::endl;
             alg.getInstructionForCargo(pathToDir +  R"(/instructions.txt)");
-            Crane c1(ship);
+            Crane c1(ship, errors);
             portOperations = c1.executeOperationList(pathToDir +  R"(/instructions.txt)");
             if(portOperations<0){
-                std::cout << "NaiveAlgo failure, exiting..." << std::endl;
+                errors->push_back("Error: Algo return negative number of moves (Algo failed)");
+//                std::cout << "NaiveAlgo failure, exiting..." << std::endl;
                 delete ship;
                 return -1;
             }
@@ -130,7 +119,7 @@ ShipPlan* AlgoRunner::createShipPlan(const string& pathToShipPlan) {
         return nullptr;
     }
 
-    auto* shipPlan = new ShipPlan(numFloors, length, width, *blocks);
+    auto* shipPlan = new ShipPlan(numFloors, length, width, *blocks, errors);
     delete blocks;
     return  shipPlan;
 }
@@ -155,7 +144,7 @@ Ship* AlgoRunner::createShip(const string &pathToDir){
 
     map<string, Port*>* portNameToPortMap = createPortNameToPortMap(pathToDir, mapPortVisits, shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1));
 
-    auto* ship = new Ship(shipRoute, shipPlan, portNameToPortMap);
+    auto* ship = new Ship(shipRoute, shipPlan, portNameToPortMap, errors);
     delete mapPortVisits;
     return ship;
 }
@@ -224,4 +213,16 @@ void AlgoRunner::addPortsWithFileToMap(const string &pathToDir, map<string, int>
         }
     }
     delete pathToDirChar;
+}
+
+bool validate(Ship* ship){
+    if(ship->isFull())
+        return true;
+    vector<Container*> vec;
+    ship->getCurrentPort()->getVectorOfContainers(vec);
+    for(size_t i=0; i<vec.size(); i++){
+        if(vec.at(i)->checkId() && ship->willVisit(vec.at(i)->getDest()))
+            return false;
+    }
+    return true;
 }

@@ -17,9 +17,10 @@ private:
     ShipPlan* plan;
     map<string, Port*> *mapPortNameToPort;
     map<string, int>* mapPortNameToNumberOfVisitsUntilNow;
+    vector<string>* errors;
 
 public:
-    Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port*>* mapPortToPort);
+    Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port *> *mapPortToPort, vector<string> *_errors);
     ~Ship();
     Ship(const Ship &ship) = delete; //disable copy constr'. the deafult is not good, need deep copy.
     //const ShipRoute& getRoute();

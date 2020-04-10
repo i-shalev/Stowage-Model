@@ -39,7 +39,7 @@ public:
     void addPortsWithFileToMap(const string &pathToDir, map<string, int> *mapPortVisits, map<string, Port*>* mapPortNameToPort);
 };
 
-
+bool validate(Ship* ship);
 
 
 

@@ -13,8 +13,9 @@ using namespace std;
 enum result{ SUCCESS=0, DEST_NOT_IN_LIST=1, INVALID_INDEX=2, FULL_PLACE=3, EMPTY_BELOW=4, CONTAINER_ABOVE=5, WRONG_CONTAINER=6};
 class Crane{
     Ship* curShip;
+    vector<string>* errors;
 public:
-    Crane(Ship* ship): curShip(ship){}
+    Crane(Ship *ship, vector<string> *_errors) : curShip(ship), errors(_errors){}
     Crane(){}
     Crane(const Crane& crane)  = delete;
     result Load(const string& contId, int level, int i, int j);
