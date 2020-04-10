@@ -69,6 +69,20 @@ void Ship::getAllContainersWithDest(const string& dest, std::vector<Container*>&
     //res may stay empty!
 }
 
+
+bool Ship::isFull() {
+    for (int level = 0; level < this->plan->getNumFloors(); level++) {
+        for (int i = 0; i < this->plan->getLength(); i++) {
+            for (int j = 0; j < this->plan->getWidth(); j++) {
+                if (this->plan->getFloor(level)->getContainerAtPosition(i, j) == nullptr) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 bool Ship::finishRoute() {
     return this->route->getRouteLength() == 0;
 }

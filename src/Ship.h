@@ -25,6 +25,7 @@ public:
     //const ShipRoute& getRoute();
     ShipPlan& getPlan();//TODO: make sure we really cant change the route from outside
     bool willVisit(string dest);
+    bool isFull();
 //    bool calculateBalanceAfter(const string& opcode, const string& containerId){ return true;}
     void getAllContainersWithDest(const string &dest, vector<Container*> &res);
     string getCurrentDestination() const {return route->getHead();}

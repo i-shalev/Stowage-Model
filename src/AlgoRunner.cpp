@@ -31,7 +31,17 @@ void AlgoRunner::startRun() {
 
     delete dirs;
 }
-
+ bool validate(Ship* ship){
+   if(ship->isFull())
+       return true;
+   vector<Container*> vec;
+   ship->getCurrentPort()->getVectorOfContainers(vec);
+   for(size_t i=0; i<vec.size(); i++){
+       if(vec.at(i)->checkId() && ship->willVisit(vec.at(i)->getDest()))
+           return false;
+   }
+   return true;
+}
 int AlgoRunner::simulateNaive(const string &pathToDir) {
         auto* ship = createShip(pathToDir);
         if(ship == nullptr) {
@@ -50,13 +60,16 @@ int AlgoRunner::simulateNaive(const string &pathToDir) {
                 return -1;
             }
             sumOp+=portOperations;
-
+            if(!validate(ship)){
+                std::cout << "Algo reject containers with no reason" << std::endl;
+            }
             ship->moveToNextPort();
             std::cout << "Moving to the next destination" << std::endl;
         }
         delete ship;
         return sumOp;
 }
+
 
 bool handleNameOfFile (const string& fileName, string& portName, int & indexNumber) {
     vector<string> elems;
