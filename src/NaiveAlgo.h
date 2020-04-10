@@ -2,8 +2,8 @@
 // Created by zivco on 05/04/2020.
 //
 
-#ifndef STOWAGE_MODEL_ALGO_H
-#define STOWAGE_MODEL_ALGO_H
+#ifndef STOWAGE_MODEL_NAIVEALGO_H
+#define STOWAGE_MODEL_NAIVEALGO_H
 
 #include "Ship.h"
 #include "Balancer.h"
@@ -11,11 +11,11 @@
 #include "fstream"
 #include "Files.h"
 
-class Algo{
+class NaiveAlgo{
     Ship* ship;
     //BalanceCalc* calc;
 public:
-    explicit Algo(Ship* _ship): ship(_ship){}
+    explicit NaiveAlgo(Ship* _ship): ship(_ship){}
     void getInstructionForCargo(const std::string& outputPath);
 private:
     int emptyPlacesInPosition(int i, int j, const string& portSymbol);
@@ -23,4 +23,4 @@ private:
 };
 
 
-#endif //STOWAGE_MODEL_ALGO_H
+#endif //STOWAGE_MODEL_NAIVEALGO_H

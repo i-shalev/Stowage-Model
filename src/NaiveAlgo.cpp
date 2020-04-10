@@ -2,9 +2,9 @@
 // Created by zivco on 05/04/2020.
 //
 
-#include "Algo.h"
+#include "NaiveAlgo.h"
 
-void Algo::getInstructionForCargo(const std::string& outputPath) {
+void NaiveAlgo::getInstructionForCargo(const std::string& outputPath) {
     char* pathToDirChar = (char *)(malloc((outputPath.size() + 1) * sizeof(char)));
     stringToCharStar(pathToDirChar, outputPath);
     std::remove(pathToDirChar);
@@ -89,7 +89,7 @@ void Algo::getInstructionForCargo(const std::string& outputPath) {
     fs.close();
     delete pathToDirChar;
 }
-int Algo::emptyPlacesInPosition(int i, int j, const string& portSymbol){
+int NaiveAlgo::emptyPlacesInPosition(int i, int j, const string& portSymbol){
     int sum = 0;
     for(int level=0; level<ship->getPlan().getNumFloors(); level++){
         if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)== nullptr ||
@@ -101,6 +101,6 @@ int Algo::emptyPlacesInPosition(int i, int j, const string& portSymbol){
     return sum;
     //sum last positions are empty
 }
-bool Algo::checkContainer(Container* cont){
+bool NaiveAlgo::checkContainer(Container* cont){
     return cont->checkId() && ship->willVisit(cont->getDest());
 }

@@ -25,7 +25,7 @@ int simulate(const string &pathToDir) {
         return EXIT_FAILURE;
     }
 //    ship->getPlan().printShipPlan();
-    Algo alg(ship);
+    NaiveAlgo alg(ship);
     int portOperations, sumOperations=0;
     while(!ship->finishRoute()){
         std::cout << "enter to port "<<ship->getCurrentDestination() << std::endl;
@@ -33,7 +33,7 @@ int simulate(const string &pathToDir) {
         Crane c1(ship);
         portOperations = c1.executeOperationList(pathToDir +  R"(/instructions.txt)");
         if(portOperations<0){
-            std::cout << "Algo failure, exiting..." << std::endl;
+            std::cout << "NaiveAlgo failure, exiting..." << std::endl;
             delete ship;
             return EXIT_FAILURE;
         }
