@@ -27,19 +27,6 @@ void AlgoRunner::startRun() {
             }
             writeToFile(pathToRootDir +  resultFileName, std::to_string(this->sumOperations) + "\n");
             break;
-        case NaiveAndStupidAlgoEnum:
-            writeToFile(pathToRootDir +  resultFileName, "NaiveAndStupidAlgo, ");
-            for(const auto& dir:*dirs) {
-                std::cout << dir << std::endl;
-                int numOp = simulateNaiveAndStupid(dir);
-                if(numOp != -1) {
-                    this->sumOperations += numOp;
-                }
-                writeToFile(pathToRootDir +  resultFileName, std::to_string(numOp) + ", ");
-
-            }
-            writeToFile(pathToRootDir +  resultFileName, std::to_string(this->sumOperations) + "\n");
-            break;
     }
 
     delete dirs;
@@ -69,32 +56,6 @@ int AlgoRunner::simulateNaive(const string &pathToDir) {
         }
         delete ship;
         return sumOp;
-}
-
-int AlgoRunner::simulateNaiveAndStupid(const string &pathToDir) {
-    auto* ship = createShip(pathToDir);
-    if(ship == nullptr) {
-        return -1;
-    }
-    NaiveAndStupidAlgo alg(ship);
-    int portOperations, sumOp=0;
-    while(!ship->finishRoute()){
-        std::cout << "enter to port "<<ship->getCurrentDestination() << std::endl;
-        alg.getInstructionForCargo(pathToDir +  R"(/instructions.txt)");
-        Crane c1(ship);
-        portOperations = c1.executeOperationList(pathToDir +  R"(/instructions.txt)");
-        if(portOperations<0){
-            std::cout << "NaiveAlgo failure, exiting..." << std::endl;
-            delete ship;
-            return -1;
-        }
-        sumOp+=portOperations;
-
-        ship->moveToNextPort();
-        std::cout << "Moving to the next destination" << std::endl;
-    }
-    delete ship;
-    return sumOp;
 }
 
 bool handleNameOfFile (const string& fileName, string& portName, int & indexNumber) {

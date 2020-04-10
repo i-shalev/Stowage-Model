@@ -10,10 +10,7 @@ int main(){
         writeToFile(pathToRootDir +  resultFileName, "," + dir);
     }
     writeToFile(pathToRootDir +  resultFileName, ", Sum \n");
-//    auto* algoRunnerNaive = new AlgoRunner(NaiveAlgoEnum, pathToRootDir);
-//    algoRunnerNaive->startRun();
-//    delete algoRunnerNaive;
-    auto* algoRunnerNaiveAndStupid = new AlgoRunner(NaiveAndStupidAlgoEnum, pathToRootDir);
-    algoRunnerNaiveAndStupid->startRun();
-    delete algoRunnerNaiveAndStupid;
+    auto* algoRunnerNaive = new AlgoRunner(NaiveAlgoEnum, pathToRootDir);
+    algoRunnerNaive->startRun();
+    delete algoRunnerNaive;
 }

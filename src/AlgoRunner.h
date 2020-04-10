@@ -11,10 +11,9 @@
 #include "Port.h"
 #include "Crane.h"
 #include "NaiveAlgo.h"
-#include "NaiveAndStupidAlgo.h"
 
 
-enum AlgoType  {NaiveAlgoEnum, NaiveAndStupidAlgoEnum};
+enum AlgoType  {NaiveAlgoEnum};
 
 using namespace std;
 class AlgoRunner {
@@ -27,7 +26,6 @@ public:
     AlgoRunner(const AlgoRunner& algoRunner)  = delete;
     void startRun();
     int simulateNaive(const string &pathToDir);
-    int simulateNaiveAndStupid(const string &pathToDir);
 };
 
 bool handleNameOfFile (const string& fileName, string& portName, int & indexNumber);
