@@ -16,5 +16,8 @@ int main(){
     writeToFile(pathToRootDir +  errorFileName, "\n");
     auto* algoRunnerNaive = new AlgoRunner(NaiveAlgoEnum, pathToRootDir);
     algoRunnerNaive->startRun();
+    auto* algoRunnerNaive1 = new AlgoRunner(NaiveAlgoEnum, pathToRootDir);
+    algoRunnerNaive1->startRun();
     delete algoRunnerNaive;
+    delete algoRunnerNaive1;
 }
