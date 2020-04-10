@@ -133,7 +133,6 @@ bool readShipPorts(vector<string>& ports, const string& path) {
         std::cout << "ERROR: Failed to open file" << std::endl;
         return false;
     }
-
     string line;
     while (getline(fin, line)) {
         if(! isCommentLine(line)) {
@@ -197,7 +196,7 @@ bool isCommentLine(string line) {
     if(line.empty())
         return true;
     line = removeLeadingAndTrailingWhitespaces(line);
-    return line.at(0) == '#';
+    return line.size() == 0 or line.at(0) == '#';
 }
 
 bool hasEnding (std::string const &fullString, std::string const &ending) {
@@ -240,7 +239,7 @@ void getCargoData(const char *path, vector<string>& res){
         for (size_t i = 0; i < strlen(path); i++) {
             fullPath[i] = path[i];
         }
-        fullPath[strlen(path)] = '\\';
+        fullPath[strlen(path)] = '/';
 
         for (size_t i = 0; i < name.size(); i++) {
             fullPath[i+strlen(path)+1] = name.at(i);
@@ -279,7 +278,7 @@ vector<string>* getDirsFromRootDir(const string &pathToDir) {
         for (size_t i = 0; i < strlen(path); i++) {
             fullPath[i] = path[i];
         }
-        fullPath[strlen(path)] = '\\';
+        fullPath[strlen(path)] = '/';
 
         for (size_t i = 0; i < name.size(); i++) {
             fullPath[i + strlen(path) + 1] = name.at(i);

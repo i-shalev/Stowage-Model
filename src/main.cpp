@@ -2,16 +2,15 @@
 #include "main.h"
 
 int main(){
-    auto* dirs = getDirsFromRootDir(R"(C:\Users\itay\Desktop\ex-1)");
+    auto* dirs = getDirsFromRootDir(R"(C:\Users\itay\Desktop\ex)");
     for(auto dir:*dirs) {
         std::cout << dir << std::endl;
+        simulate(dir);
     }
-    simulate( R"(C:\Users\itay\Desktop\ex-1)");
     delete dirs;
 }
 
 int simulate(const string &pathToDir) {
-
     auto* ship = createShip(pathToDir);
     if(ship == nullptr) {
         return EXIT_FAILURE;
@@ -20,9 +19,9 @@ int simulate(const string &pathToDir) {
     Algo alg(ship);
     while(!ship->finishRoute()){
         std::cout << "enter to port "<<ship->getCurrentDestination() << std::endl;
-        alg.getInstructionForCargo(pathToDir +  R"(\instructions.txt)");
+        alg.getInstructionForCargo(pathToDir +  R"(/instructions.txt)");
         Crane c1(ship);
-        c1.executeOperationList(pathToDir +  R"(\instructions.txt)");
+        c1.executeOperationList(pathToDir +  R"(/instructions.txt)");
         ship->moveToNextPort();
         std::cout << "Moving to the next destination" << std::endl;
     }
@@ -95,10 +94,8 @@ ShipRoute* createShipRoute(const string &pathToShipPorts) {
 }
 
 Ship* createShip(const string &pathToDir){
-
-
-    auto* shipPlan = createShipPlan(pathToDir + R"(\ShipPort.csv)");
-    auto* shipRoute = createShipRoute(pathToDir + R"(\Ports.csv)");
+    auto* shipPlan = createShipPlan(pathToDir + R"(/ShipPort.csv)");
+    auto* shipRoute = createShipRoute(pathToDir + R"(/Ports.csv)");
     auto* mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());
 
     if(shipPlan == nullptr or shipRoute == nullptr or shipRoute->getRouteLength() == 0){
@@ -162,7 +159,7 @@ void addPortsWithFileToMap(const string &pathToDir, map<string, int> *mapPortVis
             auto res = mapPortVisits->find(portName);
             if(res !=  mapPortVisits->end() and res->second > indexNumber) {
                 Port *port = new Port(portName, indexNumber);
-                fullname =  pathToDir + '\\';
+                fullname =  pathToDir + '/';
                 fullname += name;
                 fullname += R"(.cargo_data)";
                 if (readPortContainers(port, fullname)) {
