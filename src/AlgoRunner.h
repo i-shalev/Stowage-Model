@@ -11,8 +11,10 @@
 #include "Port.h"
 #include "Crane.h"
 #include "NaiveAlgo.h"
+#include "NaiveAndStupidAlgo.h"
 
-enum AlgoType  {NaiveAlgoEnum};
+
+enum AlgoType  {NaiveAlgoEnum, NaiveAndStupidAlgoEnum};
 
 using namespace std;
 class AlgoRunner {
@@ -21,10 +23,11 @@ class AlgoRunner {
     int sumOperations;
 
 public:
-    AlgoRunner(AlgoType _algoType, string _pathToRootDir);
+    AlgoRunner(AlgoType _algoType, const string& _pathToRootDir);
     AlgoRunner(const AlgoRunner& algoRunner)  = delete;
     void startRun();
     int simulateNaive(const string &pathToDir);
+    int simulateNaiveAndStupid(const string &pathToDir);
 };
 
 bool handleNameOfFile (const string& fileName, string& portName, int & indexNumber);
@@ -37,6 +40,7 @@ map<string, Port*>* createPortNameToPortMap(const string &pathToDir, map<string,
 void addPortsWithNoFileToMap(map<string, int> *mapPortVisits, const string &lastPort,
                              map<string, Port *> *mapPortNameToPort);
 void addPortsWithFileToMap(const string &pathToDir, map<string, int> *mapPortVisits, map<string, Port*>* mapPortNameToPort);
+
 
 
 

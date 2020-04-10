@@ -2,7 +2,7 @@
 #include "main.h"
 
 int main(){
-    string pathToRootDir = R"(C:\Users\zivco\Desktop\ex)";
+    string pathToRootDir = R"(C:\Users\itay\Desktop\ex)";
     string resultFileName = R"(/simulation.results)";
     emptyFile(pathToRootDir +  resultFileName);
     auto* dirs = getDirsNamesFromRootDir(pathToRootDir);
@@ -10,7 +10,10 @@ int main(){
         writeToFile(pathToRootDir +  resultFileName, "," + dir);
     }
     writeToFile(pathToRootDir +  resultFileName, ", Sum \n");
-    auto* algoRunner = new AlgoRunner(NaiveAlgoEnum, pathToRootDir);
-    algoRunner->startRun();
-    delete algoRunner;
+//    auto* algoRunnerNaive = new AlgoRunner(NaiveAlgoEnum, pathToRootDir);
+//    algoRunnerNaive->startRun();
+//    delete algoRunnerNaive;
+    auto* algoRunnerNaiveAndStupid = new AlgoRunner(NaiveAndStupidAlgoEnum, pathToRootDir);
+    algoRunnerNaiveAndStupid->startRun();
+    delete algoRunnerNaiveAndStupid;
 }
