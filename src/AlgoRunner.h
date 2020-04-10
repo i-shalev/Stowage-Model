@@ -6,7 +6,7 @@
 #define STOWAGE_MODEL_ALGORUNNER_H
 #include <string>
 
-enum AlgoType  {NaiveAlgo};
+enum AlgoType  {NaiveAlgoEnum};
 
 using namespace std;
 class AlgoRunner {
