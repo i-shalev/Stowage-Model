@@ -2,12 +2,21 @@
 #include "main.h"
 
 int main(){
-    auto* dirs = getDirsFromRootDir(R"(C:\Users\itay\Desktop\ex)");
+    auto* dirs = getDirsFromRootDir(R"(C:\Users\zivco\Desktop\ex)");
     for(auto dir:*dirs) {
         std::cout << dir << std::endl;
         simulate(dir);
     }
     delete dirs;
+}
+
+void writeToFile(const string& filename, const string& data) {
+    std::cout <<data << std::endl;
+    std::ofstream outfile;
+    outfile.open(filename, std::ios_base::app);
+    outfile << data << std::endl;
+    outfile.close();
+
 }
 
 int simulate(const string &pathToDir) {
@@ -17,15 +26,24 @@ int simulate(const string &pathToDir) {
     }
 //    ship->getPlan().printShipPlan();
     Algo alg(ship);
+    int portOperations, sumOperations=0;
     while(!ship->finishRoute()){
         std::cout << "enter to port "<<ship->getCurrentDestination() << std::endl;
         alg.getInstructionForCargo(pathToDir +  R"(/instructions.txt)");
         Crane c1(ship);
-        c1.executeOperationList(pathToDir +  R"(/instructions.txt)");
+        portOperations = c1.executeOperationList(pathToDir +  R"(/instructions.txt)");
+        if(portOperations<0){
+            std::cout << "Algo failure, exiting..." << std::endl;
+            delete ship;
+            return EXIT_FAILURE;
+        }
+        sumOperations+=portOperations;
+
         ship->moveToNextPort();
         std::cout << "Moving to the next destination" << std::endl;
     }
-
+    string msg = "Naive algo done with total " + std::to_string(sumOperations) + " operations.";
+    writeToFile(pathToDir +  R"(/Results.txt)", msg);
     delete ship;
     return EXIT_SUCCESS;
 }
