@@ -32,5 +32,7 @@ void stringToCharStar(char* chatStar, string str);
 bool isFile(const char* path);
 int isDirectory(const char *path);
 vector<string>* getDirsFromRootDir(const string &pathToDir);
+void writeToFile(const string& filename, const string& data);
+void emptyFile(const string& filename);
 
 #endif //STOWAGE_MODEL_FILES_H

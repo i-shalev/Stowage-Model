@@ -296,3 +296,15 @@ vector<string>* getDirsFromRootDir(const string &pathToDir) {
     return dirs;
 }
 
+void writeToFile(const string& filename, const string& data) {
+    std::ofstream outfile;
+    outfile.open(filename, std::ios_base::app);
+    outfile << data;
+    outfile.close();
+}
+
+void emptyFile(const string& filename){
+    std::ofstream outfile;
+    outfile.open(filename);
+    outfile.close();
+}
