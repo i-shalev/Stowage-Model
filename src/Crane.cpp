@@ -114,7 +114,7 @@ int Crane::executeOperationList(const string& path) {
         else if( line.at(0) == 'R'){
             id =  line.substr(2,11);
             std::cout << "rejecting container " << id << std::endl;
-            price++; // TODO: make sure it really costs...
+//            price++; // TODO: make sure it really costs...
         }
         else{
             std::cout << "wrong file format" << std::endl;
