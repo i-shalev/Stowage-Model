@@ -20,11 +20,11 @@ class Files {
 
 };
 
-bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines);
-bool readShipPlan(vector<vector<int>>& blocks, const string& path);
-bool getNumberOfNonEmtpyLines(const string &path, int &numLines);
-bool readPortContainers(Port*& port, const string& path);
-bool readShipPorts(vector<string>& ports, const string& path);
+bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines, vector<string>* errors);
+bool readShipPlan(vector<vector<int>> &blocks, const string &path, vector<string> *errors);
+
+bool readPortContainers(Port *&port, const string &path, vector<string> *errors);
+bool readShipPorts(vector<string> &ports, const string &path, vector<string> *errors);
 string removeLeadingAndTrailingWhitespaces(string line);
 bool isCommentLine(string line);
 void getCargoData(const char *path, vector<string>& res);

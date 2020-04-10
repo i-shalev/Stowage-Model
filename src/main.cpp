@@ -2,7 +2,7 @@
 #include "main.h"
 
 int main(){
-    string pathToRootDir = R"(C:\Users\zivco\Desktop\ex)";
+    string pathToRootDir = R"(C:\Users\itay\Desktop\ex)";
     string resultFileName = R"(/simulation.results)";
     emptyFile(pathToRootDir +  resultFileName);
     auto* dirs = getDirsNamesFromRootDir(pathToRootDir);
