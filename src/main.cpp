@@ -11,12 +11,15 @@ int main(){
 }
 
 void writeToFile(const string& filename, const string& data) {
-    std::cout <<data << std::endl;
     std::ofstream outfile;
     outfile.open(filename, std::ios_base::app);
     outfile << data << std::endl;
     outfile.close();
-
+}
+void emptyFile(const string& filename){
+    std::ofstream outfile;
+    outfile.open(filename);
+    outfile.close();
 }
 
 int simulate(const string &pathToDir) {
@@ -43,6 +46,7 @@ int simulate(const string &pathToDir) {
         std::cout << "Moving to the next destination" << std::endl;
     }
     string msg = "Naive algo done with total " + std::to_string(sumOperations) + " operations.";
+    emptyFile(pathToDir +  R"(/Results.txt)");
     writeToFile(pathToDir +  R"(/Results.txt)", msg);
     delete ship;
     return EXIT_SUCCESS;
