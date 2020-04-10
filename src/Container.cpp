@@ -2,7 +2,7 @@
 
 #include <utility>
 
-Container::Container(int _weight, string  _dest, string  _id, bool _blocked): dest(std::move(_dest)), id(std::move(_id)), weight(_weight), blocked(_blocked)
+Container::Container(int _weight, string  _dest, string  _id, bool _blocked): dest(_dest), id(_id), weight(_weight), blocked(_blocked)
 {
     this->valid = checkId() && checkDestination();
 }

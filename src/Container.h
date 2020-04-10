@@ -8,9 +8,9 @@
 using namespace std;
 class Container {
     private:
-        int weight;
         const string dest;
         const string id;
+        int weight;
         bool valid;
         bool blocked;
 
