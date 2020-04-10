@@ -3,6 +3,7 @@
 //
 
 
+#include <algorithm>
 #include "Files.h"
 
 bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines, vector<string>* errors) {
@@ -10,7 +11,7 @@ bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &widt
     try{
         fin.open(path, ios::in);
     } catch (const std::exception& e) {
-        errors->push_back("ERROR: Failed to open file");
+        errors->push_back("Error: Failed to open file");
 //        std::cout << "ERROR: Failed to open file" << std::endl;
         return false;
     }
@@ -37,17 +38,19 @@ bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &widt
                 length = stoi(row[1]);
                 width = stoi(row[2]);
             } catch (const std::exception& e) {
-                errors->push_back("Error: One of the parameters is not a number, in line: " + line);
+                std::replace( line.begin(), line.end(), ',', '.');
+                errors->push_back("Error: One of the parameters is not a number. in line: " + line + " (replace comma with .)");
 //                std::cout << "Warning: One of the parameters is not a number, in line: " << line << std::endl;
                 return false;
             }
         } else {
-            errors->push_back("ERROR: Not enough parameters in the first line, in line: " + line);
+            std::replace( line.begin(), line.end(), ',', '.');
+            errors->push_back("Error: Not enough parameters in the first line. in line: " + line + " (replace comma with .)");
 //            std::cout << "ERROR: Not enough parameters in the first line, in line: " << line << std::endl;
             return false;
         }
     } else {
-        errors->push_back("ERROR: Failed to read the line with the parameters");
+        errors->push_back("Error: Failed to read the line with the parameters");
 //        std::cout << "ERROR: Failed to read the line with the parameters" << std::endl;
        return false;
     }
@@ -92,13 +95,15 @@ bool readShipPlan(vector<vector<int>> &blocks, const string &path, vector<string
                     try {
                         blocks.at(i - 1).push_back(stoi(row.at(j)));
                     } catch (const std::exception& e) {
-                        errors->push_back("Warning: One of the parameters is not a number, in line: " + line);
+                        std::replace( line.begin(), line.end(), ',', '.');
+                        errors->push_back("Warning: One of the parameters is not a number. in line: " + line + " (replace comma with .)");
 //                        std::cout << "Warning: One of the parameters is not a number, in line: " << line << std::endl;
                         blocks.at(i - 1).push_back(-1);
                     }
                 }
             } else {
-                errors->push_back("Warning: Not enough parameters - expected 3 parameters per line, in line: " + line);
+                std::replace( line.begin(), line.end(), ',', '.');
+                errors->push_back("Warning: Not enough parameters - expected 3 parameters per line. in line: " + line + " (replace comma with .)");
 //                std::cout << "Warning: Not enough parameters - expected 3 parameters per line, in line: " << line << std::endl;
                 blocks.at(i - 1).push_back(-1);
                 blocks.at(i - 1).push_back(-1);
@@ -116,7 +121,7 @@ bool readShipPorts(vector<string> &ports, const string &path, vector<string> *er
     try{
         fin.open(path, ios::in);
     } catch (const std::exception& e) {
-        errors->push_back("ERROR: Failed to open file" );
+        errors->push_back("Error: Failed to open file" );
 //        std::cout << "ERROR: Failed to open file" << std::endl;
         return false;
     }
@@ -135,7 +140,7 @@ bool readPortContainers(Port *&port, const string &path, vector<string> *errors)
     try{
         fin.open(path, ios::in);
     } catch (const std::exception& e) {
-        errors->push_back("ERROR: Failed to open file");
+        errors->push_back("Error: Failed to open file");
 //        std::cout << "ERROR: Failed to open file" << std::endl;
         return false;
     }
@@ -150,7 +155,8 @@ bool readPortContainers(Port *&port, const string &path, vector<string> *errors)
                 row.push_back(removeLeadingAndTrailingWhitespaces(word));
             }
             if(row.size() < 3) {
-                errors->push_back("Warning: not all the information about container was given, in line: " + line);
+                std::replace( line.begin(), line.end(), ',', '.');
+                errors->push_back("Warning: not all the information about container was given. in line: " + line + " (replace comma with .)");
 //                std::cout << "Warning: not all the information about container was given, in line: " << line << std::endl;
             }
             else {
@@ -161,11 +167,13 @@ bool readPortContainers(Port *&port, const string &path, vector<string> *errors)
                         port->addContainer(container);
                     } else {
                         delete container;
-                        errors->push_back("Warning: ID or destination is not valid , in line: " + line);
+                        std::replace( line.begin(), line.end(), ',', '.');
+                        errors->push_back("Warning: ID or destination is not valid. in line: " + line + " (replace comma with .)");
 //                        std::cout << "Warning: ID or destination is not valid , in line: " << line << std::endl;
                     }
                 } catch (const std::exception& e) {
-                    errors->push_back("Warning: weight is not int, in line: " + line);
+                    std::replace( line.begin(), line.end(), ',', '.');
+                    errors->push_back("Warning: weight is not int. in line: " + line + " (replace comma with .)");
 //                    std::cout << "Warning: weight is not int, in line: " << line << std::endl;
                     continue;
                 }

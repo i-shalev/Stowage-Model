@@ -14,9 +14,11 @@ AlgoRunner::AlgoRunner(AlgoType _algoType, const string& _pathToRootDir) {
 void AlgoRunner::startRun() {
     auto* dirs = getDirsFromRootDir(pathToRootDir);
     string resultFileName = R"(/simulation.results)";
+    string errorFileName = R"(/simulation.errors)";
     switch(algoType){
         case NaiveAlgoEnum:
             writeToFile(pathToRootDir +  resultFileName, "NaiveAlgo, ");
+            writeToFile(pathToRootDir +  errorFileName, "NaiveAlgo, ");
             for(const auto& dir:*dirs) {
                 errors->clear();
                 std::cout << dir << std::endl;
@@ -25,12 +27,22 @@ void AlgoRunner::startRun() {
                     this->sumOperations += numOp;
                 }
                 writeToFile(pathToRootDir +  resultFileName, std::to_string(numOp) + ", ");
-                std::cout << "ERRORS:" << std::endl;
+//                std::cout << "ERRORS:" << std::endl;
+                if(!errors->empty()) {
+                    string errorsString = errors->at(0);
+                    for(int i = 1; i < errors->size(); i++) {
+                        errorsString += " | ";
+                        errorsString += errors->at(i);
+                    }
+                    writeToFile(pathToRootDir +  errorFileName, errorsString );
+                }
                 for(const auto& error:*errors) {
                     std::cout << error << std::endl;
                 }
+                writeToFile(pathToRootDir +  errorFileName, "," );
             }
             writeToFile(pathToRootDir +  resultFileName, std::to_string(this->sumOperations) + "\n");
+            writeToFile(pathToRootDir +  errorFileName, "\n" );
             break;
     }
 

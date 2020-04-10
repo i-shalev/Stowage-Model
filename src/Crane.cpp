@@ -132,7 +132,7 @@ int Crane::executeOperationList(const string& path) {
                         errors->push_back("Error: cant load container. there is nothing below");
 //                        std::cout << "Error: cant load container. there is nothing below" << std::endl;
                     case 6:
-                        errors->push_back("Error: cant find the container, wrong ID");
+                        errors->push_back("Error: cant find the container. wrong ID");
 //                        std::cout << "Error: cant find the container, wrong ID" << std::endl;
                 }
 //                std::cout << "Abort operation" << std::endl;
