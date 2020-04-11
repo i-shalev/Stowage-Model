@@ -1,10 +1,10 @@
 //
-// Created by zivco on 05/04/2020.
+// Created by itay on 11/04/2020.
 //
 
-#include "NaiveAlgo.h"
+#include "NaiveAlgoWithTrick.h"
 
-void NaiveAlgo::getInstructionForCargo(const std::string& outputPath) {
+void NaiveAlgoWithTrick::getInstructionForCargo(const std::string &outputPath) {
     char* pathToDirChar = (char *)(malloc((outputPath.size() + 1) * sizeof(char)));
     stringToCharStar(pathToDirChar, outputPath);
     std::remove(pathToDirChar);
@@ -58,49 +58,69 @@ void NaiveAlgo::getInstructionForCargo(const std::string& outputPath) {
     }
     //now load everything from port to ship. check valid ids and destinations.
     vector<Container*> toLoad;
+    int numPlacesOnShip = ship->numEmptyPlaces();
     ship->getCurrentPort()->getContainersByDistance(ship->getRoute(),toLoad);
+    vector<Container*> toLoadInOrder;
+
+    int maxIndex = min(toLoad.size(), numPlacesOnShip);
+
+    for(int i = maxIndex-1; i >= 0; i--) {
+        toLoadInOrder.push_back(toLoad.at(i));
+    }
+    for(int i = maxIndex; i < toLoad.size(); i++) {
+        toLoadInOrder.push_back(toLoad.at(i));
+    }
+
     int emptyPlacesAtPosition;
-    bool done = toLoad.empty();
+    bool done = toLoadInOrder.empty();
     for(int i=0; i<ship->getPlan().getLength() && !done; i++){
         for(int j=0; j< ship->getPlan().getWidth() && !done; j++){
             emptyPlacesAtPosition  = this->emptyPlacesInPosition(i,j,ship->getCurrentDestination());
             for(int level = ship->getPlan().getNumFloors() - emptyPlacesAtPosition; level<ship->getPlan().getNumFloors() && !done; level++){
-                if(checkContainer(toLoad.front())) {
+                if(checkContainer(toLoadInOrder.front())) {
                     if (tryOperation(/*'L', toLoad.front()->getWeight(), 0, i, j, 0, 0, 0*/) != APPROVED) {
 //                        std::cout << "unbalance..." << std::endl;
                     }
-                    fs << "L " << toLoad.front()->getId() << " " << level << " " << i << " " << j << std::endl;
+                    fs << "L " << toLoadInOrder.front()->getId() << " " << level << " " << i << " " << j << std::endl;
                 }
                 else{
-                    fs << "R " << toLoad.front()->getId() << std::endl;
+                    fs << "R " << toLoadInOrder.front()->getId() << std::endl;
                     level--;
                 }
-                toLoad.erase(toLoad.begin());
-                if(toLoad.empty()){
+                toLoadInOrder.erase(toLoadInOrder.begin());
+                if(toLoadInOrder.empty()){
                     done = true;
                 }
             }
         }
     }
-    while(!toLoad.empty()) {
-        fs << "R " << toLoad.back()->getId() << std::endl;
-        toLoad.pop_back();
+    while(!toLoadInOrder.empty()) {
+        fs << "R " << toLoadInOrder.back()->getId() << std::endl;
+        toLoadInOrder.pop_back();
     }
     fs.close();
     delete pathToDirChar;
 }
-int NaiveAlgo::emptyPlacesInPosition(int i, int j, const string& portSymbol){
+
+int NaiveAlgoWithTrick::emptyPlacesInPosition(int i, int j, const string& portSymbol){
     int sum = 0;
     for(int level=0; level<ship->getPlan().getNumFloors(); level++){
         if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)== nullptr ||
-                (!ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked() &&
-                ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()==portSymbol)){
+           (!ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked() &&
+            ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()==portSymbol)){
             sum++;
         }
     }
     return sum;
     //sum last positions are empty
 }
-bool NaiveAlgo::checkContainer(Container* cont){
+
+bool NaiveAlgoWithTrick::checkContainer(Container* cont){
     return cont->checkId() && ship->willVisit(cont->getDest());
+}
+
+int min(int x, int y) {
+    if( x < y )
+        return x;
+    return y;
 }

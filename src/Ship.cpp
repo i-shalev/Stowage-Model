@@ -124,3 +124,17 @@ Port* Ship::getCurrentPort() {
     }
     return nullptr;
 }
+
+int Ship::numEmptyPlaces() {
+    int counter = 0;
+    for (int level = 0; level < this->plan->getNumFloors(); level++) {
+        for (int i = 0; i < this->plan->getLength(); i++) {
+            for (int j = 0; j < this->plan->getWidth(); j++) {
+                if (this->plan->getFloor(level)->getContainerAtPosition(i, j) == nullptr) {
+                    counter++;
+                }
+            }
+        }
+    }
+    return counter;
+}

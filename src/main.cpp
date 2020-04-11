@@ -2,7 +2,7 @@
 #include "main.h"
 
 int main(){
-    string pathToRootDir = R"(C:\Users\zivco\Desktop\ex)";
+    string pathToRootDir = R"(C:\Users\itay\Desktop\ex)";
     string resultFileName = R"(/simulation.results)";
     string errorFileName = R"(/simulation.errors)";
     emptyFile(pathToRootDir +  resultFileName);
@@ -16,8 +16,8 @@ int main(){
     writeToFile(pathToRootDir +  errorFileName, "\n");
     auto* algoRunnerNaive = new AlgoRunner(NaiveAlgoEnum, pathToRootDir);
     algoRunnerNaive->startRun();
-    auto* algoRunnerNaive1 = new AlgoRunner(NaiveAlgoEnum, pathToRootDir);
-    algoRunnerNaive1->startRun();
+    auto* algoRunnerNaiveWithTrick = new AlgoRunner(NaiveAlgoWithTrickEnum, pathToRootDir);
+    algoRunnerNaiveWithTrick->startRun();
     delete algoRunnerNaive;
-    delete algoRunnerNaive1;
+    delete algoRunnerNaiveWithTrick;
 }

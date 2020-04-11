@@ -11,9 +11,10 @@
 #include "Port.h"
 #include "Crane.h"
 #include "NaiveAlgo.h"
+#include "NaiveAlgoWithTrick.h"
 
 
-enum AlgoType  {NaiveAlgoEnum};
+enum AlgoType  {NaiveAlgoEnum, NaiveAlgoWithTrickEnum};
 
 using namespace std;
 class AlgoRunner {
@@ -27,9 +28,9 @@ public:
     AlgoRunner(const AlgoRunner& algoRunner)  = delete;
     void startRun();
     int simulateNaive(const string &pathToDir);
+    int simulateNaiveWithTrick(const string &pathToDir);
     bool handleNameOfFile (const string& fileName, string& portName, int & indexNumber);
     map<string, int>* createMapOfPortAndNumberOfVisits(vector<string>* portList);
-    void addPortsWithNoFile(map<string, int> *mapPortVisits, vector<string> *portVector, const string &path);
     ShipPlan* createShipPlan(const string& pathToShipPlan);
     ShipRoute *createShipRoute(const string &pathToShipPorts);
     Ship* createShip(const string &pathToDir);

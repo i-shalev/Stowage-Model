@@ -17,11 +17,12 @@ void AlgoRunner::startRun() {
     string errorFileName = R"(/simulation.errors)";
     switch(algoType){
         case NaiveAlgoEnum:
+//            std::cout << "NaiveAlgo" << std::endl;
             writeToFile(pathToRootDir +  resultFileName, "NaiveAlgo, ");
             writeToFile(pathToRootDir +  errorFileName, "NaiveAlgo, ");
             for(const auto& dir:*dirs) {
                 errors->clear();
-                std::cout << dir << std::endl;
+//                std::cout << dir << std::endl;
                 int numOp = simulateNaive(dir);
                 if(numOp != -1) {
                     this->sumOperations += numOp;
@@ -36,16 +37,44 @@ void AlgoRunner::startRun() {
                     }
                     writeToFile(pathToRootDir +  errorFileName, errorsString );
                 }
-                for(const auto& error:*errors) {
-                    std::cout << error << std::endl;
-                }
+//                for(const auto& error:*errors) {
+//                    std::cout << error << std::endl;
+//                }
                 writeToFile(pathToRootDir +  errorFileName, "," );
             }
-            writeToFile(pathToRootDir +  resultFileName, std::to_string(this->sumOperations) + "\n");
-            writeToFile(pathToRootDir +  errorFileName, "\n" );
             break;
+        case NaiveAlgoWithTrickEnum:
+//            std::cout << "NaiveAlgoWithTrick" << std::endl;
+            writeToFile(pathToRootDir +  resultFileName, "NaiveAlgoWithTrick, ");
+            writeToFile(pathToRootDir +  errorFileName, "NaiveAlgoWithTrick, ");
+            for(const auto& dir:*dirs) {
+                errors->clear();
+//                std::cout << dir << std::endl;
+                int numOp = simulateNaiveWithTrick(dir);
+                if(numOp != -1) {
+                    this->sumOperations += numOp;
+                }
+                writeToFile(pathToRootDir +  resultFileName, std::to_string(numOp) + ", ");
+//                std::cout << "ERRORS:" << std::endl;
+                if(!errors->empty()) {
+                    string errorsString = errors->at(0);
+                    for(int i = 1; i < errors->size(); i++) {
+                        errorsString += " | ";
+                        errorsString += errors->at(i);
+                    }
+                    writeToFile(pathToRootDir +  errorFileName, errorsString );
+                }
+//                for(const auto& error:*errors) {
+//                    std::cout << error << std::endl;
+//                }
+                writeToFile(pathToRootDir +  errorFileName, "," );
+            }
+            break;
+
     }
 
+    writeToFile(pathToRootDir +  resultFileName, std::to_string(this->sumOperations) + "\n");
+    writeToFile(pathToRootDir +  errorFileName, "\n" );
     delete errors;
     delete dirs;
 }
@@ -78,6 +107,36 @@ int AlgoRunner::simulateNaive(const string &pathToDir) {
         }
         delete ship;
         return sumOp;
+}
+
+int AlgoRunner::simulateNaiveWithTrick(const string &pathToDir) {
+    auto* ship = createShip(pathToDir);
+    if(ship == nullptr) {
+        return -1;
+    }
+    NaiveAlgoWithTrick alg(ship);
+    int portOperations, sumOp=0;
+    while(!ship->finishRoute()){
+//            std::cout << "enter to port "<<ship->getCurrentDestination() << std::endl;
+        alg.getInstructionForCargo(pathToDir +  R"(/instructions.txt)");
+        Crane c1(ship, errors);
+        portOperations = c1.executeOperationList(pathToDir +  R"(/instructions.txt)");
+        if(portOperations<0){
+            errors->push_back("Error: Algo return negative number of moves (Algo failed)");
+//                std::cout << "NaiveAlgoWithTrick failure, exiting..." << std::endl;
+            delete ship;
+            return -1;
+        }
+        sumOp+=portOperations;
+        if(!validate(ship)){
+            errors->push_back("Error: Algo reject containers with no reason");
+//                std::cout << "Error: Algo reject containers with no reason" << std::endl;
+        }
+        ship->moveToNextPort();
+//            std::cout << "Moving to the next destination" << std::endl;
+    }
+    delete ship;
+    return sumOp;
 }
 
 bool AlgoRunner::handleNameOfFile (const string& fileName, string& portName, int & indexNumber) {

@@ -37,6 +37,7 @@ public:
     int getIndexOfPort();
     Port* getCurrentPort();
     ShipRoute& getRoute(){return *(this->route);}
+    int numEmptyPlaces();
 };
 
 #endif //STOWAGE_MODEL_SHIP_H
