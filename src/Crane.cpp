@@ -161,3 +161,34 @@ int Crane::executeOperationList(const string& path) {
     return price;
 }
 
+int getIndexOf(string dest, vector<string>& vec){
+    for(size_t i=0; i<vec.size(); i++){
+        if(vec.at(i).compare(dest) == 0)
+            return i;
+    }
+    return -1;
+}
+bool Crane::disconnect(){
+    if(!temporaryUnloaded.empty()){
+        errors->push_back("Error: unload container to wrong port");
+        return false;
+    }
+    //check latest destination loaded
+    int  latest = -1;
+    for(auto dest : destinationsOfLoadedContainers){
+        int index = getIndexOf(dest, *(curShip->getRoute().getDstList()));
+        if(index > latest)
+            latest = index;
+    }
+    vector<Container*> vec;
+    curShip->getCurrentPort()->getVectorOfContainers(vec);
+    for(auto cont : vec){
+        int idx = getIndexOf(cont->getDest(), *(curShip->getRoute().getDstList()));
+        if(idx != -1 && idx < latest){
+            errors->push_back("Error: reject container with closer destination");
+            return false;
+        }
+    }
+    return true;
+
+}

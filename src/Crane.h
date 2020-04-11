@@ -28,6 +28,7 @@ public:
     Ship* getShip(){ return curShip;}
     void setShip(Ship* newShip){ this->curShip=newShip;}
     int executeOperationList(const string& pathToFile);
+    bool disconnect();
 };
 
 

@@ -102,6 +102,7 @@ int AlgoRunner::simulateNaive(const string &pathToDir) {
                 errors->push_back("Error: Algo reject containers with no reason");
 //                std::cout << "Error: Algo reject containers with no reason" << std::endl;
             }
+            c1.disconnect();
             ship->moveToNextPort();
 //            std::cout << "Moving to the next destination" << std::endl;
         }
@@ -132,6 +133,7 @@ int AlgoRunner::simulateNaiveWithTrick(const string &pathToDir) {
             errors->push_back("Error: Algo reject containers with no reason");
 //                std::cout << "Error: Algo reject containers with no reason" << std::endl;
         }
+        c1.disconnect();
         ship->moveToNextPort();
 //            std::cout << "Moving to the next destination" << std::endl;
     }
