@@ -31,6 +31,12 @@ result Crane::Load(const string& contId, int level, int i, int j) {
     //load the container
     curShip->getPlan().getFloor(level)->setContainerAtPosition(i,j,cont);
     curShip->getCurrentPort()->removeContainer(contId);
+    if(temporaryUnloaded.find(contId)==temporaryUnloaded.end() && destinationsOfLoadedContainers.find(cont->getDest())==destinationsOfLoadedContainers.end()){ //if not temp unloaded and dest not exists
+        destinationsOfLoadedContainers.insert(cont->getDest());
+    }
+    if(temporaryUnloaded.find(contId)!=temporaryUnloaded.end()){
+        temporaryUnloaded.erase(contId);
+    }
     return SUCCESS;
 
 }
@@ -51,8 +57,10 @@ result Crane::Unload(const string& contId, int level, int i, int j) {
     if(contId!=curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId())
         return WRONG_CONTAINER;
     Container* answer = curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j);
-    if((answer)->getDest() != curShip->getCurrentDestination())
+    if((answer)->getDest() != curShip->getCurrentDestination()) {
         curShip->getCurrentPort()->addContainer(answer);
+        temporaryUnloaded.insert(answer->getId());
+    }
     else
         delete answer;
     curShip->getPlan().getFloor(level)->setContainerAtPosition(i,j,nullptr);
