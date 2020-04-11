@@ -16,8 +16,7 @@ class main {
 
 };
 
-int main();
-int simulate(const string &pathToDir);
+int main(int argc, char **argv);
 
 
 #endif //STOWAGE_MODEL_MAIN_H

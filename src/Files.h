@@ -20,13 +20,19 @@ class Files {
 
 };
 
+// read the file and fill the data to the args.
 bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines, vector<string>* errors);
+
 bool readShipPlan(vector<vector<int>> &blocks, const string &path, vector<string> *errors);
 
 bool readPortContainers(Port *&port, const string &path, vector<string> *errors);
+
 bool readShipPorts(vector<string> &ports, const string &path, vector<string> *errors);
+
 string removeLeadingAndTrailingWhitespaces(string line);
+
 bool isCommentLine(string line);
+
 void getCargoData(const char *path, vector<string>& res);
 void stringToCharStar(char* chatStar, string str);
 bool isFile(const char* path);

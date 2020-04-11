@@ -11,6 +11,7 @@
 #include "fstream"
 #include "Files.h"
 
+// this algorithm sort the Containers by their destinations from closest to farthest and Load them one by one.
 class NaiveAlgo{
     Ship* ship;
     //BalanceCalc* calc;

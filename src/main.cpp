@@ -1,8 +1,11 @@
 
 #include "main.h"
 
-int main(){
-    string pathToRootDir = R"(C:\Users\zivco\Desktop\ex)";
+int main(int argc, char **argv){
+    if(argc < 2) {
+        std::cout << "ERROR: Please pass a root dir" << std::endl;
+    }
+    string pathToRootDir = argv[1];
     string resultFileName = R"(/simulation.results)";
     string errorFileName = R"(/simulation.errors)";
     emptyFile(pathToRootDir +  resultFileName);
