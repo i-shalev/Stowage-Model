@@ -11,31 +11,34 @@ Container::Container(int _weight, string  _dest, string  _id, bool _blocked): de
 ////    std::cout << "Delete Container: " << this->id << std::endl;
 //}
 
-int Container::getWeight()
+int Container::getWeight() const
 {
     return this->weight;
 }
 
-string Container::getDest()
+string Container::getDest() const
 {
     return this->dest;
 }
 
-string Container::getId()
+string Container::getId() const
 {
     return this->id;
 }
 
-bool Container::getValid()
+bool Container::getValid() const
 {
     return this->valid;
 }
 
-void Container::setWeight(int _weight)
+void Container::setWeight(const int _weight)
 {
     this->weight = _weight;
 }
 
+bool Container::getBlocked() const {
+    return this->blocked;
+}
 bool Container::checkId()
 {
     int result = 0;
