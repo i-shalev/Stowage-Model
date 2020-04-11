@@ -25,7 +25,7 @@ public:
     result Load(const string& contId, int level, int i, int j);
     result Unload(const string& contId, int level, int i, int j);
     result Move(/*string id, int level, int i, int j, int toLevel, int toi, int toj*/);
-    Ship* getShip(){ return curShip;}
+    Ship* getShip() const { return curShip;}
     void setShip(Ship* newShip){ this->curShip=newShip;}
     int executeOperationList(const string& pathToFile);
     bool disconnect();

@@ -15,7 +15,7 @@ Floor::~Floor() {
     delete floorMap;
 }
 
-Container* Floor::getContainerAtPosition(int i, int j){
+Container* Floor::getContainerAtPosition(int i, int j) const{
     if(i < 0 or j < 0 or i > length or j > width)
         return nullptr;
     return (*this->floorMap)[i][j];
