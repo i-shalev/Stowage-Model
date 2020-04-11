@@ -16,7 +16,7 @@ class Floor{
         Floor(int index, int length, int width);
         ~Floor();
         Floor(const Floor& f) = delete; // disable copy constr'. need deep copy
-        Container* getContainerAtPosition(int i, int j);
+        Container* getContainerAtPosition(int i, int j) const;
         void setContainerAtPosition(int i, int j, Container* value);
 
 

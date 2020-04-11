@@ -17,12 +17,12 @@ class Container {
     public:
         Container(int _weight, string  _dest, string  _id, bool _blocked = false);
 //        ~Container();
-        int getWeight();
-        string getDest();
-        string getId();
-        bool getValid();
-        bool getBlocked(){return this->blocked;}
-        void setWeight(int _weight);
+        int getWeight() const ;
+        string getDest() const ;
+        string getId() const;
+        bool getValid() const;
+        bool getBlocked() const;
+        void setWeight(const int _weight);
         void printContainer() const;
 
 
