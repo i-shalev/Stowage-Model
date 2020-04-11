@@ -67,7 +67,7 @@ void NaiveAlgoWithTrick::getInstructionForCargo(const std::string &outputPath) {
     for(int i = maxIndex-1; i >= 0; i--) {
         toLoadInOrder.push_back(toLoad.at(i));
     }
-    for(int i = maxIndex; i < toLoad.size(); i++) {
+    for(size_t i = maxIndex; i < toLoad.size(); i++) {
         toLoadInOrder.push_back(toLoad.at(i));
     }
 

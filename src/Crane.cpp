@@ -103,13 +103,16 @@ int Crane::executeOperationList(const string& path) {
                 switch(rc){
                     case 2:
                         errors->push_back("Error: index out of range");
+                        break;
 //                        std::cout << "Error: index out of range" << std::endl;
                     case 5:
                         errors->push_back("Error: cant unload container. container above");
 //                        std::cout << "Error: cant unload container. container above" << std::endl;
+                        break;
                     case 6:
                         errors->push_back("Error: there is other container in this place");
 //                        std::cout << "Error: there is other container in this place" << std::endl;
+                        break;
                 }
 //                std::cout << "Abort operation" << std::endl;
                 return -1;
@@ -129,18 +132,23 @@ int Crane::executeOperationList(const string& path) {
                 switch(rc){
                     case 1:
                         errors->push_back("Error: cant load the container because the ship will not visit its destination");
+                        break;
 //                        std::cout << "Error: cant load the container because the ship will not visit its destination" << std::endl;
                     case 2:
                         errors->push_back("Error: index out of range");
+                        break;
 //                        std::cout << "Error: index out of range" << std::endl;
                     case 3:
                         errors->push_back("Error: cant load container. the location is full");
+                        break;
 //                        std::cout << "Error: cant load container. the location is full" << std::endl;
                     case 4:
                         errors->push_back("Error: cant load container. there is nothing below");
+                        break;
 //                        std::cout << "Error: cant load container. there is nothing below" << std::endl;
                     case 6:
                         errors->push_back("Error: cant find the container. wrong ID");
+                        break;
 //                        std::cout << "Error: cant find the container, wrong ID" << std::endl;
                 }
 //                std::cout << "Abort operation" << std::endl;

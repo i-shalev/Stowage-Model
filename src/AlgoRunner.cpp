@@ -31,7 +31,7 @@ void AlgoRunner::startRun() {
 //                std::cout << "ERRORS:" << std::endl;
                 if(!errors->empty()) {
                     string errorsString = errors->at(0);
-                    for(int i = 1; i < errors->size(); i++) {
+                    for(size_t i = 1; i < errors->size(); i++) {
                         errorsString += " | ";
                         errorsString += errors->at(i);
                     }
@@ -58,7 +58,7 @@ void AlgoRunner::startRun() {
 //                std::cout << "ERRORS:" << std::endl;
                 if(!errors->empty()) {
                     string errorsString = errors->at(0);
-                    for(int i = 1; i < errors->size(); i++) {
+                    for(size_t i = 1; i < errors->size(); i++) {
                         errorsString += " | ";
                         errorsString += errors->at(i);
                     }
