@@ -11,9 +11,10 @@ using namespace std;
 class ShipRoute {
     private:
         vector<string>* dstList;
+        vector<string>* errors;
 
     public:
-        explicit ShipRoute(const vector<string>* _dstList);
+        explicit ShipRoute(const vector<string>* _dstList, vector<string>* _errors);
         ShipRoute();
         ~ShipRoute();
         void addDstAtEnd(const string& dst);
