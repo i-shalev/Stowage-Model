@@ -4,6 +4,7 @@
 int main(int argc, char **argv){
     if(argc < 2) {
         std::cout << "ERROR: Please pass a root dir" << std::endl;
+        return EXIT_FAILURE;
     }
     string pathToRootDir = argv[1];
     string resultFileName = R"(/simulation.results)";
@@ -23,4 +24,6 @@ int main(int argc, char **argv){
     algoRunnerNaiveWithTrick->startRun();
     delete algoRunnerNaive;
     delete algoRunnerNaiveWithTrick;
+
+    return EXIT_SUCCESS;
 }
