@@ -30,7 +30,7 @@ Ship::~Ship() {
 
 ShipPlan& Ship::getPlan() { return *(this->plan);}
 //const ShipRoute& Ship::getRoute() {return *(this->route);}
-bool Ship::willVisit(string dest) {
+bool Ship::willVisit(string dest) const {
     return this->route->willVisit(std::move(dest));
 }
 
@@ -75,7 +75,7 @@ void Ship::getAllContainersWithDest(const string& dest, std::vector<Container*>&
 }
 
 
-bool Ship::isFull() {
+bool Ship::isFull() const{
     for (int level = 0; level < this->plan->getNumFloors(); level++) {
         for (int i = 0; i < this->plan->getLength(); i++) {
             for (int j = 0; j < this->plan->getWidth(); j++) {
@@ -88,11 +88,11 @@ bool Ship::isFull() {
     return true;
 }
 
-bool Ship::finishRoute() {
+bool Ship::finishRoute() const{
     return this->route->getRouteLength() == 0;
 }
 
-void Ship::moveToNextPort() {
+void Ship::moveToNextPort(){
     if(finishRoute())
         return;
     this->route->deleteFirst();
@@ -100,7 +100,7 @@ void Ship::moveToNextPort() {
         addOneVisitToMap();
 }
 
-void Ship::addOneVisitToMap() {
+void Ship::addOneVisitToMap(){
     int ans = 0;
     auto res = mapPortNameToNumberOfVisitsUntilNow->find(this->route->getHead());
     if(!mapPortNameToNumberOfVisitsUntilNow->empty() && res!=mapPortNameToNumberOfVisitsUntilNow->end()){
@@ -110,12 +110,12 @@ void Ship::addOneVisitToMap() {
     mapPortNameToNumberOfVisitsUntilNow->insert({this->route->getHead(), ans});
 }
 
-int Ship::getIndexOfPort() {
+int Ship::getIndexOfPort() const{
     auto res = mapPortNameToNumberOfVisitsUntilNow->find(this->route->getHead());
     return res->second;
 }
 
-Port* Ship::getCurrentPort() {
+Port* Ship::getCurrentPort() const{
     int index = getIndexOfPort();
     string fullName = this->route->getHead() + "_" + to_string(index);
     auto res = mapPortNameToPort->find(fullName);
@@ -125,7 +125,7 @@ Port* Ship::getCurrentPort() {
     return nullptr;
 }
 
-int Ship::numEmptyPlaces() {
+int Ship::numEmptyPlaces() const{
     int counter = 0;
     for (int level = 0; level < this->plan->getNumFloors(); level++) {
         for (int i = 0; i < this->plan->getLength(); i++) {

@@ -18,10 +18,10 @@ class ShipRoute {
         ~ShipRoute();
         void addDstAtEnd(const string& dst);
         void deleteFirst();
-        string getHead();
-        void printList();
-        bool willVisit(const string& dest);
-        int getRouteLength();
+        string getHead() const;
+        void printList() const;
+        bool willVisit(const string& dest) const;
+        int getRouteLength() const;
         vector<string>* getDstList();
 };
 bool checkDestination(string dest);

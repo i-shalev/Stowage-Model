@@ -48,19 +48,19 @@ ShipPlan::~ShipPlan() {
     delete[] this->floors;
 }
 
-int ShipPlan::getNumFloors(){
+int ShipPlan::getNumFloors() const{
     return this->numFloors;
 }
 
-int ShipPlan::getLength(){
+int ShipPlan::getLength() const{
     return this->length;
 }
 
-int ShipPlan::getWidth(){
+int ShipPlan::getWidth() const{
     return this->width;
 }
 
-Floor* ShipPlan::getFloor(int i){
+Floor* ShipPlan::getFloor(int i) const{
     return this->floors[i];
 }
 
@@ -85,7 +85,7 @@ bool ShipPlan::isValid(){
     return true;
 }
 
-void ShipPlan::printShipPlan() {
+void ShipPlan::printShipPlan() const{
     std::cout << "num Floors: " << this->numFloors  << std::endl;
     std::cout << "length: "     << this->length     << std::endl;
     std::cout << "width: "      << this->width      << std::endl;

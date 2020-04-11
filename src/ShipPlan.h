@@ -21,11 +21,11 @@ class ShipPlan {
         ShipPlan(int numFloors, int length, int width, const vector<vector<int>> &blocks, vector<string> *_errors);
         ShipPlan(const ShipPlan& s) = delete; // disable copy constr'. need deep copy
         ~ShipPlan();
-        int getNumFloors();
-        int getLength();
-        int getWidth();
-        Floor* getFloor(int i);
-        void printShipPlan();
+        int getNumFloors() const;
+        int getLength() const;
+        int getWidth() const;
+        Floor* getFloor(int i) const;
+        void printShipPlan() const;
 
     bool isValid();
 };

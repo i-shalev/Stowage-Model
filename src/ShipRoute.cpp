@@ -31,7 +31,7 @@ void ShipRoute::deleteFirst()
     }
 }
 
-string ShipRoute::getHead()
+string ShipRoute::getHead() const
 {
     if(!this->dstList->empty()) {
         return this->dstList->at(0);
@@ -39,7 +39,7 @@ string ShipRoute::getHead()
     return "";
 }
 
-void ShipRoute::printList()
+void ShipRoute::printList() const
 {
     for(const auto & i : *this->dstList)
     {
@@ -47,7 +47,7 @@ void ShipRoute::printList()
     }
 }
 
-bool ShipRoute::willVisit(const string& dest){
+bool ShipRoute::willVisit(const string& dest) const{
     for(const auto& i : *this->dstList)
     {
         if(i==dest){
@@ -57,7 +57,7 @@ bool ShipRoute::willVisit(const string& dest){
     return false;
 }
 
-int ShipRoute::getRouteLength() {
+int ShipRoute::getRouteLength() const{
     return this->dstList->size();
 }
 

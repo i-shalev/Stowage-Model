@@ -45,31 +45,31 @@ Container* Port::removeContainer(const std::string& id){
 
 }
 
-bool Port::hasContainers() {
+bool Port::hasContainers() const{
     return !ContainersAwaiting->empty();
 }
 
-Container* Port::getContainerByID(const string& id){
+Container* Port::getContainerByID(const string& id) const{
     auto it = ContainersAwaiting->find(id);
     if(it!=ContainersAwaiting->end())
         return it->second;
     return nullptr;
 }
 
-void Port::getVectorOfContainers(vector<Container*>& vector) {
+void Port::getVectorOfContainers(vector<Container*>& vector) const{
     for(const auto& elem : *this->ContainersAwaiting )
     {
         vector.push_back(elem.second);
     }
 }
-void Port::getContainersWithDest(const string& dest, vector<Container*>& vec){
+void Port::getContainersWithDest(const string& dest, vector<Container*>& vec) const{
     for(const auto& elem : *(this->ContainersAwaiting) )
     {
         if(elem.second->getDest().compare(dest)==0)
             vec.push_back(elem.second);
     }
 }
-void Port::getContainersByDistance(ShipRoute& sr, vector<Container*>& vec){
+void Port::getContainersByDistance(ShipRoute& sr, vector<Container*>& vec) const{
     set<string> seenBefore;
     for(auto elem : *(sr.getDstList())){
         if(seenBefore.find(elem) == seenBefore.end()) {

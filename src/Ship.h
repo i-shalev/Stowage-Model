@@ -23,21 +23,20 @@ public:
     Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port *> *mapPortToPort, vector<string> *_errors);
     ~Ship();
     Ship(const Ship &ship) = delete; //disable copy constr'. the deafult is not good, need deep copy.
-    //const ShipRoute& getRoute();
-    ShipPlan& getPlan();//TODO: make sure we really cant change the route from outside
-    bool willVisit(string dest);
-    bool isFull();
+    ShipPlan& getPlan();
+    bool willVisit(string dest) const;
+    bool isFull() const;
 //    bool calculateBalanceAfter(const string& opcode, const string& containerId){ return true;}
     void getAllContainersWithDest(const string &dest, vector<Container*> &res);
     string getCurrentDestination() const {return route->getHead();}
     void getContainerPosition(const string &id, vector<int> &res);
-    bool finishRoute();
+    bool finishRoute() const;
     void moveToNextPort();
     void addOneVisitToMap();
-    int getIndexOfPort();
-    Port* getCurrentPort();
-    ShipRoute& getRoute(){return *(this->route);}
-    int numEmptyPlaces();
+    int getIndexOfPort() const;
+    Port* getCurrentPort() const;
+    ShipRoute& getRoute() const {return *(this->route);}
+    int numEmptyPlaces() const;
 };
 
 #endif //STOWAGE_MODEL_SHIP_H

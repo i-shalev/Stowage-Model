@@ -24,11 +24,11 @@ public:
     const std::string& getSymbol() const;
     void addContainer(Container* container);
     Container* removeContainer(const std::string& id);
-    bool hasContainers();
-    Container* getContainerByID(const string& id);
-    void getVectorOfContainers(vector<Container*>& vector) ;
-    void getContainersWithDest(const string& dest, vector<Container*>& vec);
-    void getContainersByDistance(ShipRoute& sr, vector<Container*>& vec);
+    bool hasContainers() const;
+    Container* getContainerByID(const string& id) const;
+    void getVectorOfContainers(vector<Container*>& vector) const;
+    void getContainersWithDest(const string& dest, vector<Container*>& vec) const;
+    void getContainersByDistance(ShipRoute& sr, vector<Container*>& vec) const;
 };
 
 
