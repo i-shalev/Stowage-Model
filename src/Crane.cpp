@@ -31,6 +31,12 @@ result Crane::Load(const string& contId, int level, int i, int j) {
     //load the container
     curShip->getPlan().getFloor(level)->setContainerAtPosition(i,j,cont);
     curShip->getCurrentPort()->removeContainer(contId);
+    if(temporaryUnloaded.find(contId)==temporaryUnloaded.end() && destinationsOfLoadedContainers.find(cont->getDest())==destinationsOfLoadedContainers.end()){ //if not temp unloaded and dest not exists
+        destinationsOfLoadedContainers.insert(cont->getDest());
+    }
+    if(temporaryUnloaded.find(contId)!=temporaryUnloaded.end()){
+        temporaryUnloaded.erase(contId);
+    }
     return SUCCESS;
 
 }
@@ -51,8 +57,10 @@ result Crane::Unload(const string& contId, int level, int i, int j) {
     if(contId!=curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId())
         return WRONG_CONTAINER;
     Container* answer = curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j);
-    if((answer)->getDest() != curShip->getCurrentDestination())
+    if((answer)->getDest() != curShip->getCurrentDestination()) {
         curShip->getCurrentPort()->addContainer(answer);
+        temporaryUnloaded.insert(answer->getId());
+    }
     else
         delete answer;
     curShip->getPlan().getFloor(level)->setContainerAtPosition(i,j,nullptr);
@@ -153,3 +161,34 @@ int Crane::executeOperationList(const string& path) {
     return price;
 }
 
+int getIndexOf(string dest, vector<string>& vec){
+    for(size_t i=0; i<vec.size(); i++){
+        if(vec.at(i).compare(dest) == 0)
+            return i;
+    }
+    return -1;
+}
+bool Crane::disconnect(){
+    if(!temporaryUnloaded.empty()){
+        errors->push_back("Error: unload container to wrong port");
+        return false;
+    }
+    //check latest destination loaded
+    int  latest = -1;
+    for(auto dest : destinationsOfLoadedContainers){
+        int index = getIndexOf(dest, *(curShip->getRoute().getDstList()));
+        if(index > latest)
+            latest = index;
+    }
+    vector<Container*> vec;
+    curShip->getCurrentPort()->getVectorOfContainers(vec);
+    for(auto cont : vec){
+        int idx = getIndexOf(cont->getDest(), *(curShip->getRoute().getDstList()));
+        if(idx != -1 && idx < latest){
+            errors->push_back("Error: reject container with closer destination");
+            return false;
+        }
+    }
+    return true;
+
+}

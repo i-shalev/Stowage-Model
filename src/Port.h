@@ -6,6 +6,7 @@
 #define STOWAGE_MODEL_PORT_H
 
 #include <map>
+#include <set>
 #include <utility>
 #include "Container.h"
 #include "ShipRoute.h"
@@ -85,8 +86,12 @@ public:
         }
     }
     void getContainersByDistance(ShipRoute& sr, vector<Container*>& vec){
+        set<string> seenBefore;
         for(auto elem : *(sr.getDstList())){
-            getContainersWithDest(elem, vec);
+            if(seenBefore.find(elem) == seenBefore.end()) {
+                getContainersWithDest(elem, vec);
+                seenBefore.insert(elem);
+            }
         }
     }
 };
