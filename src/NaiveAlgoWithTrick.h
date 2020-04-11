@@ -11,6 +11,9 @@
 #include "fstream"
 #include "Files.h"
 
+// this algorithm sort the Containers by their destinations from closest to farthest.
+// than calculate how much space is left on the boat and Load the containers that should get on the ship from the
+// farthest to the closest.
 class NaiveAlgoWithTrick {
     Ship* ship;
     //BalanceCalc* calc;
