@@ -16,7 +16,7 @@ class main {
 
 };
 
-int main();
+int main(int argc, char **argv);
 
 
 #endif //STOWAGE_MODEL_MAIN_H
