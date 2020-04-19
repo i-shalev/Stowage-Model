@@ -4,8 +4,9 @@
 
 #include "ShipRoute.h"
 
-ShipRoute::ShipRoute(const vector<string>* _dstList): dstList(new vector<string>())
+ShipRoute::ShipRoute(const vector<string>* _dstList, vector<string>* _errors): dstList(new vector<string>())
 {
+    errors = _errors;
     for(const auto & i : *_dstList)
     {
         this->addDstAtEnd(i);
@@ -22,6 +23,8 @@ void ShipRoute::addDstAtEnd(const string& dst)
 {
     if(checkDestination(dst))
         this->dstList->push_back(dst);
+    else
+        errors->push_back("Warning: " + dst + " is not legal Port ID");
 }
 
 void ShipRoute::deleteFirst()

@@ -200,7 +200,7 @@ ShipPlan* AlgoRunner::createShipPlan(const string& pathToShipPlan) {
 ShipRoute* AlgoRunner::createShipRoute(const string &pathToShipPorts) {
     auto* ports = new vector<string>();
     readShipPorts(*ports, pathToShipPorts, errors);
-    auto* shipRoute = new ShipRoute(ports);
+    auto* shipRoute = new ShipRoute(ports, errors);
 
     delete ports;
     return shipRoute;
