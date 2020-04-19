@@ -6,8 +6,8 @@
 
 #include <utility>
 
-Ship::Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port *> *mapPortToPort, vector<string> *_errors)
-        : route(sr), plan(sp), mapPortNameToPort(mapPortToPort), mapPortNameToNumberOfVisitsUntilNow(new map<string,int>){
+Ship::Ship(ShipRoute *sr, ShipPlan *sp, std::map<std::string, Port *> *mapPortToPort, std::vector<std::string> *_errors)
+        : route(sr), plan(sp), mapPortNameToPort(mapPortToPort), mapPortNameToNumberOfVisitsUntilNow(new std::map<std::string,int>){
     this->errors = _errors;
     if(!this->plan->isValid()){
         errors->push_back("Warning: invalid plan");
@@ -30,11 +30,11 @@ Ship::~Ship() {
 
 ShipPlan& Ship::getPlan() { return *(this->plan);}
 //const ShipRoute& Ship::getRoute() {return *(this->route);}
-bool Ship::willVisit(string dest) const {
+bool Ship::willVisit(std::string dest) const {
     return this->route->willVisit(std::move(dest));
 }
 
-void Ship::getContainerPosition(const string& id, std::vector<int>& res){
+void Ship::getContainerPosition(const std::string& id, std::vector<int>& res){
     if(!res.empty()){
         errors->push_back("Warning: incorrect use of getContainerPosition");
 //        std::cout << "Warning: incorrect use of getContainerPosition" << std::endl;
@@ -57,7 +57,7 @@ void Ship::getContainerPosition(const string& id, std::vector<int>& res){
 
 }
 
-void Ship::getAllContainersWithDest(const string& dest, std::vector<Container*>& res) {
+void Ship::getAllContainersWithDest(const std::string& dest, std::vector<Container*>& res) {
     if (!res.empty()) {
         errors->push_back("Warning: incorrect use of getAllContainersWithDest");
 //        std::cout << "Warning: incorrect use of getAllContainersWithDest" << std::endl;
@@ -117,7 +117,7 @@ int Ship::getIndexOfPort() const{
 
 Port* Ship::getCurrentPort() const{
     int index = getIndexOfPort();
-    string fullName = this->route->getHead() + "_" + to_string(index);
+    std::string fullName = this->route->getHead() + "_" + std::to_string(index);
     auto res = mapPortNameToPort->find(fullName);
     if(!mapPortNameToPort->empty() && res!=mapPortNameToPort->end()){
         return res->second;

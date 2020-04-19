@@ -2,7 +2,7 @@
 
 #include <utility>
 
-Container::Container(int _weight, string  _dest, string  _id, bool _blocked): dest(_dest), id(_id), weight(_weight), blocked(_blocked)
+Container::Container(int _weight, std::string  _dest, std::string  _id, bool _blocked): dest(_dest), id(_id), weight(_weight), blocked(_blocked)
 {
     this->valid = checkId() && checkDestination();
 }
@@ -16,12 +16,12 @@ int Container::getWeight() const
     return this->weight;
 }
 
-string Container::getDest() const
+std::string Container::getDest() const
 {
     return this->dest;
 }
 
-string Container::getId() const
+std::string Container::getId() const
 {
     return this->id;
 }
@@ -83,7 +83,7 @@ bool Container::checkDestination(){
 }
 
 void Container::printContainer() const {
-    std::cout << "ID: " << this->id << ", " << "dest: " << this->dest << ", " <<"weight: " << this->weight << ", " << "blocked: " << this->blocked <<  endl;
+    std::cout << "ID: " << this->id << ", " << "dest: " << this->dest << ", " <<"weight: " << this->weight << ", " << "blocked: " << this->blocked <<  std::endl;
 }
 
 int letterToInt(char ch)

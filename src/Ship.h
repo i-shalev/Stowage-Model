@@ -10,26 +10,26 @@
 #ifndef STOWAGE_MODEL_SHIP_H
 #define STOWAGE_MODEL_SHIP_H
 
-using namespace std;
+//using namespace std;
 class Ship {
 private:
     ShipRoute* route;
     ShipPlan* plan;
-    map<string, Port*> *mapPortNameToPort;
-    map<string, int>* mapPortNameToNumberOfVisitsUntilNow;
-    vector<string>* errors;
+    std::map<std::string, Port*> *mapPortNameToPort;
+    std::map<std::string, int>* mapPortNameToNumberOfVisitsUntilNow;
+    std::vector<std::string>* errors;
 
 public:
-    Ship(ShipRoute *sr, ShipPlan *sp, map<string, Port *> *mapPortToPort, vector<string> *_errors);
+    Ship(ShipRoute *sr, ShipPlan *sp, std::map<std::string, Port *> *mapPortToPort, std::vector<std::string> *_errors);
     ~Ship();
     Ship(const Ship &ship) = delete; //disable copy constr'. the deafult is not good, need deep copy.
     ShipPlan& getPlan();
-    bool willVisit(string dest) const;
+    bool willVisit(std::string dest) const;
     bool isFull() const;
 //    bool calculateBalanceAfter(const string& opcode, const string& containerId){ return true;}
-    void getAllContainersWithDest(const string &dest, vector<Container*> &res);
-    string getCurrentDestination() const {return route->getHead();}
-    void getContainerPosition(const string &id, vector<int> &res);
+    void getAllContainersWithDest(const std::string &dest, std::vector<Container*> &res);
+    std::string getCurrentDestination() const {return route->getHead();}
+    void getContainerPosition(const std::string &id, std::vector<int> &res);
     bool finishRoute() const;
     void moveToNextPort();
     void addOneVisitToMap();

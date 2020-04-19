@@ -7,7 +7,7 @@
 #ifndef STOWAGE_MODEL_SHIPPLAN_H
 #define STOWAGE_MODEL_SHIPPLAN_H
 
-using namespace std;
+//using namespace std;
 class ShipPlan {
     private:
         int numFloors;
@@ -15,10 +15,10 @@ class ShipPlan {
         int width;
         Floor** floors = nullptr;
         Container* blockingContainer = new Container(-1,"BLOCK", "BLOCK", true);
-        vector<string>* errors;
+    std::vector<std::string>* errors;
 
     public:
-        ShipPlan(int numFloors, int length, int width, const vector<vector<int>> &blocks, vector<string> *_errors);
+        ShipPlan(int numFloors, int length, int width, const std::vector<std::vector<int>> &blocks, std::vector<std::string> *_errors);
         ShipPlan(const ShipPlan& s) = delete; // disable copy constr'. need deep copy
         ~ShipPlan();
         int getNumFloors() const;

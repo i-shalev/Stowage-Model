@@ -4,7 +4,7 @@
 
 #include "Crane.h"
 
-result Crane::Load(const string& contId, int level, int i, int j) {
+result Crane::Load(const std::string& contId, int level, int i, int j) {
     Container* cont = curShip->getCurrentPort()->getContainerByID(contId);
     //check the container target is in the ship's destination list
     if(cont == nullptr)
@@ -41,7 +41,7 @@ result Crane::Load(const string& contId, int level, int i, int j) {
 
 }
 
-result Crane::Unload(const string& contId, int level, int i, int j) {
+result Crane::Unload(const std::string& contId, int level, int i, int j) {
     //check index
     if(level > curShip->getPlan().getNumFloors() || level < 0 ||
        i > curShip->getPlan().getLength() || i < 0 ||
@@ -75,17 +75,17 @@ result Crane::Move(/*string id, int level, int i, int j, int toLevel, int toi, i
     return SUCCESS;
 }
 
-int Crane::executeOperationList(const string& path) {
+int Crane::executeOperationList(const std::string& path) {
     int price = 0;
-    ifstream fin;
+    std::ifstream fin;
     try{
-        fin.open(path, ios::in);
+        fin.open(path, std::ios::in);
     } catch (const std::exception& e) {
         errors->push_back("ERROR: Failed to open file:" + path);
 //        std::cout << "ERROR: Failed to open file" << std::endl;
         return false;
     }
-    string line, id;
+    std::string line, id;
     size_t sz;
     size_t last_index = -1;
     int level, i, j;
@@ -169,7 +169,7 @@ int Crane::executeOperationList(const string& path) {
     return price;
 }
 
-int getIndexOf(string dest, vector<string>& vec){
+int getIndexOf(std::string dest, std::vector<std::string>& vec){
     for(size_t i=0; i<vec.size(); i++){
         if(vec.at(i).compare(dest) == 0)
             return i;
@@ -188,7 +188,7 @@ bool Crane::disconnect(){
         if(index > latest)
             latest = index;
     }
-    vector<Container*> vec;
+    std::vector<Container*> vec;
     curShip->getCurrentPort()->getVectorOfContainers(vec);
     for(auto cont : vec){
         int idx = getIndexOf(cont->getDest(), *(curShip->getRoute().getDstList()));

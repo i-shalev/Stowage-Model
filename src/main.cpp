@@ -6,9 +6,9 @@ int main(int argc, char **argv){
         std::cout << "ERROR: Please pass a root dir" << std::endl;
         return EXIT_FAILURE;
     }
-    string pathToRootDir = argv[1];
-    string resultFileName = R"(/simulation.results)";
-    string errorFileName = R"(/simulation.errors)";
+    std::string pathToRootDir = argv[1];
+    std::string resultFileName = R"(/simulation.results)";
+    std::string errorFileName = R"(/simulation.errors)";
     emptyFile(pathToRootDir +  resultFileName);
     emptyFile(pathToRootDir +  errorFileName);
     auto* dirs = getDirsNamesFromRootDir(pathToRootDir);

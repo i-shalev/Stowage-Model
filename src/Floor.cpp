@@ -8,7 +8,7 @@ Floor::Floor(int index, int length, int width) {
     this->index = index;
     this->length=length;
     this->width=width;
-    this->floorMap = new vector<vector<Container*>>(length, vector<Container*>(width, nullptr));
+    this->floorMap = new std::vector<std::vector<Container*>>(length, std::vector<Container*>(width, nullptr));
 }
 Floor::~Floor() {
 //    std::cout << "Delete Floor: " << this->index << std::endl;

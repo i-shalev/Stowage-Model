@@ -3,16 +3,16 @@
 //
 
 #include "ShipPlan.h"
-void printvec(const vector<vector<int>> vec){
+void printvec(const std::vector<std::vector<int>> vec){
     for(size_t i=0; i<vec.size(); i++){
         for(size_t j=0; j<vec.at(i).size(); j++)
             std::cout << vec.at(i).at(j) << ",";
         std::cout << std::endl;
     }
 }
-ShipPlan::ShipPlan(int numFloors, int length, int width, const vector<vector<int>>& blocks, vector<string>* _errors)
+ShipPlan::ShipPlan(int numFloors, int length, int width, const std::vector<std::vector<int>>& blocks, std::vector<std::string>* _errors)
 {
-    vector<vector<int>> floorBlocks; //unused
+    std::vector<std::vector<int>> floorBlocks; //unused
     this->numFloors = numFloors;
     this->length = length;
     this->width = width;

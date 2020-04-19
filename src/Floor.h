@@ -4,13 +4,13 @@
 #ifndef STOWAGE_MODEL_FLOOR_H
 #define STOWAGE_MODEL_FLOOR_H
 
-using namespace std;
+//using namespace std;
 class Floor{
     private:
         int index;
         int length;
         int width;
-        vector<vector<Container*>>* floorMap;
+        std::vector<std::vector<Container*>>* floorMap;
 
     public:
         Floor(int index, int length, int width);

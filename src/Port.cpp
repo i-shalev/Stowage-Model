@@ -4,9 +4,9 @@
 
 #include "Port.h"
 
-Port::Port(std::string  symbol, int number, vector<string>* _errors): symbol(std::move(symbol)), number(number){
+Port::Port(std::string  symbol, int number, std::vector<std::string>* _errors): symbol(std::move(symbol)), number(number){
     this->errors = _errors;
-    ContainersAwaiting = new map<std::string, Container*>;
+    ContainersAwaiting = new std::map<std::string, Container*>;
 }
 
 Port::~Port(){
@@ -49,28 +49,28 @@ bool Port::hasContainers() const{
     return !ContainersAwaiting->empty();
 }
 
-Container* Port::getContainerByID(const string& id) const{
+Container* Port::getContainerByID(const std::string& id) const{
     auto it = ContainersAwaiting->find(id);
     if(it!=ContainersAwaiting->end())
         return it->second;
     return nullptr;
 }
 
-void Port::getVectorOfContainers(vector<Container*>& vector) const{
+void Port::getVectorOfContainers(std::vector<Container*>& vector) const{
     for(const auto& elem : *this->ContainersAwaiting )
     {
         vector.push_back(elem.second);
     }
 }
-void Port::getContainersWithDest(const string& dest, vector<Container*>& vec) const{
+void Port::getContainersWithDest(const std::string& dest, std::vector<Container*>& vec) const{
     for(const auto& elem : *(this->ContainersAwaiting) )
     {
         if(elem.second->getDest().compare(dest)==0)
             vec.push_back(elem.second);
     }
 }
-void Port::getContainersByDistance(ShipRoute& sr, vector<Container*>& vec) const{
-    set<string> seenBefore;
+void Port::getContainersByDistance(ShipRoute& sr, std::vector<Container*>& vec) const{
+    std::set<std::string> seenBefore;
     for(auto elem : *(sr.getDstList())){
         if(seenBefore.find(elem) == seenBefore.end()) {
             getContainersWithDest(elem, vec);

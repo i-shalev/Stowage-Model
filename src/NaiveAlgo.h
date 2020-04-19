@@ -19,7 +19,7 @@ public:
     explicit NaiveAlgo(Ship* _ship): ship(_ship){}
     void getInstructionForCargo(const std::string& outputPath);
 private:
-    int emptyPlacesInPosition(int i, int j, const string& portSymbol);
+    int emptyPlacesInPosition(int i, int j, const std::string& portSymbol);
     bool checkContainer(Container *cont);
 };
 

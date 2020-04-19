@@ -6,18 +6,18 @@
 #include <algorithm>
 #include "Files.h"
 
-bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines, vector<string>* errors) {
-    ifstream fin;
+bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int &width, int &numLines, std::vector<std::string>* errors) {
+    std::ifstream fin;
     try{
-        fin.open(path, ios::in);
+        fin.open(path, std::ios::in);
     } catch (const std::exception& e) {
         errors->push_back("Error: Failed to open file");
 //        std::cout << "ERROR: Failed to open file" << std::endl;
         return false;
     }
 
-    vector<string> row;
-    string line, word;
+    std::vector<std::string> row;
+    std::string line, word;
 
     while(getline(fin, line)) {
         if(!isCommentLine(line)) {
@@ -27,7 +27,7 @@ bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &widt
 
     if (!isCommentLine(line)) {
         numLines = 1;
-        stringstream s(line);
+        std::stringstream s(line);
         while (getline(s, word, ',')) {
             row.push_back(removeLeadingAndTrailingWhitespaces(word));
         }
@@ -65,18 +65,18 @@ bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &widt
     return true;
 }
 
-bool readShipPlan(vector<vector<int>> &blocks, const string &path, vector<string> *errors) {
-    ifstream fin;
+bool readShipPlan(std::vector<std::vector<int>> &blocks, const std::string &path, std::vector<std::string> *errors) {
+    std::ifstream fin;
     try{
-        fin.open(path, ios::in);
+        fin.open(path, std::ios::in);
     } catch (const std::exception& e) {
         errors->push_back("ERROR: Failed to open file");
 //        std::cout << "ERROR: Failed to open file" << std::endl;
         return false;
     }
 
-    vector<string> row;
-    string line, word, temp;
+    std::vector<std::string> row;
+    std::string line, word, temp;
     int i = 0;
 
     while (getline(fin, line)) {
@@ -86,7 +86,7 @@ bool readShipPlan(vector<vector<int>> &blocks, const string &path, vector<string
         if (i != 0)
         {
             row.clear();
-            stringstream s(line);
+            std::stringstream s(line);
             while (getline(s, word, ',')) {
                 row.push_back(removeLeadingAndTrailingWhitespaces(word));
             }
@@ -116,16 +116,16 @@ bool readShipPlan(vector<vector<int>> &blocks, const string &path, vector<string
     return true;
 }
 
-bool readShipPorts(vector<string> &ports, const string &path, vector<string> *errors) {
-    ifstream fin;
+bool readShipPorts(std::vector<std::string> &ports, const std::string &path, std::vector<std::string> *errors) {
+    std::ifstream fin;
     try{
-        fin.open(path, ios::in);
+        fin.open(path, std::ios::in);
     } catch (const std::exception& e) {
         errors->push_back("Error: Failed to open file" );
 //        std::cout << "ERROR: Failed to open file" << std::endl;
         return false;
     }
-    string line;
+    std::string line;
     while (getline(fin, line)) {
         if(! isCommentLine(line)) {
             ports.push_back(removeLeadingAndTrailingWhitespaces(line));
@@ -135,21 +135,21 @@ bool readShipPorts(vector<string> &ports, const string &path, vector<string> *er
     return true;
 }
 
-bool readPortContainers(Port *&port, const string &path, vector<string> *errors) {
-    ifstream fin;
+bool readPortContainers(Port *&port, const std::string &path, std::vector<std::string> *errors) {
+    std::ifstream fin;
     try{
-        fin.open(path, ios::in);
+        fin.open(path, std::ios::in);
     } catch (const std::exception& e) {
         errors->push_back("Error: Failed to open file");
 //        std::cout << "ERROR: Failed to open file" << std::endl;
         return false;
     }
-    vector<string> row;
-    string line, word, temp;
+    std::vector<std::string> row;
+    std::string line, word, temp;
 
     while (getline(fin, line)) {
         if(! isCommentLine(line)) {
-            stringstream s(line);
+            std::stringstream s(line);
             row.clear();
             while (getline(s, word, ',')) {
                 row.push_back(removeLeadingAndTrailingWhitespaces(word));
@@ -184,14 +184,14 @@ bool readPortContainers(Port *&port, const string &path, vector<string> *errors)
     return true;
 }
 
-string removeLeadingAndTrailingWhitespaces(string line) {
+std::string removeLeadingAndTrailingWhitespaces(std::string line) {
     const char* t = " \t\n\r\f\v";
     line.erase(0, line.find_first_not_of(t));
     line.erase(line.find_last_not_of(t) + 1);
     return line;
 }
 
-bool isCommentLine(string line) {
+bool isCommentLine(std::string line) {
     if(line.empty())
         return true;
     line = removeLeadingAndTrailingWhitespaces(line);
@@ -206,7 +206,7 @@ bool hasEnding (std::string const &fullString, std::string const &ending) {
     }
 }
 
-void stringToCharStar(char* chatStar, string str) {
+void stringToCharStar(char* chatStar, std::string str) {
     for (size_t i = 0; i < str.size(); i++) {
         chatStar[i] = str.at(i);
     }
@@ -226,14 +226,14 @@ int isDirectory(const char *path) {
     return S_ISDIR(statbuf.st_mode);
 }
 
-void getCargoData(const char *path, vector<string>& res){
+void getCargoData(const char *path, std::vector<std::string>& res){
     DIR *dir = opendir(path);
     struct dirent *entry = readdir(dir);
-    string name;
+    std::string name;
     while (entry != nullptr)
     {
         name = entry->d_name;
-        string pathString(path);
+        std::string pathString(path);
         char* fullPath = (char *)(malloc((strlen(path)+name.size()+2) * sizeof(char)));
         for (size_t i = 0; i < strlen(path); i++) {
             fullPath[i] = path[i];
@@ -257,14 +257,14 @@ void getCargoData(const char *path, vector<string>& res){
     closedir(dir);
 }
 
-vector<string>* getDirsFromRootDir(const string &pathToDir) {
-    auto* dirs = new vector<string>();
+std::vector<std::string>* getDirsFromRootDir(const std::string &pathToDir) {
+    auto* dirs = new std::vector<std::string>();
     char* path = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
     stringToCharStar(path, pathToDir);
 
     DIR *dir = opendir(path);
     struct dirent *entry = readdir(dir);
-    string name;
+    std::string name;
     while (entry != nullptr)
     {
         name = entry->d_name;
@@ -272,7 +272,7 @@ vector<string>* getDirsFromRootDir(const string &pathToDir) {
         if(name == "." or name == "..") {
             continue;
         }
-        string pathString(path);
+        std::string pathString(path);
         char* fullPath = (char *)(malloc((strlen(path) + name.size() + 2) * sizeof(char)));
         for (size_t i = 0; i < strlen(path); i++) {
             fullPath[i] = path[i];
@@ -295,28 +295,28 @@ vector<string>* getDirsFromRootDir(const string &pathToDir) {
     return dirs;
 }
 
-void writeToFile(const string& filename, const string& data) {
+void writeToFile(const std::string& filename, const std::string& data) {
     std::ofstream outfile;
     outfile.open(filename, std::ios_base::app);
     outfile << data;
     outfile.close();
 }
 
-void emptyFile(const string& filename){
+void emptyFile(const std::string& filename){
     std::ofstream outfile;
     outfile.open(filename);
     outfile.close();
 }
 
-vector<string>* getDirsNamesFromRootDir(const string &pathToDir) {
+std::vector<std::string>* getDirsNamesFromRootDir(const std::string &pathToDir) {
 
-        auto* dirs = new vector<string>();
+        auto* dirs = new std::vector<std::string>();
         char* path = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
         stringToCharStar(path, pathToDir);
 
         DIR *dir = opendir(path);
         struct dirent *entry = readdir(dir);
-        string name;
+        std::string name;
         while (entry != nullptr)
         {
             name = entry->d_name;
@@ -324,7 +324,7 @@ vector<string>* getDirsNamesFromRootDir(const string &pathToDir) {
             if(name == "." or name == "..") {
                 continue;
             }
-            string pathString(path);
+            std::string pathString(path);
             char* fullPath = (char *)(malloc((strlen(path) + name.size() + 2) * sizeof(char)));
             for (size_t i = 0; i < strlen(path); i++) {
                 fullPath[i] = path[i];

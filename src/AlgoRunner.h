@@ -17,42 +17,42 @@
 enum AlgoType  {NaiveAlgoEnum, NaiveAlgoWithTrickEnum};
 
 // This Class is the actual simulation it's get an Algorithm Object and run the simulation.
-using namespace std;
+//using namespace std;
 class AlgoRunner {
     AlgoType algoType;
-    string pathToRootDir;
+    std::string pathToRootDir;
     int sumOperations;
-    vector<string>* errors;
+    std::vector<std::string>* errors;
 
 public:
-    AlgoRunner(AlgoType _algoType, const string& _pathToRootDir);
+    AlgoRunner(AlgoType _algoType, const std::string& _pathToRootDir);
     AlgoRunner(const AlgoRunner& algoRunner)  = delete;
 
     //Start the run of the simulation
     void startRun();
 
     //The simulation for the naive algorithm.
-    int simulateNaive(const string &pathToDir);
+    int simulateNaive(const std::string &pathToDir);
 
     //The simulation for the little bit smarter algorithm.
-    int simulateNaiveWithTrick(const string &pathToDir);
+    int simulateNaiveWithTrick(const std::string &pathToDir);
 
     // Get a name of a file if it's in the form "port_index" it's put the values to the args and return true.
-    bool handleNameOfFile (const string& fileName, string& portName, int & indexNumber);
+    bool handleNameOfFile (const std::string& fileName, std::string& portName, int & indexNumber);
 
-    map<string, int>* createMapOfPortAndNumberOfVisits(vector<string>* portList);
+    std::map<std::string, int>* createMapOfPortAndNumberOfVisits(std::vector<std::string>* portList);
 
-    ShipPlan* createShipPlan(const string& pathToShipPlan);
+    ShipPlan* createShipPlan(const std::string& pathToShipPlan);
 
-    ShipRoute *createShipRoute(const string &pathToShipPorts);
+    ShipRoute *createShipRoute(const std::string &pathToShipPorts);
 
-    Ship* createShip(const string &pathToDir);
+    Ship* createShip(const std::string &pathToDir);
 
-    map<string, Port*>* createPortNameToPortMap(const string &pathToDir, map<string, int>* mapPortVisits, const string& lastPort);
+    std::map<std::string, Port*>* createPortNameToPortMap(const std::string &pathToDir, std::map<std::string, int>* mapPortVisits, const std::string& lastPort);
 
-    void addPortsWithNoFileToMap(map<string, int> *mapPortVisits, const string &lastPort,
-                                 map<string, Port *> *mapPortNameToPort);
-    void addPortsWithFileToMap(const string &pathToDir, map<string, int> *mapPortVisits, map<string, Port*>* mapPortNameToPort);
+    void addPortsWithNoFileToMap(std::map<std::string, int> *mapPortVisits, const std::string &lastPort,
+                                 std::map<std::string, Port *> *mapPortNameToPort);
+    void addPortsWithFileToMap(const std::string &pathToDir, std::map<std::string, int> *mapPortVisits, std::map<std::string, Port*>* mapPortNameToPort);
 };
 
 bool validate(Ship* ship);

@@ -11,7 +11,7 @@ void NaiveAlgo::getInstructionForCargo(const std::string& outputPath) {
     std::fstream fs;
     fs.open(outputPath, std::ios::out | std::ios::app);
 
-    vector<Container*> temporaryUnloaded;
+    std::vector<Container*> temporaryUnloaded;
     //first unload from ship all the containers with this destination
     for(int i=0; i<ship->getPlan().getLength();i++){
         for(int j=0; j<ship->getPlan().getWidth(); j++){
@@ -57,7 +57,7 @@ void NaiveAlgo::getInstructionForCargo(const std::string& outputPath) {
         }
     }
     //now load everything from port to ship. check valid ids and destinations.
-    vector<Container*> toLoad;
+    std::vector<Container*> toLoad;
     ship->getCurrentPort()->getContainersByDistance(ship->getRoute(),toLoad);
     int emptyPlacesAtPosition;
     bool done = toLoad.empty();
@@ -89,7 +89,7 @@ void NaiveAlgo::getInstructionForCargo(const std::string& outputPath) {
     fs.close();
     delete pathToDirChar;
 }
-int NaiveAlgo::emptyPlacesInPosition(int i, int j, const string& portSymbol){
+int NaiveAlgo::emptyPlacesInPosition(int i, int j, const std::string& portSymbol){
     int sum = 0;
     for(int level=0; level<ship->getPlan().getNumFloors(); level++){
         if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)== nullptr ||

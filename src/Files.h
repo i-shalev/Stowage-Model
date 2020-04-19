@@ -14,32 +14,32 @@
 #ifndef STOWAGE_MODEL_FILES_H
 #define STOWAGE_MODEL_FILES_H
 
-using namespace std;
+//using namespace std;
 
 class Files {
 
 };
 
 // read the file and fill the data to the args.
-bool getSizesShipPlan(const string &path, int &numFloors, int &length, int &width, int &numLines, vector<string>* errors);
+bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int &width, int &numLines, std::vector<std::string>* errors);
 
-bool readShipPlan(vector<vector<int>> &blocks, const string &path, vector<string> *errors);
+bool readShipPlan(std::vector<std::vector<int>> &blocks, const std::string &path, std::vector<std::string> *errors);
 
-bool readPortContainers(Port *&port, const string &path, vector<string> *errors);
+bool readPortContainers(Port *&port, const std::string &path, std::vector<std::string> *errors);
 
-bool readShipPorts(vector<string> &ports, const string &path, vector<string> *errors);
+bool readShipPorts(std::vector<std::string> &ports, const std::string &path, std::vector<std::string> *errors);
 
-string removeLeadingAndTrailingWhitespaces(string line);
+std::string removeLeadingAndTrailingWhitespaces(std::string line);
 
-bool isCommentLine(string line);
+bool isCommentLine(std::string line);
 
-void getCargoData(const char *path, vector<string>& res);
-void stringToCharStar(char* chatStar, string str);
+void getCargoData(const char *path, std::vector<std::string>& res);
+void stringToCharStar(char* chatStar, std::string str);
 bool isFile(const char* path);
 int isDirectory(const char *path);
-vector<string>* getDirsFromRootDir(const string &pathToDir);
-void writeToFile(const string& filename, const string& data);
-void emptyFile(const string& filename);
-vector<string>* getDirsNamesFromRootDir(const string &pathToDir);
+std::vector<std::string>* getDirsFromRootDir(const std::string &pathToDir);
+void writeToFile(const std::string& filename, const std::string& data);
+void emptyFile(const std::string& filename);
+std::vector<std::string>* getDirsNamesFromRootDir(const std::string &pathToDir);
 
 #endif //STOWAGE_MODEL_FILES_H

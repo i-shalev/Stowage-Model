@@ -4,17 +4,17 @@
 
 #include "AlgoRunner.h"
 
-AlgoRunner::AlgoRunner(AlgoType _algoType, const string& _pathToRootDir) {
+AlgoRunner::AlgoRunner(AlgoType _algoType, const std::string& _pathToRootDir) {
     this->pathToRootDir = _pathToRootDir;
     this->algoType = _algoType;
     this->sumOperations = 0;
-    this->errors = new vector<string>();
+    this->errors = new std::vector<std::string>();
 }
 
 void AlgoRunner::startRun() {
     auto* dirs = getDirsFromRootDir(pathToRootDir);
-    string resultFileName = R"(/simulation.results)";
-    string errorFileName = R"(/simulation.errors)";
+    std::string resultFileName = R"(/simulation.results)";
+    std::string errorFileName = R"(/simulation.errors)";
     switch(algoType){
         case NaiveAlgoEnum:
 //            std::cout << "NaiveAlgo" << std::endl;
@@ -30,7 +30,7 @@ void AlgoRunner::startRun() {
                 writeToFile(pathToRootDir +  resultFileName, std::to_string(numOp) + ", ");
 //                std::cout << "ERRORS:" << std::endl;
                 if(!errors->empty()) {
-                    string errorsString = errors->at(0);
+                    std::string errorsString = errors->at(0);
                     for(size_t i = 1; i < errors->size(); i++) {
                         errorsString += " | ";
                         errorsString += errors->at(i);
@@ -57,7 +57,7 @@ void AlgoRunner::startRun() {
                 writeToFile(pathToRootDir +  resultFileName, std::to_string(numOp) + ", ");
 //                std::cout << "ERRORS:" << std::endl;
                 if(!errors->empty()) {
-                    string errorsString = errors->at(0);
+                    std::string errorsString = errors->at(0);
                     for(size_t i = 1; i < errors->size(); i++) {
                         errorsString += " | ";
                         errorsString += errors->at(i);
@@ -79,7 +79,7 @@ void AlgoRunner::startRun() {
     delete dirs;
 }
 
-int AlgoRunner::simulateNaive(const string &pathToDir) {
+int AlgoRunner::simulateNaive(const std::string &pathToDir) {
         auto* ship = createShip(pathToDir);
         if(ship == nullptr) {
             return -1;
@@ -110,7 +110,7 @@ int AlgoRunner::simulateNaive(const string &pathToDir) {
         return sumOp;
 }
 
-int AlgoRunner::simulateNaiveWithTrick(const string &pathToDir) {
+int AlgoRunner::simulateNaiveWithTrick(const std::string &pathToDir) {
     auto* ship = createShip(pathToDir);
     if(ship == nullptr) {
         return -1;
@@ -141,10 +141,10 @@ int AlgoRunner::simulateNaiveWithTrick(const string &pathToDir) {
     return sumOp;
 }
 
-bool AlgoRunner::handleNameOfFile (const string& fileName, string& portName, int & indexNumber) {
-    vector<string> elems;
-    stringstream s(fileName);
-    string word;
+bool AlgoRunner::handleNameOfFile (const std::string& fileName, std::string& portName, int & indexNumber) {
+    std::vector<std::string> elems;
+    std::stringstream s(fileName);
+    std::string word;
     while(getline(s, word, '_')) {
         elems.push_back(word);
     }
@@ -164,8 +164,8 @@ bool AlgoRunner::handleNameOfFile (const string& fileName, string& portName, int
     return true;
 }
 
-map<string, int>* AlgoRunner::createMapOfPortAndNumberOfVisits(vector<string>* portList) {
-    auto* mapPortVisits = new map<string, int>();
+std::map<std::string, int>* AlgoRunner::createMapOfPortAndNumberOfVisits(std::vector<std::string>* portList) {
+    auto* mapPortVisits = new std::map<std::string, int>();
     for(const auto& port : *portList) {
         auto res = mapPortVisits->find(port);
         int ans;
@@ -180,14 +180,14 @@ map<string, int>* AlgoRunner::createMapOfPortAndNumberOfVisits(vector<string>* p
     return mapPortVisits;
 }
 
-ShipPlan* AlgoRunner::createShipPlan(const string& pathToShipPlan) {
+ShipPlan* AlgoRunner::createShipPlan(const std::string& pathToShipPlan) {
     int numFloors=0 , length=0, width=0, numLines;
     if(! getSizesShipPlan(pathToShipPlan, numFloors, length, width, numLines, this->errors)) {
         return nullptr;
     }
 
     // create the ShipPlanVector
-    auto* blocks = new vector<vector<int>>(numLines-1);
+    auto* blocks = new std::vector<std::vector<int>>(numLines-1);
     if(!readShipPlan(*blocks, pathToShipPlan, errors)) {
         return nullptr;
     }
@@ -197,8 +197,8 @@ ShipPlan* AlgoRunner::createShipPlan(const string& pathToShipPlan) {
     return  shipPlan;
 }
 
-ShipRoute* AlgoRunner::createShipRoute(const string &pathToShipPorts) {
-    auto* ports = new vector<string>();
+ShipRoute* AlgoRunner::createShipRoute(const std::string &pathToShipPorts) {
+    auto* ports = new std::vector<std::string>();
     readShipPorts(*ports, pathToShipPorts, errors);
     auto* shipRoute = new ShipRoute(ports, errors);
 
@@ -206,7 +206,7 @@ ShipRoute* AlgoRunner::createShipRoute(const string &pathToShipPorts) {
     return shipRoute;
 }
 
-Ship* AlgoRunner::createShip(const string &pathToDir){
+Ship* AlgoRunner::createShip(const std::string &pathToDir){
     auto* shipPlan = createShipPlan(pathToDir + R"(/ShipPort.csv)");
     auto* shipRoute = createShipRoute(pathToDir + R"(/Ports.csv)");
     auto* mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());
@@ -215,16 +215,16 @@ Ship* AlgoRunner::createShip(const string &pathToDir){
         return nullptr;
     }
 
-    map<string, Port*>* portNameToPortMap = createPortNameToPortMap(pathToDir, mapPortVisits, shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1));
+    std::map<std::string, Port*>* portNameToPortMap = createPortNameToPortMap(pathToDir, mapPortVisits, shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1));
 
     auto* ship = new Ship(shipRoute, shipPlan, portNameToPortMap, errors);
     delete mapPortVisits;
     return ship;
 }
 
-map<string, Port*>* AlgoRunner::createPortNameToPortMap(const string &pathToDir, map<string, int>* mapPortVisits, const string& lastPort) {
+std::map<std::string, Port*>* AlgoRunner::createPortNameToPortMap(const std::string &pathToDir, std::map<std::string, int>* mapPortVisits, const std::string& lastPort) {
 
-    auto* mapPortNameToPort = new map<string, Port*>();
+    auto* mapPortNameToPort = new std::map<std::string, Port*>();
 
     addPortsWithFileToMap(pathToDir, mapPortVisits, mapPortNameToPort);
 
@@ -233,13 +233,13 @@ map<string, Port*>* AlgoRunner::createPortNameToPortMap(const string &pathToDir,
     return mapPortNameToPort;
 }
 
-void AlgoRunner::addPortsWithNoFileToMap(map<string, int> *mapPortVisits, const string &lastPort, map<string, Port *> *mapPortNameToPort) {
+void AlgoRunner::addPortsWithNoFileToMap(std::map<std::string, int> *mapPortVisits, const std::string &lastPort, std::map<std::string, Port *> *mapPortNameToPort) {
 
     for(const auto& elem : *mapPortVisits)
     {
         for(int i = 0; i < elem.second; i++)
         {
-            string port_index = elem.first + "_" + to_string(i);
+            std::string port_index = elem.first + "_" + std::to_string(i);
             auto res = mapPortNameToPort->find(port_index);
             if(!mapPortNameToPort->empty() && res!=mapPortNameToPort->end()){
                 continue;
@@ -248,7 +248,7 @@ void AlgoRunner::addPortsWithNoFileToMap(map<string, int> *mapPortVisits, const 
             if(lastPort == elem.first and i == elem.second - 1){
                 // the last port - dont need to do anything for now
             } else {
-                errors->push_back("Warning: the file " + elem.first + "_" + to_string(i) + ".cargo_data is missing.");
+                errors->push_back("Warning: the file " + elem.first + "_" + std::to_string(i) + ".cargo_data is missing.");
 //                std::cout << "Warning: the file " << elem.first + "_" + to_string(i) << ".cargo_data is missing." << std::endl;
             }
             Port *port = new Port(elem.first, i, errors);
@@ -257,15 +257,15 @@ void AlgoRunner::addPortsWithNoFileToMap(map<string, int> *mapPortVisits, const 
     }
 }
 
-void AlgoRunner::addPortsWithFileToMap(const string &pathToDir, map<string, int> *mapPortVisits, map<string, Port*>* mapPortNameToPort) {
+void AlgoRunner::addPortsWithFileToMap(const std::string &pathToDir, std::map<std::string, int> *mapPortVisits, std::map<std::string, Port*>* mapPortNameToPort) {
     char* pathToDirChar = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
     stringToCharStar(pathToDirChar, pathToDir);
-    vector<string> namesOfFilesEndsWithCargoData;
+    std::vector<std::string> namesOfFilesEndsWithCargoData;
     getCargoData(pathToDirChar, namesOfFilesEndsWithCargoData);
 
     int indexNumber;
-    string portName;
-    string fullname;
+    std::string portName;
+    std::string fullname;
 
 
     for (const auto& name: namesOfFilesEndsWithCargoData) {
@@ -291,7 +291,7 @@ void AlgoRunner::addPortsWithFileToMap(const string &pathToDir, map<string, int>
 bool validate(Ship* ship){
     if(ship->isFull())
         return true;
-    vector<Container*> vec;
+    std::vector<Container*> vec;
     ship->getCurrentPort()->getVectorOfContainers(vec);
     for(auto & i : vec){
         if(i->checkId() && ship->willVisit(i->getDest()))

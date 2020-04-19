@@ -14,21 +14,21 @@
 class Port{
     const std::string symbol;
     int number;
-    map<std::string, Container*>* ContainersAwaiting;
-    vector<string>* errors;
+    std::map<std::string, Container*>* ContainersAwaiting;
+    std::vector<std::string>* errors;
 
 public:
-    Port(std::string  symbol, int number, vector<string>* _errors);
+    Port(std::string  symbol, int number, std::vector<std::string>* _errors);
     Port(const Port& port)  = delete;
     ~Port();
     const std::string& getSymbol() const;
     void addContainer(Container* container);
     Container* removeContainer(const std::string& id);
     bool hasContainers() const;
-    Container* getContainerByID(const string& id) const;
-    void getVectorOfContainers(vector<Container*>& vector) const;
-    void getContainersWithDest(const string& dest, vector<Container*>& vec) const;
-    void getContainersByDistance(ShipRoute& sr, vector<Container*>& vec) const;
+    Container* getContainerByID(const std::string& id) const;
+    void getVectorOfContainers(std::vector<Container*>& vector) const;
+    void getContainersWithDest(const std::string& dest, std::vector<Container*>& vec) const;
+    void getContainersByDistance(ShipRoute& sr, std::vector<Container*>& vec) const;
 };
 
 
