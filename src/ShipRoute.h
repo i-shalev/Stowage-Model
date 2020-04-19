@@ -7,25 +7,25 @@
 #ifndef STOWAGE_MODEL_SHIPROUTE_H
 #define STOWAGE_MODEL_SHIPROUTE_H
 
-//using namespace std;
+using namespace std;
 class ShipRoute {
     private:
-        std::vector<std::string>* dstList;
-        std::vector<std::string>* errors;
+        vector<string>* dstList;
+        vector<string>* errors;
 
     public:
-        explicit ShipRoute(const std::vector<std::string>* _dstList, std::vector<std::string>* _errors);
+        explicit ShipRoute(const vector<string>* _dstList, vector<string>* _errors);
         ShipRoute();
         ~ShipRoute();
-        void addDstAtEnd(const std::string& dst);
+        void addDstAtEnd(const string& dst);
         void deleteFirst();
-        std::string getHead() const;
+        string getHead() const;
         void printList() const;
-        bool willVisit(const std::string& dest) const;
+        bool willVisit(const string& dest) const;
         int getRouteLength() const;
-        std::vector<std::string>* getDstList();
+        vector<string>* getDstList();
 };
-bool checkDestination(std::string dest);
+bool checkDestination(string dest);
 
 
 #endif //STOWAGE_MODEL_SHIPROUTE_H
