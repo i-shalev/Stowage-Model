@@ -4,7 +4,7 @@
 
 #include "ShipRoute.h"
 
-ShipRoute::ShipRoute(const vector<string>* _dstList, vector<string>* _errors): dstList(new vector<string>())
+ShipRoute::ShipRoute(const std::vector<std::string>* _dstList, std::vector<std::string>* _errors): dstList(new std::vector<std::string>())
 {
     errors = _errors;
     for(const auto & i : *_dstList)
@@ -13,13 +13,13 @@ ShipRoute::ShipRoute(const vector<string>* _dstList, vector<string>* _errors): d
     }
 }
 
-ShipRoute::ShipRoute(): dstList(new vector<string>()){}
+ShipRoute::ShipRoute(): dstList(new std::vector<std::string>()){}
 
 ShipRoute::~ShipRoute() {
     delete this->dstList;
 }
 
-void ShipRoute::addDstAtEnd(const string& dst)
+void ShipRoute::addDstAtEnd(const std::string& dst)
 {
     if(checkDestination(dst))
         this->dstList->push_back(dst);
@@ -34,7 +34,7 @@ void ShipRoute::deleteFirst()
     }
 }
 
-string ShipRoute::getHead() const
+std::string ShipRoute::getHead() const
 {
     if(!this->dstList->empty()) {
         return this->dstList->at(0);
@@ -50,7 +50,7 @@ void ShipRoute::printList() const
     }
 }
 
-bool ShipRoute::willVisit(const string& dest) const{
+bool ShipRoute::willVisit(const std::string& dest) const{
     for(const auto& i : *this->dstList)
     {
         if(i==dest){
@@ -64,11 +64,11 @@ int ShipRoute::getRouteLength() const{
     return this->dstList->size();
 }
 
-vector<string>* ShipRoute::getDstList(){
+std::vector<std::string>* ShipRoute::getDstList(){
     return this->dstList;
 }
 
-bool checkDestination(string dest){
+bool checkDestination(std::string dest){
     if(dest.length() != 5)
         return false;
     for(int i = 0; i < 5; i++) {
