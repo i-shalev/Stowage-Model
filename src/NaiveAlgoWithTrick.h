@@ -6,7 +6,7 @@
 #define STOWAGE_MODEL_NAIVEALGOWITHTRICK_H
 
 #include "Ship.h"
-#include "Balancer.h"
+#include "WeightBalancerCalculator.h"
 #include <cstdio>
 #include "fstream"
 #include "Files.h"
@@ -16,7 +16,7 @@
 // farthest to the closest.
 class NaiveAlgoWithTrick {
     Ship* ship;
-    //BalanceCalc* calc;
+    WeightBalancerCalculator* calc;
 public:
     explicit NaiveAlgoWithTrick(Ship* _ship): ship(_ship){}
     void getInstructionForCargo(const std::string& outputPath);
