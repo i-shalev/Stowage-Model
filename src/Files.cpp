@@ -6,12 +6,14 @@
 #include <algorithm>
 #include "Files.h"
 
+// if return false - indicate if we failed to open file or there was an error on the first line of the ShipPlan file. (2^3)
 bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int &width, int &numLines, std::vector<std::string>* errors) {
     std::ifstream fin;
+
     try{
         fin.open(path, std::ios::in);
     } catch (const std::exception& e) {
-        errors->push_back("Error: Failed to open file");
+//        errors->push_back("Error: Failed to open file");
 //        std::cout << "ERROR: Failed to open file" << std::endl;
         return false;
     }
@@ -38,19 +40,19 @@ bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int 
                 length = stoi(row[1]);
                 width = stoi(row[2]);
             } catch (const std::exception& e) {
-                std::replace( line.begin(), line.end(), ',', '.');
-                errors->push_back("Error: One of the parameters is not a number. in line: " + line + " (replace comma with .)");
+//                std::replace( line.begin(), line.end(), ',', '.');
+//                errors->push_back("Error: One of the parameters is not a number. in line: " + line + " (replace comma with .)");
 //                std::cout << "Warning: One of the parameters is not a number, in line: " << line << std::endl;
                 return false;
             }
         } else {
-            std::replace( line.begin(), line.end(), ',', '.');
-            errors->push_back("Error: Not enough parameters in the first line. in line: " + line + " (replace comma with .)");
+//            std::replace( line.begin(), line.end(), ',', '.');
+//            errors->push_back("Error: Not enough parameters in the first line. in line: " + line + " (replace comma with .)");
 //            std::cout << "ERROR: Not enough parameters in the first line, in line: " << line << std::endl;
             return false;
         }
     } else {
-        errors->push_back("Error: Failed to read the line with the parameters");
+//        errors->push_back("Error: Failed to read the line with the parameters");
 //        std::cout << "ERROR: Failed to read the line with the parameters" << std::endl;
        return false;
     }
@@ -65,14 +67,19 @@ bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int 
     return true;
 }
 
-bool readShipPlan(std::vector<std::vector<int>> &blocks, const std::string &path, std::vector<std::string> *errors) {
+// return vector (bool0, bool1). bool0 - indicates 2^2.
+//                               bool1 - indicates 2^3.
+//  TODO add check for 2^0, 2^1 when create the ship, all other errors are handle here so can skip without report it.
+std::vector<bool> readShipPlan(std::vector<std::vector<int>> &blocks, const std::string &path, std::vector<std::string> *errors) {
+    std::vector<bool> results = {false, false};
     std::ifstream fin;
     try{
         fin.open(path, std::ios::in);
     } catch (const std::exception& e) {
-        errors->push_back("ERROR: Failed to open file");
+//        errors->push_back("ERROR: Failed to open file");
 //        std::cout << "ERROR: Failed to open file" << std::endl;
-        return false;
+        results[1] = true;
+        return results;
     }
 
     std::vector<std::string> row;
@@ -93,17 +100,23 @@ bool readShipPlan(std::vector<std::vector<int>> &blocks, const std::string &path
             if (row.size() >= 3) {
                 for(int j=0; j < 3; j++){
                     try {
-                        blocks.at(i - 1).push_back(stoi(row.at(j)));
+                        int num = stoi(row.at(j));
+                        blocks.at(i - 1).push_back(num);
+                        if(num < 0){
+                            results[0] = true;
+                        }
                     } catch (const std::exception& e) {
-                        std::replace( line.begin(), line.end(), ',', '.');
-                        errors->push_back("Warning: One of the parameters is not a number. in line: " + line + " (replace comma with .)");
+                        results[0] = true;
+//                        std::replace( line.begin(), line.end(), ',', '.');
+//                        errors->push_back("Warning: One of the parameters is not a number. in line: " + line + " (replace comma with .)");
 //                        std::cout << "Warning: One of the parameters is not a number, in line: " << line << std::endl;
                         blocks.at(i - 1).push_back(-1);
                     }
                 }
             } else {
-                std::replace( line.begin(), line.end(), ',', '.');
-                errors->push_back("Warning: Not enough parameters - expected 3 parameters per line. in line: " + line + " (replace comma with .)");
+                results[0] = true;
+//                std::replace( line.begin(), line.end(), ',', '.');
+//                errors->push_back("Warning: Not enough parameters - expected 3 parameters per line. in line: " + line + " (replace comma with .)");
 //                std::cout << "Warning: Not enough parameters - expected 3 parameters per line, in line: " << line << std::endl;
                 blocks.at(i - 1).push_back(-1);
                 blocks.at(i - 1).push_back(-1);
@@ -113,36 +126,83 @@ bool readShipPlan(std::vector<std::vector<int>> &blocks, const std::string &path
         i++;
     }
     fin.close();
-    return true;
+    return results;
 }
 
-bool readShipPorts(std::vector<std::string> &ports, const std::string &path, std::vector<std::string> *errors) {
+// return vector (bool0, bool1, bool2, bool3). bool0 - indicates 2^5.
+//                                             bool1 - indicates 2^6.
+//                                             bool2 - indicates 2^7.
+//                                             bool3 - indicates 2^8.
+std::vector<bool> readShipPorts(std::vector<std::string> &ports, const std::string &path, std::vector<std::string> *errors) {
     std::ifstream fin;
+    std::vector<bool> results = {false, false, false, false};
+    int count = 0;
+    std::string lastPort = "";
     try{
         fin.open(path, std::ios::in);
     } catch (const std::exception& e) {
-        errors->push_back("Error: Failed to open file" );
+//        errors->push_back("Error: Failed to open file" );
 //        std::cout << "ERROR: Failed to open file" << std::endl;
-        return false;
+        results[2] = true;
+        return results;
     }
     std::string line;
     while (getline(fin, line)) {
         if(! isCommentLine(line)) {
-            ports.push_back(removeLeadingAndTrailingWhitespaces(line));
+            std::string lineAfterRemoval = removeLeadingAndTrailingWhitespaces(line);
+            if(isLegalPortName(lineAfterRemoval)){
+                if(lineAfterRemoval != lastPort) {
+                    ports.push_back(lineAfterRemoval);
+                    count++;
+                    lastPort = lineAfterRemoval;
+                } else {
+                    // two or more consecutive ports - 2^5
+                    results[0] = true;
+                }
+            } else {
+                // illegal port name - 2^6
+                results[1] = true;
+            }
         }
     }
+
+    if(count == 0) {
+        // no legal ports at all - 2^7
+        results[2] = true;
+    } else if (count == 1) {
+        // only 1 valid port - 2^8
+        results[3] = true;
+    }
     fin.close();
+    return results;
+}
+
+bool isLegalPortName(std::string portName){
+    if(portName.length() != 5)
+        return false;
+    for(int i = 0; i < 5; i++) {
+        char ch = portName.at(i);
+        if (!(ch >= 'A' && ch <= 'Z'))
+            return false;
+    }
     return true;
 }
 
-bool readPortContainers(Port *&port, const std::string &path, std::vector<std::string> *errors) {
+// return vector (bool0, bool1, bool2, bool3). bool0 - indicates 2^12.
+//                                             bool1 - indicates 2^13.
+//                                             bool2 - indicates 2^14.
+//                                             bool3 - indicates 2^15.
+//                                             bool4 - indicates 2^16.
+std::vector<bool> readPortContainers(Port *&port, const std::string &path, std::vector<std::string> *errors) {
     std::ifstream fin;
+    std::vector<bool> results = {false, false, false, false};
     try{
         fin.open(path, std::ios::in);
     } catch (const std::exception& e) {
-        errors->push_back("Error: Failed to open file");
+//        errors->push_back("Error: Failed to open file");
 //        std::cout << "ERROR: Failed to open file" << std::endl;
-        return false;
+        results[4] = true;
+        return results;
     }
     std::vector<std::string> row;
     std::string line, word, temp;
@@ -155,33 +215,108 @@ bool readPortContainers(Port *&port, const std::string &path, std::vector<std::s
                 row.push_back(removeLeadingAndTrailingWhitespaces(word));
             }
             if(row.size() < 3) {
-                std::replace( line.begin(), line.end(), ',', '.');
-                errors->push_back("Warning: not all the information about container was given. in line: " + line + " (replace comma with .)");
-//                std::cout << "Warning: not all the information about container was given, in line: " << line << std::endl;
+                // dest missing - 2^13
+                results[1] = true;
+                if(row.empty()){
+                    // row empty - 2^12 and 2^13 and 2^14
+                    results[0] = true;
+                    results[2] = true;
+                } else {
+                    // ID exist
+                    if(!isLegalId(row[0])){
+                        // illegal ID - 2^15
+                        results[3] = true;
+                    }
+                    if(row.size() == 1){
+                        // only ID - 2^12
+                        results[0] = true;
+                    } else {
+                        // ID and weight
+                        if(getWeightIfLegal(row[1]) < 0){
+                            // weight is invalid - 2^12
+                            results[0] = true;
+                        }
+                    }
+                }
             }
             else {
-                try{
-                   int weight = stoi(row[1]);
+                bool legalLine = true;
+
+                //check weight
+                int weight = getWeightIfLegal(row[1]);
+                if(weight < 0) {
+                    // weight is invalid - 2^12
+                    results[0] = true;
+                    legalLine = false;
+                }
+
+                //check ID
+                if(!isLegalId(row[0])){
+                    // illegal ID - 2^15
+                    results[3] = true;
+                    legalLine = false;
+                }
+
+                //check dest port
+                if(!isLegalPortName(row[0])){
+                    // illegal port name - 2^6
+                    results[1] = true;
+                    legalLine = false;
+                }
+
+                if(legalLine) {
                     auto *container = new Container(weight, row[2], row[0], false);
                     if (container->getValid()) {
                         port->addContainer(container);
                     } else {
                         delete container;
-                        std::replace( line.begin(), line.end(), ',', '.');
-                        errors->push_back("Warning: ID or destination is not valid. in line: " + line + " (replace comma with .)");
-//                        std::cout << "Warning: ID or destination is not valid , in line: " << line << std::endl;
                     }
-                } catch (const std::exception& e) {
-                    std::replace( line.begin(), line.end(), ',', '.');
-                    errors->push_back("Warning: weight is not int. in line: " + line + " (replace comma with .)");
-//                    std::cout << "Warning: weight is not int, in line: " << line << std::endl;
-                    continue;
                 }
             }
         }
     }
     fin.close();
-    return true;
+    return results;
+}
+
+int getWeightIfLegal(std::string weight){
+    try{
+        int _weight = stoi(weight);
+        return _weight;
+    } catch (const std::exception& e) {
+        return -1;
+    }
+}
+
+bool isLegalId(std::string id){
+    int result = 0;
+    int mul = 1;
+    int digitCheck;
+    char ch;
+    if(id.length() != 11)
+        return false;
+    if(id.at(3)!='U' && id.at(3)!='J' && id.at(3)!='Z')
+        return false;
+    for(int i = 0; i < 4; i++)
+    {
+        ch = id.at(i);
+        if(!(ch >= 'A' && ch <= 'Z'))
+            return false;
+        result += mul * letterToInt(ch);
+        mul *= 2;
+    }
+    for(int i = 4; i < 10; i++)
+    {
+        ch = id.at(i);
+        if(!(ch >= '0' && ch <= '9'))
+            return false;
+        result += mul * (ch - '0');
+        mul *= 2;
+    }
+    digitCheck = result % 11;
+    if(digitCheck == 10)
+        digitCheck = 0;
+    return digitCheck == (id.at(10) - '0');
 }
 
 std::string removeLeadingAndTrailingWhitespaces(std::string line) {
