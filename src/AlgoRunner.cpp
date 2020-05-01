@@ -119,7 +119,7 @@ int AlgoRunner::simulateNaiveWithTrick(const std::string &pathToDir) {
     int portOperations, sumOp=0;
     while(!ship->finishRoute()){
 //            std::cout << "enter to port "<<ship->getCurrentDestination() << std::endl;
-        alg.getInstructionForCargo(pathToDir +  R"(/instructions.txt)");
+        alg.getInstructionsForCargo("",pathToDir +  R"(/instructions.txt)");
         Crane c1(ship, errors);
         portOperations = c1.executeOperationList(pathToDir +  R"(/instructions.txt)");
         if(portOperations<0){

@@ -4,12 +4,12 @@
 
 #include "NaiveAlgoWithTrick.h"
 
-void NaiveAlgoWithTrick::getInstructionForCargo(const std::string &outputPath) {
-    char* pathToDirChar = (char *)(malloc((outputPath.size() + 1) * sizeof(char)));
-    stringToCharStar(pathToDirChar, outputPath);
+int NaiveAlgoWithTrick::getInstructionsForCargo(const std::string &input_full_path_and_file_name, const std::string &output_full_path_and_file_name) {
+    char* pathToDirChar = (char *)(malloc((output_full_path_and_file_name.size() + 1) * sizeof(char)));
+    stringToCharStar(pathToDirChar, output_full_path_and_file_name);
     std::remove(pathToDirChar);
     std::fstream fs;
-    fs.open(outputPath, std::ios::out | std::ios::app);
+    fs.open(output_full_path_and_file_name, std::ios::out | std::ios::app);
 
     std::vector<Container*> temporaryUnloaded;
     //first unload from ship all the containers with this destination
@@ -98,6 +98,7 @@ void NaiveAlgoWithTrick::getInstructionForCargo(const std::string &outputPath) {
     }
     fs.close();
     delete pathToDirChar;
+    return  0;
 }
 
 int NaiveAlgoWithTrick::emptyPlacesInPosition(int i, int j, const std::string& portSymbol){
