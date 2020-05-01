@@ -12,6 +12,9 @@ bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int 
 
     try{
         fin.open(path, std::ios::in);
+        if(!fin.is_open()){
+            throw std::exception();
+        }
     } catch (const std::exception& e) {
 //        errors->push_back("Error: Failed to open file");
 //        std::cout << "ERROR: Failed to open file" << std::endl;
@@ -70,15 +73,16 @@ bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int 
 // return vector (bool0, bool1). bool0 - indicates 2^2.
 //                               bool1 - indicates 2^3.
 //  TODO add check for 2^0, 2^1 when create the ship, all other errors are handle here so can skip without report it.
-std::vector<bool> readShipPlan(std::vector<std::vector<int>> &blocks, const std::string &path, std::vector<std::string> *errors) {
-    std::vector<bool> results = {false, false};
+std::vector<bool> * readShipPlan(std::vector<std::vector<int>> &blocks, const std::string &path, std::vector<std::string> *errors) {
+    auto* results = new std::vector<bool>{false, false};
     std::ifstream fin;
     try{
         fin.open(path, std::ios::in);
+        if(!fin.is_open()){
+            throw std::exception();
+        }
     } catch (const std::exception& e) {
-//        errors->push_back("ERROR: Failed to open file");
-//        std::cout << "ERROR: Failed to open file" << std::endl;
-        results[1] = true;
+        results->at(1) = true;
         return results;
     }
 
@@ -103,10 +107,10 @@ std::vector<bool> readShipPlan(std::vector<std::vector<int>> &blocks, const std:
                         int num = stoi(row.at(j));
                         blocks.at(i - 1).push_back(num);
                         if(num < 0){
-                            results[0] = true;
+                            results->at(0) = true;
                         }
                     } catch (const std::exception& e) {
-                        results[0] = true;
+                        results->at(0) = true;
 //                        std::replace( line.begin(), line.end(), ',', '.');
 //                        errors->push_back("Warning: One of the parameters is not a number. in line: " + line + " (replace comma with .)");
 //                        std::cout << "Warning: One of the parameters is not a number, in line: " << line << std::endl;
@@ -114,7 +118,7 @@ std::vector<bool> readShipPlan(std::vector<std::vector<int>> &blocks, const std:
                     }
                 }
             } else {
-                results[0] = true;
+                results->at(0) = true;
 //                std::replace( line.begin(), line.end(), ',', '.');
 //                errors->push_back("Warning: Not enough parameters - expected 3 parameters per line. in line: " + line + " (replace comma with .)");
 //                std::cout << "Warning: Not enough parameters - expected 3 parameters per line, in line: " << line << std::endl;
@@ -133,17 +137,20 @@ std::vector<bool> readShipPlan(std::vector<std::vector<int>> &blocks, const std:
 //                                             bool1 - indicates 2^6.
 //                                             bool2 - indicates 2^7.
 //                                             bool3 - indicates 2^8.
-std::vector<bool> readShipPorts(std::vector<std::string> &ports, const std::string &path, std::vector<std::string> *errors) {
+std::vector<bool> * readShipPorts(std::vector<std::string> &ports, const std::string &path, std::vector<std::string> *errors) {
     std::ifstream fin;
-    std::vector<bool> results = {false, false, false, false};
+    auto* results = new std::vector<bool>{false, false, false, false};
     int count = 0;
     std::string lastPort = "";
     try{
         fin.open(path, std::ios::in);
+        if(!fin.is_open()){
+            throw std::exception();
+        }
     } catch (const std::exception& e) {
 //        errors->push_back("Error: Failed to open file" );
 //        std::cout << "ERROR: Failed to open file" << std::endl;
-        results[2] = true;
+        results->at(2) = true;
         return results;
     }
     std::string line;
@@ -157,21 +164,21 @@ std::vector<bool> readShipPorts(std::vector<std::string> &ports, const std::stri
                     lastPort = lineAfterRemoval;
                 } else {
                     // two or more consecutive ports - 2^5
-                    results[0] = true;
+                    results->at(0) = true;
                 }
             } else {
                 // illegal port name - 2^6
-                results[1] = true;
+                results->at(1) = true;
             }
         }
     }
 
     if(count == 0) {
         // no legal ports at all - 2^7
-        results[2] = true;
+        results->at(2) = true;
     } else if (count == 1) {
         // only 1 valid port - 2^8
-        results[3] = true;
+        results->at(3) = true;
     }
     fin.close();
     return results;
@@ -182,7 +189,7 @@ bool isLegalPortName(std::string portName){
         return false;
     for(int i = 0; i < 5; i++) {
         char ch = portName.at(i);
-        if (!(ch >= 'A' && ch <= 'Z'))
+        if (!((ch >= 'A' and ch <= 'Z') or (ch >= 'a' && ch <= 'z') ))
             return false;
     }
     return true;
@@ -193,15 +200,18 @@ bool isLegalPortName(std::string portName){
 //                                             bool2 - indicates 2^14.
 //                                             bool3 - indicates 2^15.
 //                                             bool4 - indicates 2^16.
-std::vector<bool> readPortContainers(Port *&port, const std::string &path, std::vector<std::string> *errors) {
+std::vector<bool> * readPortContainers(Port *&port, const std::string &path, std::vector<std::string> *errors) {
     std::ifstream fin;
-    std::vector<bool> results = {false, false, false, false};
+    auto* results = new std::vector<bool>{false, false, false, false, false};
     try{
         fin.open(path, std::ios::in);
+        if(!fin.is_open()){
+            throw std::exception();
+        }
     } catch (const std::exception& e) {
 //        errors->push_back("Error: Failed to open file");
 //        std::cout << "ERROR: Failed to open file" << std::endl;
-        results[4] = true;
+        results->at(4) = true;
         return results;
     }
     std::vector<std::string> row;
@@ -216,25 +226,25 @@ std::vector<bool> readPortContainers(Port *&port, const std::string &path, std::
             }
             if(row.size() < 3) {
                 // dest missing - 2^13
-                results[1] = true;
+                results->at(1) = true;
                 if(row.empty()){
                     // row empty - 2^12 and 2^13 and 2^14
-                    results[0] = true;
-                    results[2] = true;
+                    results->at(0) = true;
+                    results->at(2) = true;
                 } else {
                     // ID exist
                     if(!isLegalId(row[0])){
                         // illegal ID - 2^15
-                        results[3] = true;
+                        results->at(3) = true;
                     }
                     if(row.size() == 1){
                         // only ID - 2^12
-                        results[0] = true;
+                        results->at(3) = true;
                     } else {
                         // ID and weight
                         if(getWeightIfLegal(row[1]) < 0){
                             // weight is invalid - 2^12
-                            results[0] = true;
+                            results->at(0) = true;
                         }
                     }
                 }
@@ -246,21 +256,21 @@ std::vector<bool> readPortContainers(Port *&port, const std::string &path, std::
                 int weight = getWeightIfLegal(row[1]);
                 if(weight < 0) {
                     // weight is invalid - 2^12
-                    results[0] = true;
+                    results->at(0) = true;
                     legalLine = false;
                 }
 
                 //check ID
                 if(!isLegalId(row[0])){
                     // illegal ID - 2^15
-                    results[3] = true;
+                    results->at(3) = true;
                     legalLine = false;
                 }
 
                 //check dest port
-                if(!isLegalPortName(row[0])){
+                if(!isLegalPortName(row[2])){
                     // illegal port name - 2^6
-                    results[1] = true;
+                    results->at(1) = true;
                     legalLine = false;
                 }
 
