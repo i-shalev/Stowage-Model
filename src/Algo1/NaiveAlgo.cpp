@@ -18,10 +18,8 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     stringToCharStar(pathToDirChar, output_full_path_and_file_name);
     std::remove(pathToDirChar);
     //create a port object from input file
-    std::vector<std::string> errors;
-    Port port("CURENT",0,&errors);
-    std::vector<std::string> errors_from_port_file;
-    std::vector<bool> * res  =readPortContainers(&port, input_full_path_and_file_name, &errors_from_port_file);
+    Port port;
+    std::vector<bool> * res  =readPortContainers(&port, input_full_path_and_file_name);
     //TODO : do something with errors
     delete res;
 
@@ -105,6 +103,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     delete pathToDirChar;
     Crane crane(ship, &port);
     crane.executeOperationList(output_full_path_and_file_name);
+    ship->getRoute().deleteFirst();
     return 0;
 }
 

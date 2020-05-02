@@ -15,10 +15,9 @@ class Port{
     const std::string symbol;
     int number;
     std::map<std::string, Container*>* ContainersAwaiting;
-    std::vector<std::string>* errors;
 
 public:
-    Port(std::string  symbol, int number, std::vector<std::string>* _errors);
+    Port();
     Port(const Port& port)  = delete;
     ~Port();
     const std::string& getSymbol() const;
