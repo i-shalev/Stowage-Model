@@ -4,6 +4,13 @@
 
 #include "NaiveAlgo.h"
 
+NaiveAlgo::NaiveAlgo(){
+    this->shipRoute = nullptr;
+    this->ship = nullptr;
+    this->shipPlan = nullptr;
+    this->calc = nullptr;
+}
+
 int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) {
     char* pathToDirChar = (char *)(malloc((output_full_path_and_file_name.size() + 1) * sizeof(char)));
     stringToCharStar(pathToDirChar, output_full_path_and_file_name);
@@ -32,7 +39,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
                     continue;
                 if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked())
                     break;
-                if(calc.tryOperation('U', ship->getPlan().getFloor(level)->getContainerAtPosition(i, j)->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){
+                if(calc->tryOperation('U', ship->getPlan().getFloor(level)->getContainerAtPosition(i, j)->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){
 //                    std::cout <<"unbalance..." << std::endl;
                 }
                 fs << "U "<< ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId() << " " << level << " " << i << " " << j <<std::endl;
@@ -45,7 +52,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
                 loadBackLevel++;
             }
             while(!(temporaryUnloaded.empty())){
-                if(calc.tryOperation('L', temporaryUnloaded.back()->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){
+                if(calc->tryOperation('L', temporaryUnloaded.back()->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){
 //                    std::cout <<"unbalance..." << std::endl;
                 }
                 fs << "L "<< temporaryUnloaded.back()->getId() << " " << loadBackLevel << " " << i << " " << j <<std::endl;
@@ -64,7 +71,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
             emptyPlacesAtPosition  = this->emptyPlacesInPosition(i,j,ship->getCurrentDestination());
             for(int level = ship->getPlan().getNumFloors() - emptyPlacesAtPosition; level<ship->getPlan().getNumFloors() && !done; level++){
                 if(checkContainer(toLoad.front())) {
-                    if (calc.tryOperation('L', toLoad.front()->getWeight(),i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED) {
+                    if (calc->tryOperation('L', toLoad.front()->getWeight(),i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED) {
 //                        std::cout << "unbalance..." << std::endl;
                     }
                     fs << "L " << toLoad.front()->getId() << " " << level << " " << i << " " << j << std::endl;
@@ -102,4 +109,31 @@ int NaiveAlgo::emptyPlacesInPosition(int i, int j, const std::string& portSymbol
 }
 bool NaiveAlgo::checkContainer(Container* cont){
     return cont->checkId() && ship->willVisit(cont->getDest());
+}
+
+int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
+    return 0;
+}
+
+//int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
+//    int numFloors=0 , length=0, width=0, numLines;
+//    std::vector<std::string>* errors = {};
+//    if(! getSizesShipPlan(full_path_and_file_name, numFloors, length, width, numLines, errors)) {
+//        return nullptr;
+//    }
+//
+//    // create the ShipPlanVector
+//    auto* blocks = new std::vector<std::vector<int>>(numLines-1);
+//    if(!readShipPlan(*blocks, pathToShipPlan, errors)) {
+//        return nullptr;
+//    }
+//
+//    auto* shipPlan = new ShipPlan(numFloors, length, width, *blocks, errors);
+//    delete blocks;
+//    return  shipPlan;
+//}
+
+int turnToTrueBit(int num, int bit){
+    int mask = 1 << bit;
+    return num | mask;
 }

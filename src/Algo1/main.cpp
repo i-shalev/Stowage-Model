@@ -23,6 +23,27 @@ int main(int argc, char **argv){
 //    algoRunnerNaive->startRun();
 //
 //    delete algoRunnerNaive;
+    int x =  turnToTrueBit(0, 0);
+    std::cout << x << std::endl;
+    x =  turnToTrueBit(x, 1);
+    x =  turnToTrueBit(x, 2);
+    x =  turnToTrueBit(x, 3);
+    x =  turnToTrueBit(x, 4);
+    x =  turnToTrueBit(x, 5);
+    x =  turnToTrueBit(x, 6);
+    x =  turnToTrueBit(x, 7);
+    x =  turnToTrueBit(x, 8);
+    x =  turnToTrueBit(x, 9);
+    x =  turnToTrueBit(x, 10);
+    x =  turnToTrueBit(x, 11);
+    x =  turnToTrueBit(x, 12);
+    x =  turnToTrueBit(x, 13);
+    x =  turnToTrueBit(x, 14);
+    x =  turnToTrueBit(x, 15);
+    x =  turnToTrueBit(x, 16);
+    x =  turnToTrueBit(x, 17);
+    x =  turnToTrueBit(x, 18);
+    std::cout << x << std::endl;
 
     return EXIT_SUCCESS;
 }
