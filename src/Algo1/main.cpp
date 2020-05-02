@@ -3,8 +3,9 @@
 
 int main(int argc, char **argv){
 
-    std::string path = R"(C:\Users\itay\Desktop\input\example1\Algo 2 better than 1\Ports.csv)";
-    NaiveAlgo algo = NaiveAlgo();
+    std::string path = R"(C:\Users\zivco\Desktop\ex\sim1\Ports.csv)";
+    std::string path2 = R"(C:\Users\zivco\Desktop\ex\sim1\ShipPort.csv)";
+    NaiveAlgo algo;
     int results = algo.readShipRoute(path);
     for(int i = 0; i < 19; i++){
         if(getBitInNumber(results, i)){
@@ -12,6 +13,15 @@ int main(int argc, char **argv){
         }
     }
     algo.printShipRoute();
+    results = algo.readShipPlan(path2);
+    for(int i = 0; i < 19; i++){
+        if(getBitInNumber(results, i)){
+            std::cout << i << std::endl;
+        }
+    }
+    std::cout << algo.getInstructionsForCargo(R"(C:\Users\zivco\Desktop\ex\sim1\AAAAA_0.cargo_data)", R"(C:\Users\zivco\Desktop\ex\sim1\res.txt)") <<std::endl;
+    std::cout << algo.getInstructionsForCargo(R"(C:\Users\zivco\Desktop\ex\sim1\BBBBB_0.cargo_data)", R"(C:\Users\zivco\Desktop\ex\sim1\res2.txt)") <<std::endl;
+    std::cout << algo.getInstructionsForCargo(R"(C:\Users\zivco\Desktop\ex\sim1\CCCCC_0.cargo_data)", R"(C:\Users\zivco\Desktop\ex\sim1\res3.txt)") <<std::endl;
 
     return EXIT_SUCCESS;
 }
