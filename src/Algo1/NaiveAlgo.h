@@ -7,6 +7,7 @@
 
 #include "Ship.h"
 #include "WeightBalanceCalculator.h"
+#include "Crane.h"
 #include <cstdio>
 #include "fstream"
 #include "Files.h"

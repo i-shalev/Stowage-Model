@@ -5,9 +5,19 @@
 #include "NaiveAlgo.h"
 
 int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) {
+    if(ship == nullptr)
+        return -1; //TODO: maybe return different error code
     char* pathToDirChar = (char *)(malloc((output_full_path_and_file_name.size() + 1) * sizeof(char)));
     stringToCharStar(pathToDirChar, output_full_path_and_file_name);
     std::remove(pathToDirChar);
+    //create a port object from input file
+    std::vector<std::string> errors;
+    Port port("CURENT",0,&errors);
+    std::vector<std::string> errors_from_port_file;
+    std::vector<bool> * res  =readPortContainers(&port, input_full_path_and_file_name, &errors_from_port_file);
+    //TODO : do something with errors
+    delete res;
+
     std::fstream fs;
     fs.open(output_full_path_and_file_name, std::ios::out | std::ios::app);
 
@@ -56,7 +66,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     }
     //now load everything from port to ship. check valid ids and destinations.
     std::vector<Container*> toLoad;
-    ship->getCurrentPort()->getContainersByDistance(ship->getRoute(),toLoad);
+    ship->getCurrentPort()->getContainersByDistance(ship->getRoute(),toLoad,&port);
     int emptyPlacesAtPosition;
     bool done = toLoad.empty();
     for(int i=0; i<ship->getPlan().getLength() && !done; i++){
@@ -86,6 +96,9 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     }
     fs.close();
     delete pathToDirChar;
+    std::vector<std::string> errors_from_crane;
+    Crane crane(ship,&errors_from_crane);
+    crane.executeOperationList(output_full_path_and_file_name);
     return 0;
 }
 int NaiveAlgo::emptyPlacesInPosition(int i, int j, const std::string& portSymbol){

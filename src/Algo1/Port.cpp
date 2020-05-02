@@ -62,18 +62,18 @@ void Port::getVectorOfContainers(std::vector<Container*>& vector) const{
         vector.push_back(elem.second);
     }
 }
-void Port::getContainersWithDest(const std::string& dest, std::vector<Container*>& vec) const{
-    for(const auto& elem : *(this->ContainersAwaiting) )
+void Port::getContainersWithDest(const std::string& dest, std::vector<Container*>& vec, Port* from_port) const{
+    for(const auto& elem : *(from_port->ContainersAwaiting) )
     {
         if(elem.second->getDest().compare(dest)==0)
             vec.push_back(elem.second);
     }
 }
-void Port::getContainersByDistance(ShipRoute& sr, std::vector<Container*>& vec) const{
+void Port::getContainersByDistance(ShipRoute& sr, std::vector<Container*>& vec, Port* from_port) const{
     std::set<std::string> seenBefore;
     for(auto elem : *(sr.getDstList())){
         if(seenBefore.find(elem) == seenBefore.end()) {
-            getContainersWithDest(elem, vec);
+            getContainersWithDest(elem, vec, from_port);
             seenBefore.insert(elem);
         }
     }
