@@ -103,8 +103,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     }
     fs.close();
     delete pathToDirChar;
-    std::vector<std::string> errors_from_crane;
-    Crane crane(ship,&errors_from_crane);
+    Crane crane(ship, &port);
     crane.executeOperationList(output_full_path_and_file_name);
     return 0;
 }
