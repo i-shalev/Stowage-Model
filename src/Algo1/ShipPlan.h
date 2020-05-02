@@ -18,7 +18,7 @@ class ShipPlan {
     std::vector<std::string>* errors;
 
     public:
-        ShipPlan(int numFloors, int length, int width, const std::vector<std::vector<int>> &blocks, std::vector<std::string> *_errors);
+        ShipPlan(int numFloors, int length, int width, const std::vector<std::vector<int>> &blocks);
         ShipPlan(const ShipPlan& s) = delete; // disable copy constr'. need deep copy
         ~ShipPlan();
         int getNumFloors() const;

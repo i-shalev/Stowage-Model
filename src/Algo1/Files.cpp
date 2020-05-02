@@ -7,7 +7,7 @@
 #include "Files.h"
 
 // if return false - indicate if we failed to open file or there was an error on the first line of the ShipPlan file. (2^3)
-bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int &width, int &numLines, std::vector<std::string>* errors) {
+bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int &width, int &numLines) {
     std::ifstream fin;
 
     try{
@@ -73,7 +73,7 @@ bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int 
 // return vector (bool0, bool1). bool0 - indicates 2^2.
 //                               bool1 - indicates 2^3.
 //  TODO add check for 2^0, 2^1 when create the ship, all other errors are handle here so can skip without report it.
-std::vector<bool> * readShipPlan(std::vector<std::vector<int>> &blocks, const std::string &path, std::vector<std::string> *errors) {
+std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, const std::string &path) {
     auto* results = new std::vector<bool>{false, false};
     std::ifstream fin;
     try{

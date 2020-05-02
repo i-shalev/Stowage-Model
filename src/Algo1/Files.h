@@ -21,9 +21,9 @@ class Files {
 };
 
 // read the file and fill the data to the args.
-bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int &width, int &numLines, std::vector<std::string>* errors);
+bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int &width, int &numLines);
 
-std::vector<bool> * readShipPlan(std::vector<std::vector<int>> &blocks, const std::string &path, std::vector<std::string> *errors);
+std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, const std::string &path);
 
 bool isLegalPortName(std::string portName);
 

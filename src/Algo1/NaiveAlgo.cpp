@@ -120,31 +120,32 @@ int NaiveAlgo::emptyPlacesInPosition(int i, int j, const std::string& portSymbol
     return sum;
     //sum last positions are empty
 }
+
 bool NaiveAlgo::checkContainer(Container* cont){
     return cont->checkId() && ship->willVisit(cont->getDest());
 }
 
 int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
-    return 0;
-}
+    int errorCode = 0;
+    int numFloors=0 , length=0, width=0, numLines;
+    if(!getSizesShipPlan(full_path_and_file_name, numFloors, length, width, numLines)) {
+        return turnToTrueBit(errorCode,3);
+    }
 
-//int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
-//    int numFloors=0 , length=0, width=0, numLines;
-//    std::vector<std::string>* errors = {};
-//    if(! getSizesShipPlan(full_path_and_file_name, numFloors, length, width, numLines, errors)) {
-//        return nullptr;
-//    }
-//
-//    // create the ShipPlanVector
-//    auto* blocks = new std::vector<std::vector<int>>(numLines-1);
-//    if(!readShipPlan(*blocks, pathToShipPlan, errors)) {
-//        return nullptr;
-//    }
-//
-//    auto* shipPlan = new ShipPlan(numFloors, length, width, *blocks, errors);
-//    delete blocks;
-//    return  shipPlan;
-//}
+    // create the ShipPlanVector
+    auto* blocks = new std::vector<std::vector<int>>(numLines-1);
+    auto* results = readShipPlanInFiles(*blocks, full_path_and_file_name);
+    if(results->at(1)){
+        return turnToTrueBit(errorCode,3);
+    }
+    if(results->at(0)){
+        errorCode = turnToTrueBit(errorCode,2)
+    }
+
+    this->shipPlan = new ShipPlan(numFloors, length, width, *blocks);
+    delete blocks;
+    return  errorCode;
+}
 
 int turnToTrueBit(int num, int bit){
     int mask = 1 << bit;
