@@ -15,12 +15,10 @@ class Ship {
 private:
     ShipRoute* route;
     ShipPlan* plan;
-    std::map<std::string, Port*> *mapPortNameToPort;
     std::map<std::string, int>* mapPortNameToNumberOfVisitsUntilNow;
-    std::vector<std::string>* errors;
 
 public:
-    Ship(ShipRoute *sr, ShipPlan *sp, std::map<std::string, Port *> *mapPortToPort, std::vector<std::string> *_errors);
+    Ship(ShipRoute *sr, ShipPlan *sp);
     ~Ship();
     Ship(const Ship &ship) = delete; //disable copy constr'. the deafult is not good, need deep copy.
     ShipPlan& getPlan();

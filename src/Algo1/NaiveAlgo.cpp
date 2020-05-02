@@ -139,12 +139,44 @@ int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
         return turnToTrueBit(errorCode,3);
     }
     if(results->at(0)){
-        errorCode = turnToTrueBit(errorCode,2)
+        errorCode = turnToTrueBit(errorCode,2);
     }
 
     this->shipPlan = new ShipPlan(numFloors, length, width, *blocks);
     delete blocks;
+    delete results;
     return  errorCode;
+}
+
+int NaiveAlgo::readShipRoute(const std::string &full_path_and_file_name) {
+    int errorCode = 0;
+    auto* ports = new std::vector<std::string>();
+    auto* results = readShipPorts(*ports, full_path_and_file_name);
+    if(results->at(2)){
+        return turnToTrueBit(errorCode,2);
+    }
+    if(results->at(3)){
+        return turnToTrueBit(errorCode,3);
+    }
+    if(results->at(0)){
+        errorCode = turnToTrueBit(errorCode,0);
+    }
+    if(results->at(1)){
+        errorCode = turnToTrueBit(errorCode,1);
+    }
+    this->shipRoute = new ShipRoute(ports);
+
+    delete ports;
+    delete results;
+    return errorCode;
+}
+
+void NaiveAlgo::createShip() {
+    if(this->shipPlan != nullptr and this->shipRoute != nullptr){
+
+        auto* ship = new Ship(shipRoute, shipPlan);
+        return ship;
+    }
 }
 
 int turnToTrueBit(int num, int bit){

@@ -29,7 +29,7 @@ bool isLegalPortName(std::string portName);
 
 std::vector<bool> * readPortContainers(Port *port, const std::string &path, std::vector<std::string> *errors);
 
-std::vector<bool> * readShipPorts(std::vector<std::string> &ports, const std::string &path, std::vector<std::string> *errors);
+std::vector<bool> *readShipPorts(std::vector<std::string> &ports, const std::string &path);
 
 int getWeightIfLegal(std::string weight);
 

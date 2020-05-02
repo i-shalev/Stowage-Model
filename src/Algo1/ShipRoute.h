@@ -14,7 +14,7 @@ class ShipRoute {
         std::vector<std::string>* errors;
 
     public:
-        explicit ShipRoute(const std::vector<std::string>* _dstList, std::vector<std::string>* _errors);
+        explicit ShipRoute(const std::vector<std::string> *_dstList);
         ShipRoute();
         ~ShipRoute();
         void addDstAtEnd(const std::string& dst);

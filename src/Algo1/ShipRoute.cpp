@@ -4,13 +4,13 @@
 
 #include "ShipRoute.h"
 
-ShipRoute::ShipRoute(const std::vector<std::string>* _dstList, std::vector<std::string>* _errors): dstList(new std::vector<std::string>())
+ShipRoute::ShipRoute(const std::vector<std::string> *_dstList) : dstList(new std::vector<std::string>())
 {
-    errors = _errors;
     for(const auto & i : *_dstList)
     {
         this->addDstAtEnd(i);
     }
+    this->errors = {};
 }
 
 ShipRoute::ShipRoute(): dstList(new std::vector<std::string>()){}
@@ -23,8 +23,8 @@ void ShipRoute::addDstAtEnd(const std::string& dst)
 {
     if(checkDestination(dst))
         this->dstList->push_back(dst);
-    else
-        errors->push_back("Warning: " + dst + " is not legal Port ID");
+//    else
+//        errors->push_back("Warning: " + dst + " is not legal Port ID");
 }
 
 void ShipRoute::deleteFirst()

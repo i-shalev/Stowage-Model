@@ -6,23 +6,17 @@
 
 #include <utility>
 
-Ship::Ship(ShipRoute *sr, ShipPlan *sp, std::map<std::string, Port *> *mapPortToPort, std::vector<std::string> *_errors)
-        : route(sr), plan(sp), mapPortNameToPort(mapPortToPort), mapPortNameToNumberOfVisitsUntilNow(new std::map<std::string,int>){
-    this->errors = _errors;
+Ship::Ship(ShipRoute *sr, ShipPlan *sp)
+        : route(sr), plan(sp), mapPortNameToNumberOfVisitsUntilNow(new std::map<std::string,int>){
     if(!this->plan->isValid()){
-        errors->push_back("Warning: invalid plan");
+//        errors->push_back("Warning: invalid plan");
 //        std::cout << "invalid plan!" << std::endl;
     }
     addOneVisitToMap();
 }
 
 Ship::~Ship() {
-    for(const auto& elem : *this->mapPortNameToPort ) {
-        delete elem.second;
-    }
-    this->mapPortNameToPort->clear();
     this->mapPortNameToNumberOfVisitsUntilNow->clear();
-    delete this->mapPortNameToPort;
     delete this->plan;
     delete this->route;
     delete this->mapPortNameToNumberOfVisitsUntilNow;
@@ -36,7 +30,7 @@ bool Ship::willVisit(std::string dest) const {
 
 void Ship::getContainerPosition(const std::string& id, std::vector<int>& res){
     if(!res.empty()){
-        errors->push_back("Warning: incorrect use of getContainerPosition");
+//        errors->push_back("Warning: incorrect use of getContainerPosition");
 //        std::cout << "Warning: incorrect use of getContainerPosition" << std::endl;
     }
     for(int level=0; level<this->plan->getNumFloors(); level++){
@@ -59,7 +53,7 @@ void Ship::getContainerPosition(const std::string& id, std::vector<int>& res){
 
 void Ship::getAllContainersWithDest(const std::string& dest, std::vector<Container*>& res) {
     if (!res.empty()) {
-        errors->push_back("Warning: incorrect use of getAllContainersWithDest");
+//        errors->push_back("Warning: incorrect use of getAllContainersWithDest");
 //        std::cout << "Warning: incorrect use of getAllContainersWithDest" << std::endl;
     }
     for (int level = 0; level < this->plan->getNumFloors(); level++) {
@@ -116,12 +110,6 @@ int Ship::getIndexOfPort() const{
 }
 
 Port* Ship::getCurrentPort() const{
-    int index = getIndexOfPort();
-    std::string fullName = this->route->getHead() + "_" + std::to_string(index);
-    auto res = mapPortNameToPort->find(fullName);
-    if(!mapPortNameToPort->empty() && res!=mapPortNameToPort->end()){
-        return res->second;
-    }
     return nullptr;
 }
 

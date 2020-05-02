@@ -137,7 +137,7 @@ std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, co
 //                                             bool1 - indicates 2^6.
 //                                             bool2 - indicates 2^7.
 //                                             bool3 - indicates 2^8.
-std::vector<bool> * readShipPorts(std::vector<std::string> &ports, const std::string &path, std::vector<std::string> *errors) {
+std::vector<bool> *readShipPorts(std::vector<std::string> &ports, const std::string &path) {
     std::ifstream fin;
     auto* results = new std::vector<bool>{false, false, false, false};
     int count = 0;
