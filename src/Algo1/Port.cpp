@@ -74,4 +74,9 @@ void Port::getContainersByDistance(ShipRoute& sr, std::vector<Container*>& vec) 
             seenBefore.insert(elem);
         }
     }
+    for(auto elem : *(this->ContainersAwaiting)){
+        if(seenBefore.find(elem.second->getDest())==seenBefore.end()){
+            vec.push_back(elem.second);
+        }
+    }
 }
