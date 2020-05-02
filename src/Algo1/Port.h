@@ -27,8 +27,8 @@ public:
     bool hasContainers() const;
     Container* getContainerByID(const std::string& id) const;
     void getVectorOfContainers(std::vector<Container*>& vector) const;
-    void getContainersWithDest(const std::string& dest, std::vector<Container*>& vec, Port* from_port) const;
-    void getContainersByDistance(ShipRoute& sr, std::vector<Container*>& vec, Port* from_port) const;
+    void getContainersWithDest(const std::string& dest, std::vector<Container*>& vec) const;
+    void getContainersByDistance(ShipRoute& sr, std::vector<Container*>& vec) const;
 };
 
 
