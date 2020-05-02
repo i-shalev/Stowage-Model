@@ -16,5 +16,6 @@ class main {
 
 int main(int argc, char **argv);
 
+int getBitInNumber(int num, int bit);
 
 #endif //STOWAGE_MODEL_MAIN_H

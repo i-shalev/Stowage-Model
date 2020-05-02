@@ -21,8 +21,7 @@ ShipRoute::~ShipRoute() {
 
 void ShipRoute::addDstAtEnd(const std::string& dst)
 {
-    if(checkDestination(dst))
-        this->dstList->push_back(dst);
+    this->dstList->push_back(dst);
 //    else
 //        errors->push_back("Warning: " + dst + " is not legal Port ID");
 }

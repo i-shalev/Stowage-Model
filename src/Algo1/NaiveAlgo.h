@@ -26,6 +26,8 @@ public:
     int setWeightBalanceCalculator(WeightBalanceCalculator& calculator) override { this->calc = &calculator; return 0;}
     int readShipPlan(const std::string& full_path_and_file_name) override;
     int readShipRoute(const std::string& full_path_and_file_name) override;
+    void printShipPlan();
+    void printShipRoute();
 private:
     int emptyPlacesInPosition(int i, int j, const std::string& portSymbol);
     bool checkContainer(Container *cont);

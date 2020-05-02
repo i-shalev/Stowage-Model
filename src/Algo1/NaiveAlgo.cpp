@@ -107,6 +107,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     crane.executeOperationList(output_full_path_and_file_name);
     return 0;
 }
+
 int NaiveAlgo::emptyPlacesInPosition(int i, int j, const std::string& portSymbol){
     int sum = 0;
     for(int level=0; level<ship->getPlan().getNumFloors(); level++){
@@ -159,16 +160,16 @@ int NaiveAlgo::readShipRoute(const std::string &full_path_and_file_name) {
     auto* ports = new std::vector<std::string>();
     auto* results = readShipPorts(*ports, full_path_and_file_name);
     if(results->at(2)){
-        return turnToTrueBit(errorCode,2);
+        return turnToTrueBit(errorCode,7);
     }
     if(results->at(3)){
-        return turnToTrueBit(errorCode,3);
+        return turnToTrueBit(errorCode,8);
     }
     if(results->at(0)){
-        errorCode = turnToTrueBit(errorCode,0);
+        errorCode = turnToTrueBit(errorCode,5);
     }
     if(results->at(1)){
-        errorCode = turnToTrueBit(errorCode,1);
+        errorCode = turnToTrueBit(errorCode,6);
     }
     this->shipRoute = new ShipRoute(ports);
 
@@ -184,7 +185,16 @@ void NaiveAlgo::createShip() {
     }
 }
 
+void NaiveAlgo::printShipPlan(){
+    this->shipPlan->printShipPlan();
+}
+
+void NaiveAlgo::printShipRoute() {
+    this->shipRoute->printList();
+}
+
 int turnToTrueBit(int num, int bit){
     int mask = 1 << bit;
     return num | mask;
 }
+
