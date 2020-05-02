@@ -32,7 +32,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
                     continue;
                 if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked())
                     break;
-                if(calc->tryOperation('U', ship->getPlan().getFloor(level)->getContainerAtPosition(i, j)->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){
+                if(calc.tryOperation('U', ship->getPlan().getFloor(level)->getContainerAtPosition(i, j)->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){
 //                    std::cout <<"unbalance..." << std::endl;
                 }
                 fs << "U "<< ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId() << " " << level << " " << i << " " << j <<std::endl;
@@ -45,7 +45,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
                 loadBackLevel++;
             }
             while(!(temporaryUnloaded.empty())){
-                if(calc->tryOperation('L', temporaryUnloaded.back()->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){
+                if(calc.tryOperation('L', temporaryUnloaded.back()->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){
 //                    std::cout <<"unbalance..." << std::endl;
                 }
                 fs << "L "<< temporaryUnloaded.back()->getId() << " " << loadBackLevel << " " << i << " " << j <<std::endl;
@@ -64,7 +64,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
             emptyPlacesAtPosition  = this->emptyPlacesInPosition(i,j,ship->getCurrentDestination());
             for(int level = ship->getPlan().getNumFloors() - emptyPlacesAtPosition; level<ship->getPlan().getNumFloors() && !done; level++){
                 if(checkContainer(toLoad.front())) {
-                    if (calc->tryOperation('L', toLoad.front()->getWeight(),i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED) {
+                    if (calc.tryOperation('L', toLoad.front()->getWeight(),i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED) {
 //                        std::cout << "unbalance..." << std::endl;
                     }
                     fs << "L " << toLoad.front()->getId() << " " << level << " " << i << " " << j << std::endl;

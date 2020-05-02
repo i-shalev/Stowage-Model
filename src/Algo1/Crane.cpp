@@ -66,6 +66,7 @@ result Crane::Unload(const std::string& contId, int level, int i, int j) {
     curShip->getPlan().getFloor(level)->setContainerAtPosition(i,j,nullptr);
     return SUCCESS;
 }
+
 result Crane::Move(/*string id, int level, int i, int j, int toLevel, int toi, int toj*/) {
    /*Container* result;
    int rc = Unload(id, level, i, j, &result) !=SUCCESS;
@@ -176,6 +177,7 @@ int getIndexOf(std::string dest, std::vector<std::string>& vec){
     }
     return -1;
 }
+
 bool Crane::disconnect(){
     if(!temporaryUnloaded.empty()){
         errors->push_back("Error: unload container to wrong port");

@@ -200,7 +200,7 @@ bool isLegalPortName(std::string portName){
 //                                             bool2 - indicates 2^14.
 //                                             bool3 - indicates 2^15.
 //                                             bool4 - indicates 2^16.
-std::vector<bool> * readPortContainers(Port *&port, const std::string &path, std::vector<std::string> *errors) {
+std::vector<bool> * readPortContainers(Port *port, const std::string &path, std::vector<std::string> *errors) {
     std::ifstream fin;
     auto* results = new std::vector<bool>{false, false, false, false, false};
     try{
