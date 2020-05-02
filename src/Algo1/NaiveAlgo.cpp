@@ -145,7 +145,8 @@ int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
     this->shipPlan = new ShipPlan(numFloors, length, width, *blocks);
     delete blocks;
     delete results;
-    return  errorCode;
+    createShip();
+    return errorCode;
 }
 
 int NaiveAlgo::readShipRoute(const std::string &full_path_and_file_name) {
@@ -168,14 +169,13 @@ int NaiveAlgo::readShipRoute(const std::string &full_path_and_file_name) {
 
     delete ports;
     delete results;
+    createShip();
     return errorCode;
 }
 
 void NaiveAlgo::createShip() {
     if(this->shipPlan != nullptr and this->shipRoute != nullptr){
-
-        auto* ship = new Ship(shipRoute, shipPlan);
-        return ship;
+        ship = new Ship(shipRoute, shipPlan);
     }
 }
 

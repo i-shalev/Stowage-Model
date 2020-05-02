@@ -6,26 +6,22 @@
 
 #include <utility>
 
-Ship::Ship(ShipRoute *sr, ShipPlan *sp)
-        : route(sr), plan(sp), mapPortNameToNumberOfVisitsUntilNow(new std::map<std::string,int>){
+Ship::Ship(ShipRoute *sr, ShipPlan *sp): route(sr), plan(sp){
     if(!this->plan->isValid()){
 //        errors->push_back("Warning: invalid plan");
 //        std::cout << "invalid plan!" << std::endl;
     }
-    addOneVisitToMap();
 }
 
 Ship::~Ship() {
-    this->mapPortNameToNumberOfVisitsUntilNow->clear();
     delete this->plan;
     delete this->route;
-    delete this->mapPortNameToNumberOfVisitsUntilNow;
 }
 
 ShipPlan& Ship::getPlan() { return *(this->plan);}
 //const ShipRoute& Ship::getRoute() {return *(this->route);}
-bool Ship::willVisit(std::string dest) const {
-    return this->route->willVisit(std::move(dest));
+bool Ship::willVisit(const std::string& dest) const {
+    return this->route->willVisit(dest);
 }
 
 void Ship::getContainerPosition(const std::string& id, std::vector<int>& res){
@@ -84,33 +80,6 @@ bool Ship::isFull() const{
 
 bool Ship::finishRoute() const{
     return this->route->getRouteLength() == 0;
-}
-
-void Ship::moveToNextPort(){
-    if(finishRoute())
-        return;
-    this->route->deleteFirst();
-    if(!finishRoute())
-        addOneVisitToMap();
-}
-
-void Ship::addOneVisitToMap(){
-    int ans = 0;
-    auto res = mapPortNameToNumberOfVisitsUntilNow->find(this->route->getHead());
-    if(!mapPortNameToNumberOfVisitsUntilNow->empty() && res!=mapPortNameToNumberOfVisitsUntilNow->end()){
-        ans = res->second+1;
-        mapPortNameToNumberOfVisitsUntilNow->erase(this->route->getHead());
-    }
-    mapPortNameToNumberOfVisitsUntilNow->insert({this->route->getHead(), ans});
-}
-
-int Ship::getIndexOfPort() const{
-    auto res = mapPortNameToNumberOfVisitsUntilNow->find(this->route->getHead());
-    return res->second;
-}
-
-Port* Ship::getCurrentPort() const{
-    return nullptr;
 }
 
 int Ship::numEmptyPlaces() const{
