@@ -133,12 +133,18 @@ int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
 
     // create the ShipPlanVector
     auto* blocks = new std::vector<std::vector<int>>(numLines-1);
-    auto* results = readShipPlanInFiles(*blocks, full_path_and_file_name);
+    auto* results = readShipPlanInFiles(*blocks, full_path_and_file_name, numFloors, length, width);
     if(results->at(1)){
         return turnToTrueBit(errorCode,3);
     }
     if(results->at(0)){
         errorCode = turnToTrueBit(errorCode,2);
+    }
+    if(results->at(2)){
+        errorCode = turnToTrueBit(errorCode,0);
+    }
+    if(results->at(3)){
+        errorCode = turnToTrueBit(errorCode,1);
     }
 
     this->shipPlan = new ShipPlan(numFloors, length, width, *blocks);

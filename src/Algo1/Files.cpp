@@ -72,9 +72,11 @@ bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int 
 
 // return vector (bool0, bool1). bool0 - indicates 2^2.
 //                               bool1 - indicates 2^3.
-//  TODO add check for 2^0, 2^1 when create the ship, all other errors are handle here so can skip without report it.
-std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, const std::string &path) {
-    auto* results = new std::vector<bool>{false, false};
+//                               bool2 - indicates 2^0.
+//                               bool3 - indicates 2^1.
+std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, const std::string &path,
+        int numFloors, int length, int width) {
+    auto* results = new std::vector<bool>{false, false, false, false};
     std::ifstream fin;
     try{
         fin.open(path, std::ios::in);
@@ -102,20 +104,37 @@ std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, co
                 row.push_back(removeLeadingAndTrailingWhitespaces(word));
             }
             if (row.size() >= 3) {
-                for(int j=0; j < 3; j++){
-                    try {
-                        int num = stoi(row.at(j));
-                        blocks.at(i - 1).push_back(num);
-                        if(num < 0){
-                            results->at(0) = true;
-                        }
-                    } catch (const std::exception& e) {
-                        results->at(0) = true;
+                bool legalLine = true;
+                int x0 = 0, x1 = 0, x2 = 0;
+                try {
+                    x0 = stoi(row.at(0));
+                    x1 = stoi(row.at(1));
+                    x2 = stoi(row.at(2));
+
+                    if(x0 < 0 or x0 >= length or x1 < 0 or x1 >= width){
+                        results->at(3) = true;
+                        legalLine = false;
+                    }
+                    if(x2 < 0 or x2 >= numFloors){
+                        results->at(2) = true;
+                        legalLine = false;
+                    }
+                } catch (const std::exception& e) {
+                    results->at(0) = true;
+                    legalLine = false;
 //                        std::replace( line.begin(), line.end(), ',', '.');
 //                        errors->push_back("Warning: One of the parameters is not a number. in line: " + line + " (replace comma with .)");
 //                        std::cout << "Warning: One of the parameters is not a number, in line: " << line << std::endl;
-                        blocks.at(i - 1).push_back(-1);
-                    }
+                }
+
+                if(legalLine) {
+                    blocks.at(i - 1).push_back(x0);
+                    blocks.at(i - 1).push_back(x1);
+                    blocks.at(i - 1).push_back(x2);
+                } else {
+                    blocks.at(i - 1).push_back(-1);
+                    blocks.at(i - 1).push_back(-1);
+                    blocks.at(i - 1).push_back(-1);
                 }
             } else {
                 results->at(0) = true;
