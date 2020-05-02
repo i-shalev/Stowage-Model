@@ -19,7 +19,6 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     std::remove(pathToDirChar);
     //create a port object from input file
     Port port;
-    std::vector<std::string> errors_from_port_file;
     std::vector<bool> * res  =readPortContainers(&port, input_full_path_and_file_name);
     //TODO : do something with errors
     delete res;
