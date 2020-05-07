@@ -16,8 +16,6 @@ bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int 
             throw std::exception();
         }
     } catch (const std::exception& e) {
-//        errors->push_back("Error: Failed to open file");
-//        std::cout << "ERROR: Failed to open file" << std::endl;
         return false;
     }
 
@@ -70,13 +68,17 @@ bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int 
     return true;
 }
 
-// return vector (bool0, bool1). bool0 - indicates 2^2.
-//                               bool1 - indicates 2^3.
-//                               bool2 - indicates 2^0.
-//                               bool3 - indicates 2^1.
+// return vector (bool0, bool1, bool2, bool3, bool4). bool0 - indicates 2^2.
+//                                                    bool1 - indicates 2^3.
+//                                                    bool2 - indicates 2^0.
+//                                                    bool3 - indicates 2^1.
+//                                                    bool4 - indicates 2^4.
 std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, const std::string &path,
         int numFloors, int length, int width) {
-    auto* results = new std::vector<bool>{false, false, false, false};
+    auto* results = new std::vector<bool>{false, false, false, false, false};
+    // set to save the X,Y we already saw
+    std::set<std::tuple<int, int>> set;
+
     std::ifstream fin;
     try{
         fin.open(path, std::ios::in);
@@ -119,12 +121,15 @@ std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, co
                         results->at(2) = true;
                         legalLine = false;
                     }
+                    auto res = set.find(std::tuple<int, int>(x0, x1));
+                    if(!set.empty() && res != set.end()){
+                        results->at(4) = true;
+                        return results;
+                    }
+                    set.insert(std::tuple<int, int>(x0, x1));
                 } catch (const std::exception& e) {
                     results->at(0) = true;
                     legalLine = false;
-//                        std::replace( line.begin(), line.end(), ',', '.');
-//                        errors->push_back("Warning: One of the parameters is not a number. in line: " + line + " (replace comma with .)");
-//                        std::cout << "Warning: One of the parameters is not a number, in line: " << line << std::endl;
                 }
 
                 if(legalLine) {
@@ -132,15 +137,14 @@ std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, co
                     blocks.at(i - 1).push_back(x1);
                     blocks.at(i - 1).push_back(x2);
                 } else {
+                    // ToDo replace that with i-- (i believe it will work just do that after all work)
                     blocks.at(i - 1).push_back(-1);
                     blocks.at(i - 1).push_back(-1);
                     blocks.at(i - 1).push_back(-1);
                 }
             } else {
                 results->at(0) = true;
-//                std::replace( line.begin(), line.end(), ',', '.');
-//                errors->push_back("Warning: Not enough parameters - expected 3 parameters per line. in line: " + line + " (replace comma with .)");
-//                std::cout << "Warning: Not enough parameters - expected 3 parameters per line, in line: " << line << std::endl;
+                // ToDo replace that with i-- (i believe it will work just do that after all work)
                 blocks.at(i - 1).push_back(-1);
                 blocks.at(i - 1).push_back(-1);
                 blocks.at(i - 1).push_back(-1);
@@ -220,6 +224,57 @@ bool isLegalPortName(std::string portName){
 //                                             bool3 - indicates 2^15.
 //                                             bool4 - indicates 2^16.
 std::vector<bool> * readPortContainers(Port *port, const std::string &path) {
+    std::ifstream fin;
+    auto* results = new std::vector<bool>{false, false, false, false, false};
+    try{
+        fin.open(path, std::ios::in);
+        if(!fin.is_open()){
+            throw std::exception();
+        }
+    } catch (const std::exception& e) {
+        results->at(4) = true;
+        return results;
+    }
+    std::vector<std::string> row;
+    std::string line, word, temp;
+
+    while (getline(fin, line)) {
+        if(! isCommentLine(line)) {
+            std::string id, dest, weight;
+            std::stringstream s(line);
+            row.clear();
+            while (getline(s, word, ',')) {
+                row.push_back(removeLeadingAndTrailingWhitespaces(word));
+            }
+
+            if(row.empty() or row.at(0).length() != 11){
+                // id cant be read 2^14
+                results->at(2) = true;
+                continue;
+            }
+
+            id = row.at(0);
+            if(row.size() >= 3) {
+                weight = row.at(1);
+                dest = row.at(2);
+            } else if(row.size() == 2) {
+                weight = row.at(1);
+            }
+
+            auto *container = new Container(weight, row[2], row[0], false);
+            port->addContainer(container);
+        }
+    }
+    fin.close();
+    return results;
+}
+
+// return vector (bool0, bool1, bool2, bool3). bool0 - indicates 2^12.
+//                                             bool1 - indicates 2^13.
+//                                             bool2 - indicates 2^14.
+//                                             bool3 - indicates 2^15.
+//                                             bool4 - indicates 2^16.
+std::vector<bool> * readPortContainersOld(Port *port, const std::string &path) {
     std::ifstream fin;
     auto* results = new std::vector<bool>{false, false, false, false, false};
     try{
@@ -359,7 +414,7 @@ bool isCommentLine(std::string line) {
     if(line.empty())
         return true;
     line = removeLeadingAndTrailingWhitespaces(line);
-    return line.size() == 0 or line.at(0) == '#';
+    return line.empty() or line.at(0) == '#';
 }
 
 bool hasEnding (std::string const &fullString, std::string const &ending) {

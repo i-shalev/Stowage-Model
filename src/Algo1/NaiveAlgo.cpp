@@ -137,6 +137,9 @@ int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
     if(results->at(1)){
         return turnToTrueBit(errorCode,3);
     }
+    if(results->at(4)){
+        return turnToTrueBit(errorCode,4);
+    }
     if(results->at(0)){
         errorCode = turnToTrueBit(errorCode,2);
     }
