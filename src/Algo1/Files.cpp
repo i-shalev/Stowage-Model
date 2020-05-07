@@ -240,7 +240,7 @@ std::vector<bool> * readPortContainers(Port *port, const std::string &path) {
 
     while (getline(fin, line)) {
         if(! isCommentLine(line)) {
-            std::string id, dest, weight;
+            std::string id = "-1", dest = "-1", weight = "-1";
             std::stringstream s(line);
             row.clear();
             while (getline(s, word, ',')) {
@@ -261,7 +261,7 @@ std::vector<bool> * readPortContainers(Port *port, const std::string &path) {
                 weight = row.at(1);
             }
 
-            auto *container = new Container(weight, row[2], row[0], false);
+            auto *container = new Container(getWeightIfLegal(weight), dest, id, false);
             port->addContainer(container);
         }
     }
