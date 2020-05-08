@@ -1,11 +1,12 @@
 
 #include "main.h"
+#include "NaiveAlgoWithTrick.h"
 
 int main(int argc, char **argv){
 
     std::string path = R"(C:\Users\zivco\Desktop\ex\sim1\Ports.csv)";
     std::string path2 = R"(C:\Users\zivco\Desktop\ex\sim1\ShipPort.csv)";
-    NaiveAlgo algo;
+    NaiveAlgoWithTrick algo;
 
     std::cout << "start ReadShipRoute:" << std::endl;
     int results = algo.readShipRoute(path);
@@ -14,7 +15,6 @@ int main(int argc, char **argv){
             std::cout << i << std::endl;
         }
     }
-    algo.printShipRoute();
     std::cout << " " << std::endl;
 
     std::cout << "start ReadShipPlan:" << std::endl;
