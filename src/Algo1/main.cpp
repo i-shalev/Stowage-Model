@@ -19,13 +19,18 @@ int main(int argc, char **argv){
             std::cout << i << std::endl;
         }
     }
-    std::cout << algo.getInstructionsForCargo(R"(C:\Users\zivco\Desktop\ex\sim1\AAAAA_0.cargo_data)", R"(C:\Users\zivco\Desktop\ex\sim1\res.txt)") <<std::endl;
-    std::cout << algo.getInstructionsForCargo(R"(C:\Users\zivco\Desktop\ex\sim1\BBBBB_0.cargo_data)", R"(C:\Users\zivco\Desktop\ex\sim1\res2.txt)") <<std::endl;
-    std::cout << algo.getInstructionsForCargo(R"(C:\Users\zivco\Desktop\ex\sim1\CCCCC_0.cargo_data)", R"(C:\Users\zivco\Desktop\ex\sim1\res3.txt)") <<std::endl;
+    parse(algo.getInstructionsForCargo(R"(C:\Users\zivco\Desktop\ex\sim1\AAAAA_0.cargo_data)", R"(C:\Users\zivco\Desktop\ex\sim1\res.txt)"));
+    parse(algo.getInstructionsForCargo(R"(C:\Users\zivco\Desktop\ex\sim1\BBBBB_0.cargo_data)", R"(C:\Users\zivco\Desktop\ex\sim1\res2.txt)"));
+    parse(algo.getInstructionsForCargo(R"(C:\Users\zivco\Desktop\ex\sim1\CCCCC_0.cargo_data)", R"(C:\Users\zivco\Desktop\ex\sim1\res3.txt)"));
 
     return EXIT_SUCCESS;
 }
-
+void parse(int num){
+    for( int i=1; i<18; i++){
+        if(getBitInNumber(num, i))
+            std::cout << "bit "<< i << " is " << getBitInNumber(num, i) << std::endl;
+    }
+}
 int getBitInNumber(int num, int bit){
     int mask =  1 << bit;
     int masked_n = num & mask;
