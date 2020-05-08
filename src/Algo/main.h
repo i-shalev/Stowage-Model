@@ -5,9 +5,9 @@
 #ifndef STOWAGE_MODEL_MAIN_H
 #define STOWAGE_MODEL_MAIN_H
 #include <iostream>
-#include "Files.h"
-#include "Port.h"
-#include "Crane.h"
+#include "../common/Files.h"
+#include "../common/Port.h"
+#include "../common/Crane.h"
 #include "NaiveAlgo.h"
 //using namespace std;
 class main {

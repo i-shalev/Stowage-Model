@@ -17,9 +17,9 @@ int main(int argc, char **argv){
         std::cout << dir << std::endl;
 //        writeToFile(pathToRootDir +  resultFileName, "," + dir);
     }
-    auto* res = getAlgoNames(args["-travel_path"]);
-    for(const auto& dir:*dirs) {
-        std::cout << dir << std::endl;
+    auto* res = getAlgoNames(args["-algorithm_path"]);
+    for(const auto& algoName:*res) {
+        std::cout << algoName << std::endl;
 //        writeToFile(pathToRootDir +  resultFileName, "," + dir);
     }
 

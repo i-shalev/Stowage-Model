@@ -7,12 +7,9 @@
 
 #include <string>
 #include <iostream>
-#include "Files.h"
-#include "Port.h"
-#include "Crane.h"
-#include "NaiveAlgo.h"
-#include "NaiveAlgoWithTrick.h"
-
+#include "common/Files.h"
+#include "common/Port.h"
+#include "common/Crane.h"
 
 enum AlgoType  {NaiveAlgoEnum, NaiveAlgoWithTrickEnum};
 

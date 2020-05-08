@@ -5,13 +5,13 @@
 #ifndef STOWAGE_MODEL_NAIVEALGO_H
 #define STOWAGE_MODEL_NAIVEALGO_H
 
-#include "Ship.h"
-#include "WeightBalanceCalculator.h"
-#include "Crane.h"
+#include "../common/Ship.h"
+#include "../common/WeightBalanceCalculator.h"
+#include "../common/Crane.h"
 #include <cstdio>
 #include "fstream"
-#include "Files.h"
-#include "AbstractAlgorithm.h"
+#include "../common/Files.h"
+#include "../common/AbstractAlgorithm.h"
 
 // this algorithm sort the Containers by their destinations from closest to farthest and Load them one by one.
 class NaiveAlgo : public AbstractAlgorithm{
