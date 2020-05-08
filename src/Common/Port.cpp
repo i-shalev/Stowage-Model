@@ -90,7 +90,7 @@ void Port::fixPort(std::vector<bool>& errors, std::vector<Container*>& reject) {
             errors.at(3) = true;
             continue;
         }
-        if(cont->getWeight() < 0){
+        if(cont->getWeight() <= 0){
             reject.push_back(cont);
             errors.at(1) = true;
             continue;
