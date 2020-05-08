@@ -76,7 +76,7 @@ bool Container::checkDestination(){
         return false;
     for(int i = 0; i < 5; i++) {
         char ch = dest.at(i);
-        if (!(ch >= 'A' && ch <= 'Z'))
+        if (!((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') ))
             return false;
     }
     return true;

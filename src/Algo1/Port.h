@@ -28,6 +28,7 @@ public:
     void getVectorOfContainers(std::vector<Container*>& vector) const;
     void getContainersWithDest(const std::string& dest, std::vector<Container*>& vec) const;
     void getContainersByDistance(ShipRoute& sr, std::vector<Container*>& vec) const;
+    void fixPort(std::vector<bool> errors, std::vector<Container*> reject);
 };
 
 

@@ -12,6 +12,7 @@ NaiveAlgo::NaiveAlgo(){
 }
 
 int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) {
+    int rc = 0;
     if(ship == nullptr)
         return -1; //TODO: maybe return different error code
     char* pathToDirChar = (char *)(malloc((output_full_path_and_file_name.size() + 1) * sizeof(char)));
@@ -23,8 +24,21 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     //TODO : do something with errors
     delete res;
 
+    std::vector<Container*> problematics;
+    std::vector<bool> errors;
+    port.fixPort(errors, problematics);
+    if(errors.at(0)){ rc = turnToTrueBit(rc, 10);}
+    if(errors.at(1)){ rc = turnToTrueBit(rc, 12);}
+    if(errors.at(2)){ rc = turnToTrueBit(rc, 13);}
+    if(errors.at(3)){ rc = turnToTrueBit(rc, 15);}
+
     std::fstream fs;
     fs.open(output_full_path_and_file_name, std::ios::out | std::ios::app);
+
+    for(auto& cont : problematics){
+        fs << "R " << cont->getId() << std::endl;
+        delete cont;
+    }
 
     std::vector<Container*> temporaryUnloaded;
     //first unload from ship all the containers with this destination
@@ -104,7 +118,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     Crane crane(ship, &port);
     crane.executeOperationList(output_full_path_and_file_name);
     ship->getRoute().deleteFirst();
-    return 0;
+    return rc;
 }
 
 int NaiveAlgo::emptyPlacesInPosition(int i, int j, const std::string& portSymbol){
