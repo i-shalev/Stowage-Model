@@ -569,7 +569,7 @@ std::vector<std::string>* getDirsNamesFromRootDir(const std::string &pathToDir) 
         return dirs;
 }
 
-std::vector<std::string>* getAlgoNames(const std::string &pathToDir){
+std::vector<std::string>* getFileNamesEndWith(const std::string &pathToDir, const std::string &endsWith){
     char* path = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
     stringToCharStar(path, pathToDir);
     auto* res = new std::vector<std::string>();
@@ -592,15 +592,16 @@ std::vector<std::string>* getAlgoNames(const std::string &pathToDir){
         }
         fullPath[strlen(path)+name.size()+1] = '\0';
 
-        if(hasEnding(name, ".so")) {
+        if(hasEnding(name, endsWith)) {
             if(isFile(fullPath)) {
-                res->push_back(name.substr(0, name.size() - 3));
+                res->push_back(name.substr(0, name.size() - endsWith.length()));
             }
         }
         entry = readdir(dir);
         delete fullPath;
     }
 
+    delete path;
     closedir(dir);
     return res;
 }
