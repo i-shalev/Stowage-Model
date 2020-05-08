@@ -61,6 +61,8 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
         if(ship->hasContainer(cont->getId())) {
             fs << "R " << cont->getId() << std::endl;
             rc = turnToTrueBit(rc, 11);
+            port.removeContainer(cont->getId());
+            delete cont;
         }
     }
 

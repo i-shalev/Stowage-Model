@@ -82,35 +82,35 @@ void Port::getContainersByDistance(ShipRoute& sr, std::vector<Container*>& vec) 
 void Port::fixPort(std::vector<bool>& errors, std::vector<Container*> reject) {
     for(int i=0; i<4; i++)
         errors.push_back(false);
-    //std::set<std::string> IDs;
-    for(auto& pair : *this->ContainersAwaiting){
-        if(!(pair->checkId())){
-            reject.push_back(pair);
-            //this->removeContainer(pair.first);
+    std::vector<Container*> tmp;
+    std::set<std::string> IDs;
+    for(auto& cont : *this->ContainersAwaiting){
+        if(!(cont->checkId())){
+            reject.push_back(cont);
             errors.at(3) = true;
             continue;
         }
-        if(pair->getWeight() < 0){
-            reject.push_back(pair);
-            //this->removeContainer(pair.first);
+        if(cont->getWeight() < 0){
+            reject.push_back(cont);
             errors.at(1) = true;
             continue;
         }
-        if(!(pair->checkDestination())){
-            reject.push_back(pair);
-            //this->removeContainer(pair.first);
+        if(!(cont->checkDestination())){
+            reject.push_back(cont);
             errors.at(2) = true;
             continue;
         }
-        /*if(IDs.find(pair.first) != IDs.end()){
-            reject.push_back(pair.second);
-            this->removeContainer(pair.first);
+        if(IDs.find(cont->getId()) != IDs.end()){
+            reject.push_back(cont);
             errors.at(0) = true;
             continue;
         }
-        IDs.insert(pair.first);
-*/
+        IDs.insert(cont->getId());
+        tmp.push_back(cont);
     }
-
+    this->ContainersAwaiting->clear();
+    for(auto& container: tmp){
+        ContainersAwaiting->push_back(container);
+    }
 
 }
