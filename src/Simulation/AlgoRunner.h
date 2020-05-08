@@ -7,9 +7,9 @@
 
 #include <string>
 #include <iostream>
-#include "common/Files.h"
-#include "common/Port.h"
-#include "common/Crane.h"
+#include "../Common/Files.h"
+#include "../Common/Port.h"
+#include "../Common/Crane.h"
 
 enum AlgoType  {NaiveAlgoEnum, NaiveAlgoWithTrickEnum};
 
