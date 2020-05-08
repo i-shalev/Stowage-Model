@@ -48,5 +48,6 @@ std::vector<std::string>* getDirsFromRootDir(const std::string &pathToDir);
 void writeToFile(const std::string& filename, const std::string& data);
 void emptyFile(const std::string& filename);
 std::vector<std::string>* getDirsNamesFromRootDir(const std::string &pathToDir);
+std::vector<std::string>* getAlgoNames(const std::string &pathToDir);
 
 #endif //STOWAGE_MODEL_FILES_H

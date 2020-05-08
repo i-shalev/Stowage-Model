@@ -568,3 +568,39 @@ std::vector<std::string>* getDirsNamesFromRootDir(const std::string &pathToDir) 
         closedir(dir);
         return dirs;
 }
+
+std::vector<std::string>* getAlgoNames(const std::string &pathToDir){
+    char* path = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
+    stringToCharStar(path, pathToDir);
+    auto* res = new std::vector<std::string>();
+
+    DIR *dir = opendir(path);
+    struct dirent *entry = readdir(dir);
+    std::string name;
+    while (entry != nullptr)
+    {
+        name = entry->d_name;
+        std::string pathString(path);
+        char* fullPath = (char *)(malloc((strlen(path)+name.size()+2) * sizeof(char)));
+        for (size_t i = 0; i < strlen(path); i++) {
+            fullPath[i] = path[i];
+        }
+        fullPath[strlen(path)] = '/';
+
+        for (size_t i = 0; i < name.size(); i++) {
+            fullPath[i+strlen(path)+1] = name.at(i);
+        }
+        fullPath[strlen(path)+name.size()+1] = '\0';
+
+        if(hasEnding(name, ".so")) {
+            if(isFile(fullPath)) {
+                res->push_back(name.substr(0, name.size() - 3));
+            }
+        }
+        entry = readdir(dir);
+        delete fullPath;
+    }
+
+    closedir(dir);
+    return res;
+}

@@ -9,6 +9,7 @@ int main(int argc, char **argv){
         return EXIT_FAILURE;
     }
 
+
     printArgs(args);
 
     auto* dirs = getDirsNamesFromRootDir(args["-travel_path"]);
@@ -16,7 +17,11 @@ int main(int argc, char **argv){
         std::cout << dir << std::endl;
 //        writeToFile(pathToRootDir +  resultFileName, "," + dir);
     }
-
+    auto* res = getAlgoNames(args["-travel_path"]);
+    for(const auto& dir:*dirs) {
+        std::cout << dir << std::endl;
+//        writeToFile(pathToRootDir +  resultFileName, "," + dir);
+    }
 
 //    std::string pathToRootDir = argv[1];
 //    std::string resultFileName = R"(/simulation.results)";
@@ -61,7 +66,7 @@ int main(int argc, char **argv){
 //
 //    std::vector<bool>*  results = readPortContainers(port, pathToRootDir + R"(\\AAAAA_0.cargo_data)", errors );
 //    std::cout << results->at(0) << " " << results->at(1) << " " << results->at(2) << " " << results->at(3) << " " << results->at(4) << std::endl;
-
+    free(dirs);
     return EXIT_SUCCESS;
 }
 
