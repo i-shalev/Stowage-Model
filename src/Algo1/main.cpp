@@ -3,8 +3,8 @@
 
 int main(int argc, char **argv){
 
-    std::string path = R"(C:\Users\itay\Desktop\ex\sim1\Ports.csv)";
-    std::string path2 = R"(C:\Users\itay\Desktop\ex\sim1\ShipPort.csv)";
+    std::string path = R"(C:\Users\zivco\Desktop\ex\sim1\Ports.csv)";
+    std::string path2 = R"(C:\Users\zivco\Desktop\ex\sim1\ShipPort.csv)";
     NaiveAlgo algo;
 
     std::cout << "start ReadShipRoute:" << std::endl;
@@ -27,13 +27,13 @@ int main(int argc, char **argv){
     std::cout << " " << std::endl;
 
     std::cout << "start AAAAA_0.cargo_data:" << std::endl;
-    parse(algo.getInstructionsForCargo(R"(C:\Users\itay\Desktop\ex\sim1\AAAAA_0.cargo_data)", R"(C:\Users\itay\Desktop\ex\sim1\res.txt)"));
+    parse(algo.getInstructionsForCargo(R"(C:\Users\zivco\Desktop\ex\sim1\AAAAA_0.cargo_data)", R"(C:\Users\zivco\Desktop\ex\sim1\res.txt)"));
     std::cout << " " << std::endl;
     std::cout << "start BBBBB_0.cargo_data:" << std::endl;
-    parse(algo.getInstructionsForCargo(R"(C:\Users\itay\Desktop\ex\sim1\BBBBB_0.cargo_data)", R"(C:\Users\itay\Desktop\ex\sim1\res2.txt)"));
+    parse(algo.getInstructionsForCargo(R"(C:\Users\zivco\Desktop\ex\sim1\BBBBB_0.cargo_data)", R"(C:\Users\zivco\Desktop\ex\sim1\res2.txt)"));
     std::cout << " " << std::endl;
     std::cout << "start CCCCC_0.cargo_data:" << std::endl;
-    parse(algo.getInstructionsForCargo(R"(C:\Users\itay\Desktop\ex\sim1\CCCCC_0.cargo_data)", R"(C:\Users\itay\Desktop\ex\sim1\res3.txt)"));
+    parse(algo.getInstructionsForCargo(R"(C:\Users\zivco\Desktop\ex\sim1\CCCCC_0.cargo_data)", R"(C:\Users\zivco\Desktop\ex\sim1\res3.txt)"));
 
     return EXIT_SUCCESS;
 }

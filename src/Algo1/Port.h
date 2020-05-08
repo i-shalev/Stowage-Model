@@ -14,7 +14,7 @@
 class Port{
     const std::string symbol;
     int number;
-    std::map<std::string, Container*>* ContainersAwaiting;
+    std::vector<Container*>* ContainersAwaiting;
 
 public:
     Port();
@@ -22,7 +22,7 @@ public:
     ~Port();
     const std::string& getSymbol() const;
     void addContainer(Container* container);
-    Container* removeContainer(const std::string& id);
+    void removeContainer(const std::string& id);
     bool hasContainers() const;
     Container* getContainerByID(const std::string& id) const;
     void getVectorOfContainers(std::vector<Container*>& vector) const;
