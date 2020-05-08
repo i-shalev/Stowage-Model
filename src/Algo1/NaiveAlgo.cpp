@@ -21,8 +21,8 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     //create a port object from input file
     Port port;
     std::vector<bool> * res  =readPortContainers(&port, input_full_path_and_file_name);
-    if(res.at(0)){ rc = turnToTrueBit(rc, 14);}
-    if(res.at(1)){ rc = turnToTrueBit(rc, 16);}
+    if(res->at(0)){ rc = turnToTrueBit(rc, 14);}
+    if(res->at(1)){ rc = turnToTrueBit(rc, 16);}
     delete res;
     if(ship->lastStop()){
         if(port.hasContainers()){

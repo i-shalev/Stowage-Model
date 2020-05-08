@@ -82,7 +82,7 @@ bool Ship::finishRoute() const{
     return this->route->getRouteLength() == 0;
 }
 
-bool Ship::lastStop() const {{
+bool Ship::lastStop() const {
     return this->route->getRouteLength() == 1;
 }
 
