@@ -12,13 +12,13 @@ NaiveAlgo::NaiveAlgo(){
 }
 
 int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) {
-    int errorCode = 0;
+    int rc = 0;
     if(ship == nullptr){
         if(shipPlan == nullptr)
-            errorCode = turnToTrueBit(errorCode, 3);
+            rc = turnToTrueBit(rc, 3);
         if(shipRoute == nullptr)
-            errorCode = turnToTrueBit(errorCode, 7);
-        return errorCode;
+            rc = turnToTrueBit(rc, 7);
+        return rc;
     }
     char* pathToDirChar = (char *)(malloc((output_full_path_and_file_name.size() + 1) * sizeof(char)));
     stringToCharStar(pathToDirChar, output_full_path_and_file_name);
@@ -26,17 +26,12 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     //create a port object from input file
     Port port;
     std::vector<bool> * res  =readPortContainers(&port, input_full_path_and_file_name);
-    if(res->at(0)){
-        errorCode = turnToTrueBit(errorCode,14);
-    }
-    if(res->at(1)){
-        errorCode = turnToTrueBit(errorCode,16);
-    }
-
+    if(res->at(0)){ rc = turnToTrueBit(rc, 14);}
+    if(res->at(1)){ rc = turnToTrueBit(rc, 16);}
     delete res;
     if(ship->lastStop()){
         if(port.hasContainers()){
-            errorCode = turnToTrueBit(errorCode, 17);
+            rc = turnToTrueBit(rc,17);
             std::vector<Container*> ignore;
             port.getVectorOfContainers(ignore);
             for(auto& cont: ignore){
@@ -48,10 +43,10 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     std::vector<Container*> problematics;
     std::vector<bool> errors;
     port.fixPort(errors, problematics);
-    if(errors.at(0)){ errorCode = turnToTrueBit(errorCode, 10);}
-    if(errors.at(1)){ errorCode = turnToTrueBit(errorCode, 12);}
-    if(errors.at(2)){ errorCode = turnToTrueBit(errorCode, 13);}
-    if(errors.at(3)){ errorCode = turnToTrueBit(errorCode, 15);}
+    if(errors.at(0)){ rc = turnToTrueBit(rc, 10);}
+    if(errors.at(1)){ rc = turnToTrueBit(rc, 12);}
+    if(errors.at(2)){ rc = turnToTrueBit(rc, 13);}
+    if(errors.at(3)){ rc = turnToTrueBit(rc, 15);}
 
     std::fstream fs;
     fs.open(output_full_path_and_file_name, std::ios::out | std::ios::app);
@@ -65,7 +60,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     for(auto& cont : conts){
         if(ship->hasContainer(cont->getId())) {
             fs << "R " << cont->getId() << std::endl;
-            errorCode = turnToTrueBit(errorCode, 11);
+            rc = turnToTrueBit(rc, 11);
         }
     }
 
@@ -141,14 +136,14 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     while(!toLoad.empty()) {
         fs << "R " << toLoad.back()->getId() << std::endl;
         toLoad.pop_back();
-        errorCode = turnToTrueBit(errorCode, 18);
+        rc = turnToTrueBit(rc, 18);
     }
     fs.close();
     delete pathToDirChar;
     Crane crane(ship, &port);
     crane.executeOperationList(output_full_path_and_file_name);
     ship->getRoute().deleteFirst();
-    return errorCode;
+    return rc;
 }
 
 int NaiveAlgo::emptyPlacesInPosition(int i, int j, const std::string& portSymbol){
