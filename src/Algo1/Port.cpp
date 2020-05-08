@@ -79,7 +79,7 @@ void Port::getContainersByDistance(ShipRoute& sr, std::vector<Container*>& vec) 
 }
 
 // errors[0] - 2^10, errors[1] - 2^12, errors[2] - 2^13, errors[3] - 2^15
-void Port::fixPort(std::vector<bool>& errors, std::vector<Container*> reject) {
+void Port::fixPort(std::vector<bool>& errors, std::vector<Container*>& reject) {
     for(int i=0; i<4; i++)
         errors.push_back(false);
     std::vector<Container*> tmp;
