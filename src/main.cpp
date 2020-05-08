@@ -1,6 +1,14 @@
 
 #include "main.h"
 
+std::string current_working_directory()
+{
+    char* cwd = _getcwd( 0, 0 ) ; // **** microsoft specific ****
+    std::string working_directory(cwd) ;
+    std::free(cwd) ;
+    return working_directory ;
+}
+
 int main(int argc, char **argv){
     std::map<std::string, std::string> args;
     args["-travel_path"];
@@ -19,10 +27,18 @@ int main(int argc, char **argv){
         args["-algorithm_path"] = ".\\";
     }
     if(args["-output"].empty()){
-        args["-output"] = ".\\";
+        args["-output"] = "";
     }
-
-
+    std::cout << current_working_directory() << std::endl;
+    std::ifstream fin;
+    try{
+        fin.open(  R"(./ShipPlan.csv)", std::ios::in);
+        if(!fin.is_open()){
+            throw std::exception();
+        }
+    } catch (const std::exception& e) {
+        std::cout << "ERROR: Failed to open file" << std::endl;
+    }
 
     std::cout << "travel_path: " << args["-travel_path"] << std::endl;
     std::cout << "algorithm_path: " << args["-algorithm_path"] << std::endl;

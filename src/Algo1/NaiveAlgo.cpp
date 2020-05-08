@@ -177,12 +177,12 @@ int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
     auto* blocks = new std::vector<std::vector<int>>(numLines-1);
     auto* results = readShipPlanInFiles(*blocks, full_path_and_file_name, numFloors, length, width);
     if(results->at(1)){
-        turnToTrueBit(errorCode,3);
+        errorCode = turnToTrueBit(errorCode,3);
         fatalError = true;
     }
     if(results->at(4)){
-        turnToTrueBit(errorCode,4);
-        fatalError = true
+        errorCode = turnToTrueBit(errorCode,4);
+        fatalError = true;
     }
     if(results->at(0)){
         errorCode = turnToTrueBit(errorCode,2);
@@ -210,11 +210,11 @@ int NaiveAlgo::readShipRoute(const std::string &full_path_and_file_name) {
     auto* ports = new std::vector<std::string>();
     auto* results = readShipPorts(*ports, full_path_and_file_name);
     if(results->at(2)){
-        turnToTrueBit(errorCode,7);
+        errorCode = turnToTrueBit(errorCode,7);
         fatalError = true;
     }
     if(results->at(3)){
-        turnToTrueBit(errorCode,8);
+        errorCode = turnToTrueBit(errorCode,8);
         fatalError = true;
     }
     if(results->at(0)){
