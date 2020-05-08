@@ -167,6 +167,7 @@ bool NaiveAlgo::checkContainer(Container* cont){
 
 int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
     int errorCode = 0;
+    bool fatalError = false;
     int numFloors=0 , length=0, width=0, numLines;
     if(!getSizesShipPlan(full_path_and_file_name, numFloors, length, width, numLines)) {
         return turnToTrueBit(errorCode,3);
@@ -176,10 +177,12 @@ int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
     auto* blocks = new std::vector<std::vector<int>>(numLines-1);
     auto* results = readShipPlanInFiles(*blocks, full_path_and_file_name, numFloors, length, width);
     if(results->at(1)){
-        return turnToTrueBit(errorCode,3);
+        turnToTrueBit(errorCode,3);
+        fatalError = true;
     }
     if(results->at(4)){
-        return turnToTrueBit(errorCode,4);
+        turnToTrueBit(errorCode,4);
+        fatalError = true
     }
     if(results->at(0)){
         errorCode = turnToTrueBit(errorCode,2);
@@ -191,6 +194,9 @@ int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
         errorCode = turnToTrueBit(errorCode,1);
     }
 
+    if(fatalError)
+        return errorCode;
+
     this->shipPlan = new ShipPlan(numFloors, length, width, *blocks);
     delete blocks;
     delete results;
@@ -200,13 +206,16 @@ int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
 
 int NaiveAlgo::readShipRoute(const std::string &full_path_and_file_name) {
     int errorCode = 0;
+    bool fatalError = false;
     auto* ports = new std::vector<std::string>();
     auto* results = readShipPorts(*ports, full_path_and_file_name);
     if(results->at(2)){
-        return turnToTrueBit(errorCode,7);
+        turnToTrueBit(errorCode,7);
+        fatalError = true;
     }
     if(results->at(3)){
-        return turnToTrueBit(errorCode,8);
+        turnToTrueBit(errorCode,8);
+        fatalError = true;
     }
     if(results->at(0)){
         errorCode = turnToTrueBit(errorCode,5);
@@ -214,6 +223,9 @@ int NaiveAlgo::readShipRoute(const std::string &full_path_and_file_name) {
     if(results->at(1)){
         errorCode = turnToTrueBit(errorCode,6);
     }
+    if(fatalError)
+        return errorCode;
+
     this->shipRoute = new ShipRoute(ports);
 
     delete ports;

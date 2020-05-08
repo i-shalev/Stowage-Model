@@ -22,6 +22,8 @@ int main(int argc, char **argv){
         args["-output"] = ".\\";
     }
 
+
+
     std::cout << "travel_path: " << args["-travel_path"] << std::endl;
     std::cout << "algorithm_path: " << args["-algorithm_path"] << std::endl;
     std::cout << "output: " << args["-output"] << std::endl;
