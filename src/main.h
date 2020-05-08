@@ -17,6 +17,6 @@ class main {
 };
 
 int main(int argc, char **argv);
-
+void setPaths(std::map<std::string, std::string> args, std::string argName, std::string arg);
 
 #endif //STOWAGE_MODEL_MAIN_H

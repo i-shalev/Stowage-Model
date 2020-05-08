@@ -2,28 +2,39 @@
 #include "main.h"
 
 int main(int argc, char **argv){
-    if(argc < 2) {
-        std::cout << "ERROR: Please pass a root dir" << std::endl;
-        return EXIT_FAILURE;
+    std::map<std::string, std::string> args;
+    args["-travel_path"] = "";
+    args["-algorithm_path"] = "";
+    args["-output"] = "";
+
+    for(int i = 1; i < argc-1; i += 2){
+        args[argv[i]] = argv[i+1];
     }
-    std::string pathToRootDir = argv[1];
-    std::string resultFileName = R"(/simulation.results)";
-    std::string errorFileName = R"(/simulation.errors)";
-    emptyFile(pathToRootDir +  resultFileName);
-    emptyFile(pathToRootDir +  errorFileName);
-    auto* dirs = getDirsNamesFromRootDir(pathToRootDir);
-    for(const auto& dir:*dirs) {
-        writeToFile(pathToRootDir +  resultFileName, "," + dir);
-        writeToFile(pathToRootDir +  errorFileName, "," + dir);
-    }
-    writeToFile(pathToRootDir +  resultFileName, ", Sum \n");
-    writeToFile(pathToRootDir +  errorFileName, "\n");
-    auto* algoRunnerNaive = new AlgoRunner(NaiveAlgoEnum, pathToRootDir);
-    algoRunnerNaive->startRun();
-    auto* algoRunnerNaiveWithTrick = new AlgoRunner(NaiveAlgoWithTrickEnum, pathToRootDir);
-    algoRunnerNaiveWithTrick->startRun();
-    delete algoRunnerNaive;
-    delete algoRunnerNaiveWithTrick;
+
+    std::cout << "travel_path: " << args["-travel_path"] << std::endl;
+    std::cout << "algorithm_path: " << args["-algorithm_path"] << std::endl;
+    std::cout << "output: " << args["-output"] << std::endl;
+
+
+
+//    std::string pathToRootDir = argv[1];
+//    std::string resultFileName = R"(/simulation.results)";
+//    std::string errorFileName = R"(/simulation.errors)";
+//    emptyFile(pathToRootDir +  resultFileName);
+//    emptyFile(pathToRootDir +  errorFileName);
+//    auto* dirs = getDirsNamesFromRootDir(pathToRootDir);
+//    for(const auto& dir:*dirs) {
+//        writeToFile(pathToRootDir +  resultFileName, "," + dir);
+//        writeToFile(pathToRootDir +  errorFileName, "," + dir);
+//    }
+//    writeToFile(pathToRootDir +  resultFileName, ", Sum \n");
+//    writeToFile(pathToRootDir +  errorFileName, "\n");
+//    auto* algoRunnerNaive = new AlgoRunner(NaiveAlgoEnum, pathToRootDir);
+//    algoRunnerNaive->startRun();
+//    auto* algoRunnerNaiveWithTrick = new AlgoRunner(NaiveAlgoWithTrickEnum, pathToRootDir);
+//    algoRunnerNaiveWithTrick->startRun();
+//    delete algoRunnerNaive;
+//    delete algoRunnerNaiveWithTrick;
 
 
 // tests for Files:
@@ -51,4 +62,9 @@ int main(int argc, char **argv){
 //    std::cout << results->at(0) << " " << results->at(1) << " " << results->at(2) << " " << results->at(3) << " " << results->at(4) << std::endl;
 
     return EXIT_SUCCESS;
+}
+
+void setPaths(std::map<std::string, std::string> args, std::string argName, std::string arg){
+    std::cout << "argName: " << argName << std::endl;
+    std::cout << "arg: " << arg << std::endl;
 }
