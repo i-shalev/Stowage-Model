@@ -13,8 +13,13 @@ NaiveAlgo::NaiveAlgo(){
 
 int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) {
     int rc = 0;
-    if(ship == nullptr)
-        return -1; //TODO: maybe return different error code
+    if(ship == nullptr){
+        if(shipPlan == nullptr)
+            rc = turnToTrueBit(rc, 3);
+        if(shipRoute == nullptr)
+            rc = turnToTrueBit(rc, 7);
+        return rc;
+    }
     char* pathToDirChar = (char *)(malloc((output_full_path_and_file_name.size() + 1) * sizeof(char)));
     stringToCharStar(pathToDirChar, output_full_path_and_file_name);
     std::remove(pathToDirChar);
