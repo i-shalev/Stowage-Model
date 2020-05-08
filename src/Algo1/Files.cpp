@@ -77,7 +77,7 @@ std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, co
         int numFloors, int length, int width) {
     auto* results = new std::vector<bool>{false, false, false, false, false};
     // set to save the X,Y we already saw
-    std::set<std::tuple<int, int>> set;
+    std::map<std::tuple<int, int>, int> map;
 
     std::ifstream fin;
     try{
@@ -121,12 +121,18 @@ std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, co
                         results->at(2) = true;
                         legalLine = false;
                     }
-                    auto res = set.find(std::tuple<int, int>(x0, x1));
-                    if(!set.empty() && res != set.end()){
-                        results->at(4) = true;
-                        return results;
+                    auto res = map.find(std::tuple<int, int>(x0, x1));
+                    if(!map.empty() && res != map.end()){
+                        if(res->second == x2){
+                            results->at(0) = true;
+                        }
+                        else{
+                            results->at(4) = true;
+                            return results;
+                        }
+                    } else {
+                        map[std::tuple<int, int>(x0, x1)] = x2;
                     }
-                    set.insert(std::tuple<int, int>(x0, x1));
                 } catch (const std::exception& e) {
                     results->at(0) = true;
                     legalLine = false;

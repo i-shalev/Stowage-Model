@@ -3,12 +3,23 @@
 
 int main(int argc, char **argv){
     std::map<std::string, std::string> args;
-    args["-travel_path"] = "";
-    args["-algorithm_path"] = "";
-    args["-output"] = "";
+    args["-travel_path"];
+    args["-algorithm_path"];
+    args["-output"];
 
     for(int i = 1; i < argc-1; i += 2){
         args[argv[i]] = argv[i+1];
+    }
+
+    if(args["-travel_path"].empty()){
+        // fatal error
+        return EXIT_FAILURE;
+    }
+    if(args["-algorithm_path"].empty()){
+        args["-algorithm_path"] = ".\\";
+    }
+    if(args["-output"].empty()){
+        args["-output"] = ".\\";
     }
 
     std::cout << "travel_path: " << args["-travel_path"] << std::endl;
