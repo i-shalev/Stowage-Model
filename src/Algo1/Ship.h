@@ -29,6 +29,7 @@ public:
     bool finishRoute() const;
     ShipRoute& getRoute() const {return *(this->route);}
     int numEmptyPlaces() const;
+    bool hasContainer(const std::string ID) const;
 };
 
 #endif //STOWAGE_MODEL_SHIP_H

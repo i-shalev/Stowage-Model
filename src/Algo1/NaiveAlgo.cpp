@@ -39,6 +39,14 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
         fs << "R " << cont->getId() << std::endl;
         delete cont;
     }
+    std::vector<Container*> conts;
+    port.getVectorOfContainers(conts);
+    for(auto& cont : conts){
+        if(ship->hasContainer(cont->getId())) {
+            fs << "R " << cont->getId() << std::endl;
+            rc = turnToTrueBit(rc, 11);
+        }
+    }
 
     std::vector<Container*> temporaryUnloaded;
     //first unload from ship all the containers with this destination
@@ -112,6 +120,7 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     while(!toLoad.empty()) {
         fs << "R " << toLoad.back()->getId() << std::endl;
         toLoad.pop_back();
+        rc = turnToTrueBit(rc, 18);
     }
     fs.close();
     delete pathToDirChar;
