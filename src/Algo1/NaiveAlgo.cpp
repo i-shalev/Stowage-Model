@@ -23,7 +23,17 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     std::vector<bool> * res  =readPortContainers(&port, input_full_path_and_file_name);
     //TODO : do something with errors
     delete res;
-
+    if(ship->lastStop()){
+        if(port.hasContainers()){
+            rc = turnToTrueBit(rc,17);
+            std::vector<Container*> ignore;
+            port.getVectorOfContainers(ignore);
+            for(auto& cont: ignore){
+                port.removeContainer(cont->getId());
+                delete cont;
+            }
+        }
+    }
     std::vector<Container*> problematics;
     std::vector<bool> errors;
     port.fixPort(errors, problematics);

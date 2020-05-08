@@ -82,6 +82,10 @@ bool Ship::finishRoute() const{
     return this->route->getRouteLength() == 0;
 }
 
+bool Ship::lastStop() const {{
+    return this->route->getRouteLength() == 1;
+}
+
 int Ship::numEmptyPlaces() const{
     int counter = 0;
     for (int level = 0; level < this->plan->getNumFloors(); level++) {

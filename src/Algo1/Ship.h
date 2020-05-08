@@ -27,6 +27,7 @@ public:
     std::string getCurrentDestination() const {return route->getHead();}
     void getContainerPosition(const std::string &id, std::vector<int> &res);
     bool finishRoute() const;
+    bool lastStop() const;
     ShipRoute& getRoute() const {return *(this->route);}
     int numEmptyPlaces() const;
     bool hasContainer(const std::string ID) const;
