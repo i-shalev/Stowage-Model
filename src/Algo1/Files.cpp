@@ -218,21 +218,18 @@ bool isLegalPortName(std::string portName){
     return true;
 }
 
-// return vector (bool0, bool1, bool2, bool3). bool0 - indicates 2^12.
-//                                             bool1 - indicates 2^13.
-//                                             bool2 - indicates 2^14.
-//                                             bool3 - indicates 2^15.
-//                                             bool4 - indicates 2^16.
+// return vector (bool0, bool1). bool0 - indicates 2^14.
+//                               bool1 - indicates 2^16.
 std::vector<bool> * readPortContainers(Port *port, const std::string &path) {
     std::ifstream fin;
-    auto* results = new std::vector<bool>{false, false, false, false, false};
+    auto* results = new std::vector<bool>{false, false};
     try{
         fin.open(path, std::ios::in);
         if(!fin.is_open()){
             throw std::exception();
         }
     } catch (const std::exception& e) {
-        results->at(4) = true;
+        results->at(1) = true;
         return results;
     }
     std::vector<std::string> row;
@@ -249,7 +246,7 @@ std::vector<bool> * readPortContainers(Port *port, const std::string &path) {
 
             if(row.empty() or row.at(0).length() != 11){
                 // id cant be read 2^14
-                results->at(2) = true;
+                results->at(0) = true;
                 continue;
             }
 
