@@ -38,7 +38,7 @@ int main(int argc, char **argv){
     return EXIT_SUCCESS;
 }
 void parse(int num){
-    for( int i=1; i<18; i++){
+    for( int i=1; i<19; i++){
         if(getBitInNumber(num, i))
             std::cout << "bit "<< i << " is " << getBitInNumber(num, i) << std::endl;
     }
