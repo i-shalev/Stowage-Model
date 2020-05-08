@@ -17,7 +17,7 @@ class Crane{
     Port* curPort;
 
 public:
-    Crane(Ship *ship, Port* port) : curPort(port), curShip(ship){}
+    Crane(Ship *ship, Port* port) : curShip(ship), curPort(port){}
     Crane(const Crane& crane)  = delete;
     result Load(const std::string& contId, int level, int i, int j);
     result Unload(const std::string& contId, int level, int i, int j);
