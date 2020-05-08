@@ -12,6 +12,7 @@
 #include "fstream"
 #include "../common/Files.h"
 #include "../common/AbstractAlgorithm.h"
+#include "../common/AlgorithmRegistration.h"
 
 // this algorithm sort the Containers by their destinations from closest to farthest and Load them one by one.
 class NaiveAlgo : public AbstractAlgorithm{
