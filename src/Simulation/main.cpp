@@ -20,7 +20,7 @@ int createArgs(std::map<std::string, std::string>& args, int& argc, char **argv)
     for(int i = 1; i < argc-1; i += 2){
         args[argv[i]] = argv[i+1];
     }
-
+    //TODO handle those errors
     if(args["-travel_path"].empty()){
         // fatal error
         return EXIT_FAILURE;
@@ -36,9 +36,9 @@ int createArgs(std::map<std::string, std::string>& args, int& argc, char **argv)
 }
 
 void printArgs(std::map<std::string, std::string>& args){
-    //std::cout << "travel_path: " << args["-travel_path"] << std::endl;
-    //std::cout << "algorithm_path: " << args["-algorithm_path"] << std::endl;
-    //std::cout << "output: " << args["-output"] << std::endl;
+    std::cout << "travel_path: " << args["-travel_path"] << std::endl;
+    std::cout << "algorithm_path: " << args["-algorithm_path"] << std::endl;
+    std::cout << "output: " << args["-output"] << std::endl;
 }
 
 void runAllAlgo(const std::string& algoPath){
@@ -120,12 +120,21 @@ void runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, con
     auto* mapPortFullNameToCargoPath = createMapPortFullNameToCargoPath(pathToDir, mapPortVisits,
             shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1), errors);
 
+    int numOp = 0;
     while(!ship->finishRoute()){
         //std::cout << ship->getCurrentDestinationWithIndex() << std::endl;
         std::string pathToInstructions = pathToDir + "/" + ship->getCurrentDestinationWithIndex() + ".instructions";
         algo.getInstructionsForCargo(mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);
         std::vector<std::string> errorReason;
-        runAlgoOnPort(ship, mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions, errorReason);
+        int numOpTmp = runAlgoOnPort(ship, mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), R"(C:\Users\itay\Desktop\ex\sim1\AAAAA_0.instructions)", errorReason);
+        if(numOpTmp < 0){
+            numOp = -1;
+            if(!errorReason.empty())
+                errors->push_back(errorReason.at(0));
+            break;
+        } else {
+            numOp += numOpTmp;
+        }
         ship->moveToNextPort();
     }
 
@@ -315,7 +324,7 @@ bool handleNameOfFile (const std::string& fileName, std::string& portName, int &
 
 int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::string& instructionsPath, std::vector<std::string>& errorReason){
     Port port;
-    std::vector<bool> * res  =readPortContainers(&port, cargoDataPath);
+    std::vector<bool> * res  = readPortContainers(&port, cargoDataPath);
     delete res;
     std::vector<Container*> problematics;
     std::vector<bool> errors;
@@ -323,12 +332,11 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
     Crane crane(ship, &port);
     std::vector<Container*> wasOnPort;
     port.getVectorOfContainers(wasOnPort);
+
     std::vector<std::string> err;
     int result = crane.executeOperationList(instructionsPath, err);
     if (result == -1) {
-        errorReason.emplace_back("Algo did invalid operation");
-        for(auto& error:err)
-            errorReason.push_back(error);
+        errorReason.emplace_back("The algorithm invalid operation" + err.at(0));
         return -1;
     } //Algo Did some invalid operation
     std::vector<Container*> leftOnPort;
@@ -346,7 +354,7 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
         std::vector<Container*> byDist;
         port.getContainersByDistance(ship->getRoute(), byDist);
         if(!validateFarRejected(leftOnPort, wasOnPort,byDist)) {
-            errorReason.push_back("Algo didnt reject far containers.");
+            errorReason.push_back("The algorithm did not reject further containers.");
             return -1;
         }
     }
@@ -361,7 +369,7 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
                 }
             }
             if(!found) {
-                errorReason.push_back("Algo left container with different destination on port.");
+                errorReason.push_back("The algorithm unload containers which is not their target (and didn't upload them back).");
                 return -1;
             } // left on port container with different destination
         }
