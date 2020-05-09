@@ -19,11 +19,11 @@ class main {
 int main(int argc, char **argv);
 int createArgs(std::map<std::string, std::string>& args, int& argc, char **argv);
 void printArgs(std::map<std::string, std::string>& args);
-void runAllAlgo(const std::string& algoPath);
+void runAllAlgo(const std::string& algoPath, const std::string &travelPath, const std::string &outputPath);
 void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath, const std::string &outputPath,
-                          const std::string &algoName);
-void runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
-                      const std::string &algoName, const std::string &travelName);
+                          const std::string &algoName, std::vector<std::string>* dirs);
+int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
+                     const std::string &algoName, const std::string &travelName);
 int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::string& instructionsPath, std::vector<std::string>& errorReason);
 void getShipPlanAndRoutePaths(const std::string& travelPath, std::string& shipPlanPath, std::string& shipRoutePath);
 ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath);

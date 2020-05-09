@@ -32,6 +32,7 @@ public:
     bool lastStop() const;
     ShipRoute& getRoute() const {return *(this->route);}
     int numEmptyPlaces() const;
+    bool isEmpty() const;
     bool hasContainer(const std::string ID) const;
     void moveToNextPort();
     void addOneVisitToMap();

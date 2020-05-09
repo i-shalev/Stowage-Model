@@ -1,6 +1,7 @@
 
 #include "main.h"
 #include "../Algo/NaiveAlgo.h"
+#include "../Algo/NaiveAlgoWithTrick.h"
 
 #define PATH_TO_EMPTY_FILE R"(.\empty.empty_file)"
 
@@ -10,8 +11,8 @@ int main(int argc, char **argv){
         // fatal error
         return EXIT_FAILURE;
     }
-    NaiveAlgo algo;
-    runAlgoForAllTravels(algo, args["-travel_path"], args["-output"], "NaiveAlgo");
+
+    runAllAlgo(args["-algorithm_path"], args["-travel_path"], args["-output"]);
 
     return EXIT_SUCCESS;
 }
@@ -41,27 +42,52 @@ void printArgs(std::map<std::string, std::string>& args){
     std::cout << "output: " << args["-output"] << std::endl;
 }
 
-void runAllAlgo(const std::string& algoPath){
+void runAllAlgo(const std::string& algoPath, const std::string &travelPath, const std::string &outputPath){
     emptyFile(PATH_TO_EMPTY_FILE);
+    emptyFile(outputPath + "/simulation.results");
+    auto* dirs = getDirsNamesFromRootDir(travelPath);
+    std::vector<std::string> firstLine;
+    firstLine.push_back("RESULTS");
+    for(const auto& dir:*dirs)
+        firstLine.push_back(dir);
+    firstLine.push_back("Sum");
+    firstLine.push_back("Num Errors");
+    writeToSuccessFile(outputPath + "/simulation.results", &firstLine);
+
+    NaiveAlgo algo;
+    runAlgoForAllTravels(algo, travelPath, outputPath, "NaiveAlgo", dirs);
+
     auto* algoNames = getFileNamesEndWith(algoPath, ".so");
     for(const auto& algoName:*algoNames) {
-        std::cout << algoName << std::endl;
+//        std::cout << algoName << std::endl;
     }
+    NaiveAlgoWithTrick algo1;
+    runAlgoForAllTravels(algo1, travelPath, outputPath, "NaiveAlgoWithTrick", dirs);
 
+    delete(dirs);
     delete(algoNames);
 }
 
 void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath, const std::string &outputPath,
-                          const std::string &algoName) {
-    auto* dirs = getDirsNamesFromRootDir(travelPath);
+                          const std::string &algoName, std::vector<std::string>* dirs) {
+    std::vector<std::string> results;
+    int sum = 0, numErrors = 0, tmp;
+    results.push_back(algoName);
     for(const auto& dir:*dirs) {
-        runAlgoForTravel(algo, travelPath + "/" + dir, outputPath, algoName, dir);
+        tmp = runAlgoForTravel(algo, travelPath + "/" + dir, outputPath, algoName, dir);
+        if(tmp == -1)
+            numErrors++;
+        else
+            sum += tmp;
+        results.push_back(std::to_string(tmp));
     }
-    delete(dirs);
+    results.push_back(std::to_string(sum));
+    results.push_back(std::to_string(numErrors));
+    writeToSuccessFile(outputPath + "/simulation.results", &results);
 }
 
-void runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
-                      const std::string &algoName, const std::string &travelName) {
+int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
+                     const std::string &algoName, const std::string &travelName) {
     std::cout << "dir: " << pathToDir << std::endl;
     auto* errors = new std::vector<std::string>();
     bool fatalError = false;
@@ -76,9 +102,9 @@ void runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, con
         errors->push_back("ERROR : no shipRoute file!");
     }
     if(fatalError){
-        writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", errors);
+        writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/", errors);
         delete errors;
-        return;
+        return -1;
     }
 
     int res = 0;
@@ -90,10 +116,11 @@ void runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, con
         errorCodeStr = "While read the ShipPlan, the algorithm return the errors: " + errorCodeStr;
         errors->push_back(errorCodeStr);
         if(containsFatalError(errorCode)){
-            writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", errors);
+            writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/",
+                              errors);
             delete errors;
             delete shipPlan;
-            return;
+            return -1;
         }
     }
 
@@ -107,11 +134,12 @@ void runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, con
         errorCodeStr = "While read the ShipRoute, the algorithm return the errors: " + errorCodeStr;
         errors->push_back(errorCodeStr);
         if(containsFatalError(errorCode)){
-            writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", errors);
+            writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/",
+                              errors);
             delete errors;
             delete shipPlan;
             delete shipRoute;
-            return;
+            return -1;
         }
     }
 
@@ -126,7 +154,9 @@ void runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, con
         std::string pathToInstructions = pathToDir + "/" + ship->getCurrentDestinationWithIndex() + ".instructions";
         algo.getInstructionsForCargo(mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);
         std::vector<std::string> errorReason;
-        int numOpTmp = runAlgoOnPort(ship, mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), R"(C:\Users\itay\Desktop\ex\sim1\AAAAA_0.instructions)", errorReason);
+        //TODO
+//        int numOpTmp = runAlgoOnPort(ship, mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), R"(C:\Users\itay\Desktop\ex\sim4\AAAAA_1.instructions)", errorReason);
+        int numOpTmp = runAlgoOnPort(ship, mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions, errorReason);
         if(numOpTmp < 0){
             numOp = -1;
             if(!errorReason.empty())
@@ -137,11 +167,16 @@ void runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, con
         }
         ship->moveToNextPort();
     }
+    if(numOp > 0 and !ship->isEmpty()){
+        numOp = -1;
+        errors->push_back("The ship is not empty after finish all the instructions from the algorithm.");
+    }
 
-    writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", errors);
+    writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/", errors);
     delete(mapPortVisits);
     delete(ship);
     delete(errors);
+    return numOp;
 }
 
 void getShipPlanAndRoutePaths(const std::string& pathToDir, std::string& shipPlanPath, std::string& shipRoutePath){
@@ -336,7 +371,7 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
     std::vector<std::string> err;
     int result = crane.executeOperationList(instructionsPath, err);
     if (result == -1) {
-        errorReason.emplace_back("The algorithm invalid operation" + err.at(0));
+        errorReason.emplace_back("The algorithm's instruction: " + err.at(0));
         return -1;
     } //Algo Did some invalid operation
     std::vector<Container*> leftOnPort;
