@@ -524,12 +524,15 @@ void writeToFile(const std::string& filename, const std::string& data) {
     outfile.close();
 }
 
-void writeErrorsToFile(const std::string& filename, const std::vector<std::string>& errors) {
-    std::ofstream outfile;
-    outfile.open(filename, std::ios_base::app);
-    for(auto& error: errors)
-        outfile << error <<std::endl;
-    outfile.close();
+void writeErrorsToFile(const std::string& filename, const std::vector<std::string> *errors) {
+    std::cout << filename << std::endl;
+    if(! errors->empty()){
+        std::ofstream outfile;
+        outfile.open(filename, std::ios_base::app);
+        for(auto& error: *errors)
+            outfile << error <<std::endl;
+        outfile.close();
+    }
 }
 
 void emptyFile(const std::string& filename){

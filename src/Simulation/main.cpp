@@ -11,7 +11,7 @@ int main(int argc, char **argv){
         return EXIT_FAILURE;
     }
     NaiveAlgo algo;
-    runAlgoForAllTravels(algo, args["-travel_path"], args["-output"]);
+    runAlgoForAllTravels(algo, args["-travel_path"], args["-output"], "NaiveAlgo");
 
     return EXIT_SUCCESS;
 }
@@ -51,64 +51,74 @@ void runAllAlgo(const std::string& algoPath){
     delete(algoNames);
 }
 
-void runAlgoForAllTravels(AbstractAlgorithm& algo, const std::string &travelPath, const std::string &outputPath) {
+void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath, const std::string &outputPath,
+                          const std::string &algoName) {
     auto* dirs = getDirsNamesFromRootDir(travelPath);
     for(const auto& dir:*dirs) {
-        runAlgoForTravel(algo, travelPath + "/" + dir, outputPath);
+        runAlgoForTravel(algo, travelPath + "/" + dir, outputPath, algoName, dir);
     }
     delete(dirs);
 }
 
-void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, const std::string &outputPath) {
+void runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
+                      const std::string &algoName, const std::string &travelName) {
     std::cout << "dir: " << pathToDir << std::endl;
     auto* errors = new std::vector<std::string>();
+    bool fatalError = false;
     std::string shipPlanPath, shipRoutePath;
     getShipPlanAndRoutePaths(pathToDir, shipPlanPath, shipRoutePath);
     if(shipPlanPath.empty()){
-        std::cout << "ERROR : no shipPlan file!" << std::endl;
+        fatalError = true;
+        errors->push_back("ERROR : no shipPlan file!");
     }
     if(shipRoutePath.empty()){
-        std::cout << "ERROR : no shipPlan file!" << std::endl;
+        fatalError = true;
+        errors->push_back("ERROR : no shipRoute file!");
     }
-
-    int errorCode = 0;
-    auto* shipPlan = createShipPlan(errorCode, shipPlanPath);
-    int res = algo.readShipPlan(shipPlanPath);
-    if(errorCode == res){
-       // std::cout << "equal:" << errorCode << std::endl;
-    } else {
-        //std::cout << "not equal" << "sim: " << errorCode << " algo: " << res << std::endl;
-    }
-    if(shipPlan == nullptr){
-        // TODO change that to fatal error bool
+    if(fatalError){
+        writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", errors);
+        delete errors;
         return;
     }
 
-    errorCode = 0;
-    auto* shipRoute = createShipRoute(errorCode, shipRoutePath);
-
-    res = algo.readShipRoute(shipRoutePath);
-    if(errorCode == res){
-        //std::cout << "equal:" << errorCode << std::endl;
-    } else {
-        //std::cout << "not equal" << "sim: " << errorCode << " algo: " << res << std::endl;
+    int res = 0;
+    auto* shipPlan = createShipPlan(res, shipPlanPath);
+    int errorCode = algo.readShipPlan(shipPlanPath);
+    if(errorCode > 0){
+        std::string errorCodeStr;
+        getStringOfErrors(errorCode, errorCodeStr);
+        errorCodeStr = "While read the ShipPlan, the algorithm return the errors: " + errorCodeStr;
+        errors->push_back(errorCodeStr);
+        if(containsFatalError(errorCode)){
+            writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", errors);
+            delete errors;
+            delete shipPlan;
+            return;
+        }
     }
-    if(shipRoute == nullptr){
-        // TODO change that to fatal error bool
-        return;
+
+    res = 0;
+    auto* shipRoute = createShipRoute(res, shipRoutePath);
+
+    errorCode = algo.readShipRoute(shipRoutePath);
+    if(errorCode > 0){
+        std::string errorCodeStr;
+        getStringOfErrors(errorCode, errorCodeStr);
+        errorCodeStr = "While read the ShipRoute, the algorithm return the errors: " + errorCodeStr;
+        errors->push_back(errorCodeStr);
+        if(containsFatalError(errorCode)){
+            writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", errors);
+            delete errors;
+            delete shipPlan;
+            delete shipRoute;
+            return;
+        }
     }
 
     Ship* ship = new Ship(shipRoute, shipPlan);
     auto* mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());
     auto* mapPortFullNameToCargoPath = createMapPortFullNameToCargoPath(pathToDir, mapPortVisits,
             shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1), errors);
-
-    for(const auto & i : *mapPortFullNameToCargoPath){
-        //std::cout << i.first << " : " << i.second << std::endl;
-    }
-    for(const auto & i : *errors){
-        //std::cout << i << std::endl;
-    }
 
     while(!ship->finishRoute()){
         //std::cout << ship->getCurrentDestinationWithIndex() << std::endl;
@@ -119,6 +129,7 @@ void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, con
         ship->moveToNextPort();
     }
 
+    writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", errors);
     delete(mapPortVisits);
     delete(ship);
     delete(errors);
@@ -400,11 +411,13 @@ bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>&
     }
     return true;
 }
+
 int getBitInNumber(int num, int bit){
     int mask =  1 << bit;
     int masked_n = num & mask;
     return masked_n >> bit;
 }
+
 void getStringOfErrors(int num, std::string& result){
     std::vector<int> errors;
     for( int i=0; i<19; i++){
@@ -416,6 +429,13 @@ void getStringOfErrors(int num, std::string& result){
         result.append( std::to_string(errors.at(i)) + " ,");
     }
     result.append(std::to_string(errors.at(errors.size() - 1)));
+}
 
-
+bool containsFatalError(int errorCode){
+    std::vector<int> fatalErrorCode = {3, 4, 7, 8};
+    for(auto fed : fatalErrorCode){
+        if(getBitInNumber(errorCode, fed))
+            return true;
+    }
+    return false;
 }
