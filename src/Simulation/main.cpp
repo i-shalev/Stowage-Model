@@ -6,7 +6,6 @@
 
 int main(int argc, char **argv){
     std::map<std::string, std::string> args;
-
     if(createArgs(args, argc, argv)){
         // fatal error
         return EXIT_FAILURE;
@@ -398,6 +397,22 @@ bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>&
     }
     return true;
 }
+int getBitInNumber(int num, int bit){
+    int mask =  1 << bit;
+    int masked_n = num & mask;
+    return masked_n >> bit;
+}
+void getStringOfErrors(int num, std::string& result){
+    std::vector<int> errors;
+    for( int i=0; i<19; i++){
+        if(getBitInNumber(num, i))
+            errors.push_back(i);
+    }
+    //assume num != 0
+    for(size_t i=0; i<errors.size()-1; i++){
+        result.append( std::to_string(errors.at(i)) + " ,");
+    }
+    result.append(std::to_string(errors.at(errors.size() - 1)));
 
 bool containsFatalError(int errorCode){
     std::vector<int> fatalErrorCode = {3, 4, 7, 8};
@@ -406,10 +421,4 @@ bool containsFatalError(int errorCode){
             return true;
     }
     return false;
-}
-
-int getBitInNumber(int num, int bit){
-    int mask =  1 << bit;
-    int masked_n = num & mask;
-    return masked_n >> bit;
 }
