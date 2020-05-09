@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include "Files.h"
+#include <direct.h>
 
 // if return false - indicate if we failed to open file or there was an error on the first line of the ShipPlan file. (2^3)
 bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int &width, int &numLines) {
@@ -41,20 +42,12 @@ bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int 
                 length = stoi(row[1]);
                 width = stoi(row[2]);
             } catch (const std::exception& e) {
-//                std::replace( line.begin(), line.end(), ',', '.');
-//                errors->push_back("Error: One of the parameters is not a number. in line: " + line + " (replace comma with .)");
-//                std::cout << "Warning: One of the parameters is not a number, in line: " << line << std::endl;
                 return false;
             }
         } else {
-//            std::replace( line.begin(), line.end(), ',', '.');
-//            errors->push_back("Error: Not enough parameters in the first line. in line: " + line + " (replace comma with .)");
-//            std::cout << "ERROR: Not enough parameters in the first line, in line: " << line << std::endl;
             return false;
         }
     } else {
-//        errors->push_back("Error: Failed to read the line with the parameters");
-//        std::cout << "ERROR: Failed to read the line with the parameters" << std::endl;
        return false;
     }
 
@@ -524,14 +517,29 @@ void writeToFile(const std::string& filename, const std::string& data) {
     outfile.close();
 }
 
-void writeErrorsToFile(const std::string& filename, const std::vector<std::string> *errors) {
+void writeErrorsToFile(const std::string &filename, const std::string &folderPath, const std::vector<std::string> *errors) {
     if(! errors->empty()){
+        char* path = (char *)(malloc((folderPath.size() + 1) * sizeof(char)));
+        stringToCharStar(path, folderPath);
+        _mkdir(path);
         std::ofstream outfile;
-        outfile.open(filename, std::ios_base::app);
+        outfile.open(filename);
         for(auto& error: *errors)
             outfile << error <<std::endl;
         outfile.close();
+        delete path;
     }
+}
+
+void writeToSuccessFile(const std::string &filename, const std::vector<std::string>* results) {
+    if(results->empty())
+        return;
+    std::ofstream outfile;
+    outfile.open(filename, std::ios_base::app);
+    for(int i = 0; i < results->size()-1 ; i++)
+        outfile << results->at(i) << ", ";
+    outfile << results->at(results->size()-1) << std::endl;
+    outfile.close();
 }
 
 void emptyFile(const std::string& filename){
@@ -542,41 +550,41 @@ void emptyFile(const std::string& filename){
 
 std::vector<std::string>* getDirsNamesFromRootDir(const std::string &pathToDir) {
 
-        auto* dirs = new std::vector<std::string>();
-        char* path = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
-        stringToCharStar(path, pathToDir);
+    auto* dirs = new std::vector<std::string>();
+    char* path = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
+    stringToCharStar(path, pathToDir);
 
-        DIR *dir = opendir(path);
-        struct dirent *entry = readdir(dir);
-        std::string name;
-        while (entry != nullptr)
-        {
-            name = entry->d_name;
-            entry = readdir(dir);
-            if(name == "." or name == "..") {
-                continue;
-            }
-            std::string pathString(path);
-            char* fullPath = (char *)(malloc((strlen(path) + name.size() + 2) * sizeof(char)));
-            for (size_t i = 0; i < strlen(path); i++) {
-                fullPath[i] = path[i];
-            }
-            fullPath[strlen(path)] = '/';
-
-            for (size_t i = 0; i < name.size(); i++) {
-                fullPath[i + strlen(path) + 1] = name.at(i);
-            }
-            fullPath[strlen(path) + name.size() + 1] = '\0';
-
-            if(isDirectory(fullPath)) {
-                dirs->push_back(name);
-            }
-
-            delete fullPath;
+    DIR *dir = opendir(path);
+    struct dirent *entry = readdir(dir);
+    std::string name;
+    while (entry != nullptr)
+    {
+        name = entry->d_name;
+        entry = readdir(dir);
+        if(name == "." or name == "..") {
+            continue;
         }
-        delete path;
-        closedir(dir);
-        return dirs;
+        std::string pathString(path);
+        char* fullPath = (char *)(malloc((strlen(path) + name.size() + 2) * sizeof(char)));
+        for (size_t i = 0; i < strlen(path); i++) {
+            fullPath[i] = path[i];
+        }
+        fullPath[strlen(path)] = '/';
+
+        for (size_t i = 0; i < name.size(); i++) {
+            fullPath[i + strlen(path) + 1] = name.at(i);
+        }
+        fullPath[strlen(path) + name.size() + 1] = '\0';
+
+        if(isDirectory(fullPath)) {
+            dirs->push_back(name);
+        }
+
+        delete fullPath;
+    }
+    delete path;
+    closedir(dir);
+    return dirs;
 }
 
 std::vector<std::string>* getFileNamesEndWith(const std::string &pathToDir, const std::string &endsWith){

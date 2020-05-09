@@ -103,6 +103,21 @@ int Ship::numEmptyPlaces() const{
     return counter;
 }
 
+bool Ship::isEmpty() const {
+    Container* container;
+    for (int level = 0; level < this->plan->getNumFloors(); level++) {
+        for (int i = 0; i < this->plan->getLength(); i++) {
+            for (int j = 0; j < this->plan->getWidth(); j++) {
+                container = this->plan->getFloor(level)->getContainerAtPosition(i, j);
+                if (container != nullptr and !container->getBlocked()) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 bool Ship::hasContainer(const std::string ID) const {
     for (int level = 0; level < this->plan->getNumFloors(); level++) {
         for (int i = 0; i < this->plan->getLength(); i++) {
