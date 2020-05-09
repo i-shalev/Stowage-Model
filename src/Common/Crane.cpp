@@ -67,7 +67,7 @@ int Crane::executeOperationList(const std::string& path) {
     try{
         fin.open(path, std::ios::in);
     } catch (const std::exception& e) {
-        std::cout << "ERROR: Failed to open file" << std::endl;
+        //std::cout << "ERROR: Failed to open file" << std::endl;
         return -1;
     }
     std::string line, id;
@@ -83,7 +83,7 @@ int Crane::executeOperationList(const std::string& path) {
             last_index = last_index + sz + 1;
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             int rc = this->Unload(id,level,i,j);
-            std::cout << "unloaded container " << id << " from level " << level << " position " << i <<","<< j << std::endl;
+            //std::cout << "unloaded container " << id << " from level " << level << " position " << i <<","<< j << std::endl;
             if( rc!= SUCCESS){
                 switch(rc){
                     case 2:
@@ -109,7 +109,7 @@ int Crane::executeOperationList(const std::string& path) {
             last_index = last_index + sz + 1;
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             int rc = this->Load(id,level,i,j);
-            std::cout << "loaded container " << id << " to level " << level << " position " << i <<","<< j << std::endl;
+            //std::cout << "loaded container " << id << " to level " << level << " position " << i <<","<< j << std::endl;
             if(rc != SUCCESS){
                 switch(rc){
                     case 1:
@@ -135,7 +135,7 @@ int Crane::executeOperationList(const std::string& path) {
         }
         else if( line.at(0) == 'R'){
             id =  line.substr(2,11);
-            std::cout << "rejecting container " << id << std::endl;
+            //std::cout << "rejecting container " << id << std::endl;
         }
         else{
             std::cout << "wrong file format" << std::endl;

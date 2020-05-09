@@ -8,31 +8,31 @@ int main(int argc, char **argv){
     std::string path2 = R"(C:\Users\itay\Desktop\ex\sim1\ShipPort.csv)";
     NaiveAlgoWithTrick algo;
 
-    std::cout << "start ReadShipRoute:" << std::endl;
+    // std::cout << "start ReadShipRoute:" << std::endl;
     int results = algo.readShipRoute(path);
     for(int i = 0; i < 19; i++){
         if(getBitInNumber(results, i)){
-            std::cout << i << std::endl;
+            //std::cout << i << std::endl;
         }
     }
     std::cout << " " << std::endl;
 
-    std::cout << "start ReadShipPlan:" << std::endl;
+    // std::cout << "start ReadShipPlan:" << std::endl;
     results = algo.readShipPlan(path2);
     for(int i = 0; i < 19; i++){
         if(getBitInNumber(results, i)){
-            std::cout << i << std::endl;
+            //std::cout << i << std::endl;
         }
     }
-    std::cout << " " << std::endl;
+    //std::cout << " " << std::endl;
 
-    std::cout << "start AAAAA_0.cargo_data:" << std::endl;
+    //std::cout << "start AAAAA_0.cargo_data:" << std::endl;
     parse(algo.getInstructionsForCargo(R"(C:\Users\itay\Desktop\ex\sim1\AAAAA_0.cargo_data)", R"(C:\Users\itay\Desktop\ex\sim1\res.txt)"));
-    std::cout << " " << std::endl;
-    std::cout << "start BBBBB_0.cargo_data:" << std::endl;
+    //std::cout << " " << std::endl;
+    //std::cout << "start BBBBB_0.cargo_data:" << std::endl;
     parse(algo.getInstructionsForCargo(R"(C:\Users\itay\Desktop\ex\sim1\BBBBB_0.cargo_data)", R"(C:\Users\itay\Desktop\ex\sim1\res2.txt)"));
-    std::cout << " " << std::endl;
-    std::cout << "start CCCCC_0.cargo_data:" << std::endl;
+    //std::cout << " " << std::endl;
+    //std::cout << "start CCCCC_0.cargo_data:" << std::endl;
     parse(algo.getInstructionsForCargo(R"(C:\Users\itay\Desktop\ex\sim1\CCCCC_0.cargo_data)", R"(C:\Users\itay\Desktop\ex\sim1\res3.txt)"));
 
     return EXIT_SUCCESS;
@@ -40,7 +40,7 @@ int main(int argc, char **argv){
 void parse(int num){
     for( int i=1; i<19; i++){
         if(getBitInNumber(num, i))
-            std::cout << "bit "<< i << " is " << getBitInNumber(num, i) << std::endl;
+            //std::cout << "bit "<< i << " is " << getBitInNumber(num, i) << std::endl;
     }
 }
 int getBitInNumber(int num, int bit){

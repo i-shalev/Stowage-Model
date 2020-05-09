@@ -37,9 +37,9 @@ int createArgs(std::map<std::string, std::string>& args, int& argc, char **argv)
 }
 
 void printArgs(std::map<std::string, std::string>& args){
-    std::cout << "travel_path: " << args["-travel_path"] << std::endl;
-    std::cout << "algorithm_path: " << args["-algorithm_path"] << std::endl;
-    std::cout << "output: " << args["-output"] << std::endl;
+    //std::cout << "travel_path: " << args["-travel_path"] << std::endl;
+    //std::cout << "algorithm_path: " << args["-algorithm_path"] << std::endl;
+    //std::cout << "output: " << args["-output"] << std::endl;
 }
 
 void runAllAlgo(const std::string& algoPath){
@@ -76,9 +76,9 @@ void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, con
     auto* shipPlan = createShipPlan(errorCode, shipPlanPath);
     int res = algo.readShipPlan(shipPlanPath);
     if(errorCode == res){
-        std::cout << "equal:" << errorCode << std::endl;
+       // std::cout << "equal:" << errorCode << std::endl;
     } else {
-        std::cout << "not equal" << "sim: " << errorCode << " algo: " << res << std::endl;
+        //std::cout << "not equal" << "sim: " << errorCode << " algo: " << res << std::endl;
     }
     if(shipPlan == nullptr){
         // TODO change that to fatal error bool
@@ -90,9 +90,9 @@ void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, con
 
     res = algo.readShipRoute(shipRoutePath);
     if(errorCode == res){
-        std::cout << "equal:" << errorCode << std::endl;
+        //std::cout << "equal:" << errorCode << std::endl;
     } else {
-        std::cout << "not equal" << "sim: " << errorCode << " algo: " << res << std::endl;
+        //std::cout << "not equal" << "sim: " << errorCode << " algo: " << res << std::endl;
     }
     if(shipRoute == nullptr){
         // TODO change that to fatal error bool
@@ -105,14 +105,14 @@ void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, con
             shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1), errors);
 
     for(const auto & i : *mapPortFullNameToCargoPath){
-        std::cout << i.first << " : " << i.second << std::endl;
+        //std::cout << i.first << " : " << i.second << std::endl;
     }
     for(const auto & i : *errors){
-        std::cout << i << std::endl;
+        //std::cout << i << std::endl;
     }
 
     while(!ship->finishRoute()){
-        std::cout << ship->getCurrentDestinationWithIndex() << std::endl;
+        //std::cout << ship->getCurrentDestinationWithIndex() << std::endl;
         std::string pathToInstructions = pathToDir + "/" + ship->getCurrentDestinationWithIndex() + ".instructions";
         algo.getInstructionsForCargo(mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);
         runAlgoOnPort(ship, mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);

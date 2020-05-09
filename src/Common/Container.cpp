@@ -83,7 +83,7 @@ bool Container::checkDestination(){
 }
 
 void Container::printContainer() const {
-    std::cout << "ID: " << this->id << ", " << "dest: " << this->dest << ", " <<"weight: " << this->weight << ", " << "blocked: " << this->blocked <<  std::endl;
+    //std::cout << "ID: " << this->id << ", " << "dest: " << this->dest << ", " <<"weight: " << this->weight << ", " << "blocked: " << this->blocked <<  std::endl;
 }
 
 int letterToInt(char ch)
