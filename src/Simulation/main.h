@@ -34,4 +34,5 @@ void addPortsWithFileToMap(const std::string &pathToDir, std::map<std::string, i
 void addPortsWithNoFileToMap(const std::string &pathToDir, std::map<std::string, int> *mapPortVisits,
         std::map<std::string, std::string> *mapPortFullNameToCargoPath,
         const std::string &lastPort, std::vector<std::string>* errors);
+bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>& was, std::vector<Container*> contByDist);
 #endif //STOWAGE_MODEL_MAIN_H
