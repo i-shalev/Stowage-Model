@@ -29,4 +29,5 @@ std::map<std::string, int>* createMapOfPortAndNumberOfVisits(std::vector<std::st
 bool handleNameOfFile (const std::string& fileName, std::string& portName, int & indexNumber);
 void addPortsWithFileToMap(const std::string &pathToDir, std::map<std::string,
         int> *mapPortVisits, std::map<std::string, std::string>* mapPortFullNameToCargoPath);
+bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>& was, std::vector<Container*> contByDist);
 #endif //STOWAGE_MODEL_MAIN_H
