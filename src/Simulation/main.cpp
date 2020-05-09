@@ -299,3 +299,90 @@ bool handleNameOfFile (const std::string& fileName, std::string& portName, int &
     }
     return true;
 }
+
+
+int runAlgoOnPort(Ship& ship, const std::string cargoDataPath, const std::string instructionsPath){
+    Port port;
+    std::vector<bool> * res  =readPortContainers(&port, cargoDataPath);
+    delete res;
+    std::vector<Container*> problematics;
+    std::vector<bool> errors;
+    port.fixPort(errors, problematics);
+    Crane crane(&ship, &port);
+    std::vector<Container*> wasOnPort;
+    port.getVectorOfContainers(wasOnPort);
+    int result = crane.executeOperationList(instructionsPath);
+    if (result == -1) {return -1;} //Algo Did some invalid operation
+    std::vector<Container*> leftOnPort;
+    port.getVectorOfContainers(leftOnPort);
+    if(!ship.isFull()){
+        //check if algo took all the containers from the port
+        for(auto& cont : leftOnPort){
+            if(ship.willVisit(cont->getDest())){
+                return -1;
+            }
+        }
+    }
+    else{
+        std::vector<Container*> byDist;
+        port.getContainersByDistance(ship.getRoute(), byDist);
+        if(!validateFarRejected(leftOnPort, wasOnPort,byDist))
+            return -1;
+    }
+    //check algo left on port only containers with correct destination
+    for(auto& cont : leftOnPort){
+        bool found = false;
+        if(cont->getDest().compare(ship.getCurrentDestination())!=0){
+            for(auto& tmp : wasOnPort){
+                if(cont->getId().compare(tmp->getId()) == 0){
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) {return -1;} // left on port container with different destination
+        }
+    }
+    return result;
+
+}
+
+bool findInVec(std::vector<Container*>& vec, std::string id){
+    for(auto& cont : vec){
+        if(cont->getId().compare(id) == 0){
+            return true;
+        }
+    }
+    return false;
+}
+bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>& was, std::vector<Container*> contByDist){
+    std::vector<Container*> took;
+    for(auto& cont : was){
+        bool found = false;
+        for(auto& tmp : left){
+            if(cont->getId().compare(tmp->getId()) == 0){
+                found = true;
+                break;
+            }
+        }
+        if(!found)
+            took.push_back(cont);
+    }
+    std::set<std::string> tookDst;
+    std::string firstRejected;
+    for(auto& cont : contByDist){
+        bool rejected = findInVec(left,cont->getId());
+        if(firstRejected.empty() && !rejected) {
+            continue; //we took this container and still not rejected
+        }
+        if(firstRejected.empty() && rejected){
+            firstRejected = cont->getDest();
+            continue; //first one we reject
+        }
+        if(rejected || (!rejected && firstRejected==cont->getDest())){
+            continue; // Same distance - algo can choose
+        }
+        return false;
+
+    }
+    return true;
+}
