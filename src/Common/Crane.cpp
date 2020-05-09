@@ -61,7 +61,7 @@ result Crane::Unload(const std::string& contId, int level, int i, int j) {
 }
 
 
-int Crane::executeOperationList(const std::string& path, std::vector<std::string> errors) {
+int Crane::executeOperationList(const std::string& path, std::vector<std::string>& errors) {
     int price = 0;
     std::ifstream fin;
     try{

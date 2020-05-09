@@ -22,7 +22,7 @@ public:
     result Load(const std::string& contId, int level, int i, int j);
     result Unload(const std::string& contId, int level, int i, int j);
     //result Move(/*string id, int level, int i, int j, int toLevel, int toi, int toj*/);
-    int executeOperationList(const std::string& path, std::vector<std::string> errors);
+    int executeOperationList(const std::string& path, std::vector<std::string>& errors);
 };
 
 
