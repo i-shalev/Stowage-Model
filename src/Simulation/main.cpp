@@ -12,7 +12,7 @@ int main(int argc, char **argv){
         return EXIT_FAILURE;
     }
     NaiveAlgo algo;
-    runAlgoForAllTravels(algo, args["-travel_path"], args["-output"]);
+    runAlgoForAllTravels(algo, args["-travel_path"], args["-output"], "NaiveAlgo");
 
     return EXIT_SUCCESS;
 }
@@ -52,24 +52,34 @@ void runAllAlgo(const std::string& algoPath){
     delete(algoNames);
 }
 
-void runAlgoForAllTravels(AbstractAlgorithm& algo, const std::string &travelPath, const std::string &outputPath) {
+void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath, const std::string &outputPath,
+                          const std::string &algoName) {
     auto* dirs = getDirsNamesFromRootDir(travelPath);
     for(const auto& dir:*dirs) {
-        runAlgoForTravel(algo, travelPath + "/" + dir, outputPath);
+        runAlgoForTravel(algo, travelPath + "/" + dir, outputPath, algoName, dir);
     }
     delete(dirs);
 }
 
-void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, const std::string &outputPath) {
+void runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
+                      const std::string &algoName, const std::string &travelName) {
     std::cout << "dir: " << pathToDir << std::endl;
     auto* errors = new std::vector<std::string>();
+    bool fatalError = false;
     std::string shipPlanPath, shipRoutePath;
     getShipPlanAndRoutePaths(pathToDir, shipPlanPath, shipRoutePath);
     if(shipPlanPath.empty()){
-        std::cout << "ERROR : no shipPlan file!" << std::endl;
+        fatalError = true;
+        errors->push_back("ERROR : no shipPlan file!");
     }
     if(shipRoutePath.empty()){
-        std::cout << "ERROR : no shipPlan file!" << std::endl;
+        fatalError = true;
+        errors->push_back("ERROR : no shipRoute file!");
+    }
+    if(fatalError){
+        writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", errors);
+        delete errors;
+        return;
     }
 
     int errorCode = 0;
@@ -387,4 +397,19 @@ bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>&
 
     }
     return true;
+}
+
+bool containsFatalError(int errorCode){
+    std::vector<int> fatalErrorCode = {3, 4, 7, 8};
+    for(auto fed : fatalErrorCode){
+        if(getBitInNumber(errorCode, fed))
+            return true;
+    }
+    return false;
+}
+
+int getBitInNumber(int num, int bit){
+    int mask =  1 << bit;
+    int masked_n = num & mask;
+    return masked_n >> bit;
 }

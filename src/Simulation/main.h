@@ -20,8 +20,10 @@ int main(int argc, char **argv);
 int createArgs(std::map<std::string, std::string>& args, int& argc, char **argv);
 void printArgs(std::map<std::string, std::string>& args);
 void runAllAlgo(const std::string& algoPath);
-void runAlgoForAllTravels(AbstractAlgorithm& algo, const std::string &travelPath, const std::string &outputPath);
-void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, const std::string &outputPath);
+void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath, const std::string &outputPath,
+                          const std::string &algoName);
+void runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
+                      const std::string &algoName, const std::string &travelName);
 int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::string& instructionsPath);
 void getShipPlanAndRoutePaths(const std::string& travelPath, std::string& shipPlanPath, std::string& shipRoutePath);
 ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath);
@@ -36,4 +38,6 @@ void addPortsWithNoFileToMap(const std::string &pathToDir, std::map<std::string,
         std::map<std::string, std::string> *mapPortFullNameToCargoPath,
         const std::string &lastPort, std::vector<std::string>* errors);
 bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>& was, std::vector<Container*> contByDist);
+bool containsFatalError(int errorCode);
+int getBitInNumber(int num, int bit);
 #endif //STOWAGE_MODEL_MAIN_H
