@@ -525,7 +525,6 @@ void writeToFile(const std::string& filename, const std::string& data) {
 }
 
 void writeErrorsToFile(const std::string& filename, const std::vector<std::string> *errors) {
-    std::cout << filename << std::endl;
     if(! errors->empty()){
         std::ofstream outfile;
         outfile.open(filename, std::ios_base::app);

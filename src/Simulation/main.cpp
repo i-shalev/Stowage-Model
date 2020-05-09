@@ -20,7 +20,7 @@ int createArgs(std::map<std::string, std::string>& args, int& argc, char **argv)
     for(int i = 1; i < argc-1; i += 2){
         args[argv[i]] = argv[i+1];
     }
-
+    //TODO handle those errors
     if(args["-travel_path"].empty()){
         // fatal error
         return EXIT_FAILURE;
@@ -36,9 +36,9 @@ int createArgs(std::map<std::string, std::string>& args, int& argc, char **argv)
 }
 
 void printArgs(std::map<std::string, std::string>& args){
-    //std::cout << "travel_path: " << args["-travel_path"] << std::endl;
-    //std::cout << "algorithm_path: " << args["-algorithm_path"] << std::endl;
-    //std::cout << "output: " << args["-output"] << std::endl;
+    std::cout << "travel_path: " << args["-travel_path"] << std::endl;
+    std::cout << "algorithm_path: " << args["-algorithm_path"] << std::endl;
+    std::cout << "output: " << args["-output"] << std::endl;
 }
 
 void runAllAlgo(const std::string& algoPath){
