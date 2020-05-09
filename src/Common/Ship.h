@@ -15,6 +15,7 @@ class Ship {
 private:
     ShipRoute* route;
     ShipPlan* plan;
+    std::map<std::string, int>* mapPortNameToNumberOfVisitsUntilNow;
 
 public:
     Ship(ShipRoute *sr, ShipPlan *sp);
@@ -25,12 +26,16 @@ public:
     bool isFull() const;
     void getAllContainersWithDest(const std::string &dest, std::vector<Container*> &res);
     std::string getCurrentDestination() const {return route->getHead();}
+    std::string getCurrentDestinationWithIndex() const;
     void getContainerPosition(const std::string &id, std::vector<int> &res);
     bool finishRoute() const;
     bool lastStop() const;
     ShipRoute& getRoute() const {return *(this->route);}
     int numEmptyPlaces() const;
     bool hasContainer(const std::string ID) const;
+    void moveToNextPort();
+    void addOneVisitToMap();
+    int getIndexOfPort() const;
 };
 
 #endif //STOWAGE_MODEL_SHIP_H

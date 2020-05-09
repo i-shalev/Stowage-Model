@@ -6,16 +6,20 @@
 
 #include <utility>
 
-Ship::Ship(ShipRoute *sr, ShipPlan *sp): route(sr), plan(sp){
+Ship::Ship(ShipRoute *sr, ShipPlan *sp): route(sr), plan(sp),
+    mapPortNameToNumberOfVisitsUntilNow(new std::map<std::string,int>){
     if(!this->plan->isValid()){
 //        errors->push_back("Warning: invalid plan");
 //        std::cout << "invalid plan!" << std::endl;
     }
+    addOneVisitToMap();
 }
 
 Ship::~Ship() {
+    this->mapPortNameToNumberOfVisitsUntilNow->clear();
     delete this->plan;
     delete this->route;
+    delete this->mapPortNameToNumberOfVisitsUntilNow;
 }
 
 ShipPlan& Ship::getPlan() { return *(this->plan);}
@@ -63,7 +67,6 @@ void Ship::getAllContainersWithDest(const std::string& dest, std::vector<Contain
     }
     //res may stay empty!
 }
-
 
 bool Ship::isFull() const{
     for (int level = 0; level < this->plan->getNumFloors(); level++) {
@@ -114,4 +117,31 @@ bool Ship::hasContainer(const std::string ID) const {
         }
     }
     return false;
+}
+
+std::string Ship::getCurrentDestinationWithIndex() const {
+    return getCurrentDestination() + "_" + std::to_string(getIndexOfPort());
+}
+
+void Ship::moveToNextPort(){
+    if(finishRoute())
+        return;
+    this->route->deleteFirst();
+    if(!finishRoute())
+        addOneVisitToMap();
+}
+
+void Ship::addOneVisitToMap(){
+    int ans = 0;
+    auto res = mapPortNameToNumberOfVisitsUntilNow->find(this->route->getHead());
+    if(!mapPortNameToNumberOfVisitsUntilNow->empty() && res!=mapPortNameToNumberOfVisitsUntilNow->end()){
+        ans = res->second+1;
+        mapPortNameToNumberOfVisitsUntilNow->erase(this->route->getHead());
+    }
+    mapPortNameToNumberOfVisitsUntilNow->insert({this->route->getHead(), ans});
+}
+
+int Ship::getIndexOfPort() const{
+    auto res = mapPortNameToNumberOfVisitsUntilNow->find(this->route->getHead());
+    return res->second;
 }
