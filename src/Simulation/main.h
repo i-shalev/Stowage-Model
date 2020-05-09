@@ -25,4 +25,8 @@ void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, con
 void getShipPlanAndRoutePaths(const std::string& travelPath, std::string& shipPlanPath, std::string& shipRoutePath);
 ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath);
 ShipRoute* createShipRoute(int &errorCode, const std::string& shipRoutePath);
+std::map<std::string, int>* createMapOfPortAndNumberOfVisits(std::vector<std::string>* portList);
+bool handleNameOfFile (const std::string& fileName, std::string& portName, int & indexNumber);
+void addPortsWithFileToMap(const std::string &pathToDir, std::map<std::string,
+        int> *mapPortVisits, std::map<std::string, std::string>* mapPortFullNameToCargoPath);
 #endif //STOWAGE_MODEL_MAIN_H

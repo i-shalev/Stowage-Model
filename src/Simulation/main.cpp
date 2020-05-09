@@ -62,11 +62,9 @@ void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, con
     std::string shipPlanPath, shipRoutePath;
     getShipPlanAndRoutePaths(pathToDir, shipPlanPath, shipRoutePath);
     if(shipPlanPath.empty()){
-        // ERROR : no shipPlan file!
         std::cout << "ERROR : no shipPlan file!" << std::endl;
     }
     if(shipRoutePath.empty()){
-        // ERROR : no shipPlan file!
         std::cout << "ERROR : no shipPlan file!" << std::endl;
     }
 
@@ -78,11 +76,10 @@ void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, con
     } else {
         std::cout << "not equal" << "sim: " << errorCode << " algo: " << res << std::endl;
     }
-//    std::cout << errorCode << std::endl;
     if(shipPlan == nullptr){
         return;
     }
-//    shipPlan->printShipPlan();
+
     errorCode = 0;
     auto* shipRoute = createShipRoute(errorCode, shipRoutePath);
 
@@ -92,13 +89,17 @@ void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, con
     } else {
         std::cout << "not equal" << "sim: " << errorCode << " algo: " << res << std::endl;
     }
-//    std::cout << errorCode << std::endl;
     if(shipRoute == nullptr){
         return;
     }
 
+    Ship* ship = new Ship(shipRoute, shipPlan);
+    auto* mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());
+
+    delete(mapPortVisits);
     delete(shipPlan);
     delete(shipRoute);
+    delete(ship);
 }
 
 void getShipPlanAndRoutePaths(const std::string& pathToDir, std::string& shipPlanPath, std::string& shipRoutePath){
@@ -113,7 +114,7 @@ void getShipPlanAndRoutePaths(const std::string& pathToDir, std::string& shipPla
     delete(res);
 }
 
-ShipPlan * createShipPlan(int &errorCode, const std::string& shipPlanPath){
+ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath){
     bool fatalError = false;
     int numFloors=0 , length=0, width=0, numLines;
     if(!getSizesShipPlan(shipPlanPath, numFloors, length, width, numLines)) {
@@ -176,4 +177,79 @@ ShipRoute* createShipRoute(int &errorCode, const std::string& shipRoutePath){
     delete ports;
     delete results;
     return shipRoute;
+}
+
+std::map<std::string, int>* createMapOfPortAndNumberOfVisits(std::vector<std::string>* portList) {
+    auto* mapPortVisits = new std::map<std::string, int>();
+    for(const auto& port : *portList) {
+        auto res = mapPortVisits->find(port);
+        int ans;
+        if(res == mapPortVisits->end()) {
+            ans = 0;
+        } else {
+            ans = res->second;
+            mapPortVisits->erase(port);
+        }
+        mapPortVisits->insert({port, ans+1});
+    }
+    return mapPortVisits;
+}
+
+void addPortsWithFileToMap(const std::string &pathToDir, std::map<std::string, int> *mapPortVisits, std::map<std::string, std::string>* mapPortFullNameToCargoPath) {
+    char* pathToDirChar = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
+    stringToCharStar(pathToDirChar, pathToDir);
+    std::vector<std::string> namesOfFilesEndsWithCargoData;
+    getCargoData(pathToDirChar, namesOfFilesEndsWithCargoData);
+
+    int indexNumber;
+    std::string portName;
+    std::string fullname;
+
+
+    for (const auto& name: namesOfFilesEndsWithCargoData) {
+        if (handleNameOfFile(name, portName, indexNumber)) {
+            fullname =  pathToDir + '/';
+            fullname += name;
+            fullname += R"(.cargo_data)";
+            mapPortFullNameToCargoPath->insert({name, fullname});
+            auto res = mapPortVisits->find(portName);
+            if(res !=  mapPortVisits->end() and res->second > indexNumber) {
+                Port *port = new Port(portName, indexNumber, errors);
+
+                if (readPortContainers(port, fullname, errors)) {
+                    mapPortFullNameToCargoPath->insert({name, port});
+                }
+            } else {
+//                errors->push_back("Warning: the file " + name + ".cargo_data is not necessary");
+                std::cout << "Warning: the file " << name << ".cargo_data is not necessary" << std::endl;
+            }
+        } else {
+//            errors->push_back("Warning: the file " + name + ".cargo_data is not in the right format");
+            std::cout << "Warning: the file " << name << ".cargo_data is not in the right format" << std::endl;
+        }
+    }
+    delete pathToDirChar;
+}
+
+bool handleNameOfFile (const std::string& fileName, std::string& portName, int & indexNumber) {
+    std::vector<std::string> elems;
+    std::stringstream s(fileName);
+    std::string word;
+    while(getline(s, word, '_')) {
+        elems.push_back(word);
+    }
+    if(elems.size() != 2) {
+//        errors->push_back("Warning: the file name: " + fileName + " is not legal.");
+        std::cout << "Warning: the file name: " << fileName << " is not legal." << std::endl;
+        return false;
+    }
+    portName = elems[0];
+    try {
+        indexNumber = stoi(elems[1]);
+    } catch (const std::exception& e) {
+//        errors->push_back("Warning: the file name: " + fileName + " is not legal.");
+        std::cout << "Warning: the file name: " << fileName << " is not legal." << std::endl;
+        return false;
+    }
+    return true;
 }
