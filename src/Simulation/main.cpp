@@ -113,6 +113,8 @@ void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, con
 
     while(!ship->finishRoute()){
         std::cout << ship->getCurrentDestinationWithIndex() << std::endl;
+        std::string pathToInstructions = pathToDir + "/" + ship->getCurrentDestinationWithIndex() + ".instructions";
+        algo.getInstructionsForCargo(mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);
         ship->moveToNextPort();
     }
 
