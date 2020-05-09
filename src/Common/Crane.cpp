@@ -42,6 +42,9 @@ result Crane::Unload(const std::string& contId, int level, int i, int j) {
        j > curShip->getPlan().getWidth() || j < 0){
         return INVALID_INDEX;
     }
+    if(curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j) == nullptr){
+        return NOTHING_HERE;
+    }
     if(curShip->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked()){
         return INVALID_INDEX; //cant remove blocking container
     }
@@ -95,6 +98,9 @@ int Crane::executeOperationList(const std::string& path, std::vector<std::string
                         break;
                     case 6:
                         errors.emplace_back("Error: there is other container in this place");
+                        break;
+                    case 7:
+                        errors.emplace_back("Error: there is no container in this place");
                         break;
                 }
                 return -1;
