@@ -5,14 +5,14 @@
 #ifndef STOWAGE_MODEL_NAIVEALGOWITHTRICK_H
 #define STOWAGE_MODEL_NAIVEALGOWITHTRICK_H
 
-#include "../common/Ship.h"
-#include "../common/WeightBalanceCalculator.h"
-#include "../common/Crane.h"
+#include "../Common/Ship.h"
+#include "../Common/WeightBalanceCalculator.h"
+#include "../Common/Crane.h"
 #include <cstdio>
 #include "fstream"
-#include "../common/Files.h"
-#include "../common/AbstractAlgorithm.h"
-#include "../common/AlgorithmRegistration.h"
+#include "../Common/Files.h"
+#include "../Common/AbstractAlgorithm.h"
+#include "../Common/AlgorithmRegistration.h"
 
 
 // this algorithm sort the Containers by their destinations from closest to farthest and Load them one by one.
