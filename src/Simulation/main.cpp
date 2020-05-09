@@ -114,7 +114,8 @@ void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, con
         //std::cout << ship->getCurrentDestinationWithIndex() << std::endl;
         std::string pathToInstructions = pathToDir + "/" + ship->getCurrentDestinationWithIndex() + ".instructions";
         algo.getInstructionsForCargo(mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);
-        runAlgoOnPort(ship, mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);
+        std::vector<std::string> errorReason;
+        runAlgoOnPort(ship, mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions, errorReason);
         ship->moveToNextPort();
     }
 
@@ -301,7 +302,7 @@ bool handleNameOfFile (const std::string& fileName, std::string& portName, int &
 }
 
 
-int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::string& instructionsPath){
+int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::string& instructionsPath, std::vector<std::string>& errorReason){
     Port port;
     std::vector<bool> * res  =readPortContainers(&port, cargoDataPath);
     delete res;
@@ -311,14 +312,21 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
     Crane crane(ship, &port);
     std::vector<Container*> wasOnPort;
     port.getVectorOfContainers(wasOnPort);
-    int result = crane.executeOperationList(instructionsPath);
-    if (result == -1) {return -1;} //Algo Did some invalid operation
+    std::vector<std::string> err;
+    int result = crane.executeOperationList(instructionsPath, err);
+    if (result == -1) {
+        errorReason.emplace_back("Algo did invalid operation");
+        for(auto& error:err)
+            errorReason.push_back(error);
+        return -1;
+    } //Algo Did some invalid operation
     std::vector<Container*> leftOnPort;
     port.getVectorOfContainers(leftOnPort);
     if(!ship->isFull()){
         //check if algo took all the containers from the port
         for(auto& cont : leftOnPort){
             if(ship->willVisit(cont->getDest())){
+                errorReason.push_back("Ship is not empty, reject container " + cont->getId() + " without reason.");
                 return -1;
             }
         }
@@ -326,8 +334,10 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
     else{
         std::vector<Container*> byDist;
         port.getContainersByDistance(ship->getRoute(), byDist);
-        if(!validateFarRejected(leftOnPort, wasOnPort,byDist))
+        if(!validateFarRejected(leftOnPort, wasOnPort,byDist)) {
+            errorReason.push_back("Algo didnt reject far containers.");
             return -1;
+        }
     }
     //check algo left on port only containers with correct destination
     for(auto& cont : leftOnPort){
@@ -339,7 +349,10 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
                     break;
                 }
             }
-            if(!found) {return -1;} // left on port container with different destination
+            if(!found) {
+                errorReason.push_back("Algo left container with different destination on port.");
+                return -1;
+            } // left on port container with different destination
         }
     }
     return result;

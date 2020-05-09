@@ -61,13 +61,13 @@ result Crane::Unload(const std::string& contId, int level, int i, int j) {
 }
 
 
-int Crane::executeOperationList(const std::string& path) {
+int Crane::executeOperationList(const std::string& path, std::vector<std::string> errors) {
     int price = 0;
     std::ifstream fin;
     try{
         fin.open(path, std::ios::in);
     } catch (const std::exception& e) {
-        //std::cout << "ERROR: Failed to open file" << std::endl;
+        errors.push_back("Failed to open file");
         return -1;
     }
     std::string line, id;
@@ -85,18 +85,18 @@ int Crane::executeOperationList(const std::string& path) {
             int rc = this->Unload(id,level,i,j);
             //std::cout << "unloaded container " << id << " from level " << level << " position " << i <<","<< j << std::endl;
             if( rc!= SUCCESS){
+                errors.push_back("Unload " + id +" " + std::to_string(level) + " " + std::to_string(i) + " " + std::to_string(j) + " is invalid operation.");
                 switch(rc){
                     case 2:
-                        std::cout << "Error: index out of range" << std::endl;
+                        errors.emplace_back("Error: index out of range");
                         break;
                     case 5:
-                        std::cout << "Error: cant unload container. container above" << std::endl;
+                        errors.emplace_back("Error: cant unload container. container above");
                         break;
                     case 6:
-                        std::cout << "Error: there is other container in this place" << std::endl;
+                        errors.emplace_back("Error: there is other container in this place");
                         break;
                 }
-                std::cout << "Abort operation" << std::endl;
                 return -1;
             }
             price++;
@@ -111,24 +111,24 @@ int Crane::executeOperationList(const std::string& path) {
             int rc = this->Load(id,level,i,j);
             //std::cout << "loaded container " << id << " to level " << level << " position " << i <<","<< j << std::endl;
             if(rc != SUCCESS){
+                errors.push_back("Load " + id +" " + std::to_string(level) + " " + std::to_string(i) + " " + std::to_string(j) + " is invalid operation.");
                 switch(rc){
                     case 1:
-                       std::cout << "Error: cant load the container because the ship will not visit its destination" << std::endl;
+                        errors.emplace_back("Error: cant load the container because the ship will not visit its destination");
                        break;
                     case 2:
-                        std::cout << "Error: index out of range" << std::endl;
+                        errors.emplace_back("Error: index out of range");
                         break;
                     case 3:
-                        std::cout << "Error: cant load container. the location is full" << std::endl;
+                        errors.emplace_back("Error: cant load container. the location is full");
                         break;
                     case 4:
-                        std::cout << "Error: cant load container. there is nothing below" << std::endl;
+                        errors.emplace_back("Error: cant load container. there is nothing below" );
                         break;
                     case 6:
-                       std::cout << "Error: cant find the container, wrong ID" << std::endl;
+                        errors.emplace_back("Error: cant find the container, wrong ID");
                         break;
                 }
-                std::cout << "Abort operation" << std::endl;
                 return -1;
             }
             price++;
@@ -138,7 +138,7 @@ int Crane::executeOperationList(const std::string& path) {
             //std::cout << "rejecting container " << id << std::endl;
         }
         else{
-            std::cout << "wrong file format" << std::endl;
+            errors.emplace_back("wrong file format");
         }
 
     }

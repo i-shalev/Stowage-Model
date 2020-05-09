@@ -154,7 +154,8 @@ int NaiveAlgoWithTrick::getInstructionsForCargo(const std::string& input_full_pa
     fs.close();
     delete pathToDirChar;
     Crane crane(ship, &port);
-    crane.executeOperationList(output_full_path_and_file_name);
+    std::vector<std::string> err;
+    crane.executeOperationList(output_full_path_and_file_name, err);
     ship->moveToNextPort();
     return rc;
 }

@@ -22,7 +22,7 @@ void printArgs(std::map<std::string, std::string>& args);
 void runAllAlgo(const std::string& algoPath);
 void runAlgoForAllTravels(AbstractAlgorithm& algo, const std::string &travelPath, const std::string &outputPath);
 void runAlgoForTravel(AbstractAlgorithm& algo, const std::string &pathToDir, const std::string &outputPath);
-int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::string& instructionsPath);
+int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::string& instructionsPath, std::vector<std::string>& errorReason);
 void getShipPlanAndRoutePaths(const std::string& travelPath, std::string& shipPlanPath, std::string& shipRoutePath);
 ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath);
 ShipRoute* createShipRoute(int &errorCode, const std::string& shipRoutePath);
