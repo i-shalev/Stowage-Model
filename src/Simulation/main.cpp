@@ -68,7 +68,7 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
 
     auto* algoNames = getFileNamesEndWith(algoPath, ".so");
     for(const auto& algoName:*algoNames) {
-//        std::cout << algoName << std::endl;
+        std::cout << algoName << std::endl;
     }
     NaiveAlgoWithTrick algo1;
     runAlgoForAllTravels(algo1, travelPath, outputPath, "NaiveAlgoWithTrick", dirs);
