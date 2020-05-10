@@ -3,7 +3,7 @@
 //
 
 #include "NaiveAlgo.h"
-
+REGISTER_ALGORITHM(NaiveAlgo)
 NaiveAlgo::NaiveAlgo(){
     this->shipRoute = nullptr;
     this->ship = nullptr;

@@ -3,7 +3,7 @@
 //
 
 #include "NaiveAlgoWithTrick.h"
-
+REGISTER_ALGORITHM(NaiveAlgoWithTrick)
 NaiveAlgoWithTrick::NaiveAlgoWithTrick(){
     this->shipRoute = nullptr;
     this->ship = nullptr;
