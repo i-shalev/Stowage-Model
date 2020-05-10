@@ -23,7 +23,6 @@ int createArgs(std::map<std::string, std::string>& args, int& argc, char **argv)
     for(int i = 1; i < argc-1; i += 2){
         args[argv[i]] = argv[i+1];
     }
-    //TODO handle those errors
     if(args["-travel_path"].empty()){
         return EXIT_FAILURE;
     }
