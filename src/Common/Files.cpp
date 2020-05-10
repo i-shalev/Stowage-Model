@@ -536,7 +536,7 @@ void writeToSuccessFile(const std::string &filename, const std::vector<std::stri
         return;
     std::ofstream outfile;
     outfile.open(filename, std::ios_base::app);
-    for(int i = 0; i < results->size()-1 ; i++)
+    for(size_t i = 0; i < results->size()-1 ; i++)
         outfile << results->at(i) << ", ";
     outfile << results->at(results->size()-1) << std::endl;
     outfile.close();
