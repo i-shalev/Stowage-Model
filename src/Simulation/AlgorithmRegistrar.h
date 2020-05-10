@@ -9,7 +9,7 @@
 #include <vector>
 #include <list>
 #include <functional>
-#include "AlgorithmRegistration.h"
+#include "../Common/AlgorithmRegistration.h"
 
 class AlgorithmRegistrar {
     std::list<std::function<std::unique_ptr<AbstractAlgorithm>()>> algorithmFactories;
