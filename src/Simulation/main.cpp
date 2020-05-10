@@ -285,7 +285,7 @@ std::map<std::string, std::string>* createMapPortFullNameToCargoPath(const std::
         std::map<std::string, int> *mapPortVisits, const std::string &lastPort, std::vector<std::string>* errors){
     auto* mapPortFullNameToCargoPath = new std::map<std::string, std::string>();
     addPortsWithFileToMap(pathToDir, mapPortVisits, mapPortFullNameToCargoPath, errors);
-    addPortsWithNoFileToMap(pathToDir, mapPortVisits, mapPortFullNameToCargoPath, lastPort, errors);
+    addPortsWithNoFileToMap(mapPortVisits, mapPortFullNameToCargoPath, lastPort, errors);
     return mapPortFullNameToCargoPath;
 }
 
@@ -321,9 +321,9 @@ void addPortsWithFileToMap(const std::string &pathToDir, std::map<std::string, i
     delete pathToDirChar;
 }
 
-void addPortsWithNoFileToMap(const std::string &pathToDir, std::map<std::string, int> *mapPortVisits,
-        std::map<std::string, std::string> *mapPortFullNameToCargoPath,
-        const std::string &lastPort, std::vector<std::string>* errors) {
+void addPortsWithNoFileToMap(std::map<std::string, int> *mapPortVisits,
+                             std::map<std::string, std::string> *mapPortFullNameToCargoPath,
+                             const std::string &lastPort, std::vector<std::string> *errors) {
     for(const auto& elem : *mapPortVisits)
     {
         for(int i = 0; i < elem.second; i++)

@@ -35,9 +35,9 @@ std::map<std::string, std::string>* createMapPortFullNameToCargoPath(const std::
 bool handleNameOfFile (const std::string& fileName, std::string& portName, int & indexNumber);
 void addPortsWithFileToMap(const std::string &pathToDir, std::map<std::string, int> *mapPortVisits,
         std::map<std::string, std::string> *mapPortFullNameToCargoPath, std::vector<std::string>* errors);
-void addPortsWithNoFileToMap(const std::string &pathToDir, std::map<std::string, int> *mapPortVisits,
-        std::map<std::string, std::string> *mapPortFullNameToCargoPath,
-        const std::string &lastPort, std::vector<std::string>* errors);
+void addPortsWithNoFileToMap(std::map<std::string, int> *mapPortVisits,
+                             std::map<std::string, std::string> *mapPortFullNameToCargoPath,
+                             const std::string &lastPort, std::vector<std::string> *errors);
 bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>& was, std::vector<Container*> contByDist);
 void getStringOfErrors(int num, std::string& result);
 bool containsFatalError(int errorCode);
