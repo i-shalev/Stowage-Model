@@ -5,7 +5,7 @@
 
 #include <algorithm>
 #include "Files.h"
-#include <direct.h>
+//#include <direct.h>
 
 // if return false - indicate if we failed to open file or there was an error on the first line of the ShipPlan file. (2^3)
 bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int &width, int &numLines) {
@@ -521,7 +521,7 @@ void writeErrorsToFile(const std::string &filename, const std::string &folderPat
     if(! errors->empty()){
         char* path = (char *)(malloc((folderPath.size() + 1) * sizeof(char)));
         stringToCharStar(path, folderPath);
-        _mkdir(path);
+//        _mkdir(path);
         std::ofstream outfile;
         outfile.open(filename);
         for(auto& error: *errors)
