@@ -10,6 +10,7 @@
 #include "../Common/Crane.h"
 #include "AlgoRunner.h"
 #include "../Common/AbstractAlgorithm.h"
+#include "AlgorithmRegistrar.h"
 
 //using namespace std;
 class main {

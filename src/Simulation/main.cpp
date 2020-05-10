@@ -8,7 +8,9 @@
 int main(int argc, char **argv){
     std::map<std::string, std::string> args;
     if(createArgs(args, argc, argv)){
-        // fatal error
+        std::vector<std::string> errors;
+        errors.push_back("ERROR : travel_path not provided!");
+        writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
         return EXIT_FAILURE;
     }
 
@@ -23,7 +25,6 @@ int createArgs(std::map<std::string, std::string>& args, int& argc, char **argv)
     }
     //TODO handle those errors
     if(args["-travel_path"].empty()){
-        // fatal error
         return EXIT_FAILURE;
     }
     if(args["-algorithm_path"].empty()){
@@ -43,6 +44,8 @@ void printArgs(std::map<std::string, std::string>& args){
 }
 
 void runAllAlgo(const std::string& algoPath, const std::string &travelPath, const std::string &outputPath){
+    AlgorithmRegistrar& registrar = AlgorithmRegistrar::getInstance();
+
     emptyFile(PATH_TO_EMPTY_FILE);
     emptyFile(outputPath + "/simulation.results");
     auto* dirs = getDirsNamesFromRootDir(travelPath);
@@ -54,8 +57,15 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
     firstLine.push_back("Num Errors");
     writeToSuccessFile(outputPath + "/simulation.results", &firstLine);
 
-    NaiveAlgo algo;
-    runAlgoForAllTravels(algo, travelPath, outputPath, "NaiveAlgo", dirs);
+    if(registrar.size() == 0) {
+        // TODO: no algorithms loaded - print usage etc.
+    }
+
+    // get new instances of the algorithms and run them
+    auto algorithms = registrar.getAlgorithms();
+    for(auto& algorithm: algorithms) {
+        runAlgoForAllTravels(*algorithm, travelPath, outputPath, "NaiveAlgo", dirs);
+    }
 
     auto* algoNames = getFileNamesEndWith(algoPath, ".so");
     for(const auto& algoName:*algoNames) {
