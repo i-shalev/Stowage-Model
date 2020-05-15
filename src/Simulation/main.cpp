@@ -56,7 +56,7 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
 
     emptyFile(PATH_TO_EMPTY_FILE);
     emptyFile(outputPath + "/simulation.results");
-    auto* dirs = getDirsNamesFromRootDir(travelPath);
+    auto dirs = getDirsNamesFromRootDir(travelPath);
     std::vector<std::string> firstLine;
     firstLine.push_back("RESULTS");
     for(const auto& dir:*dirs)
@@ -67,7 +67,7 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
     
     std::vector<std::string> vectorAlgoNames;
     size_t lastLength = 0;
-    auto* algoNames = getFileNamesEndWith(algoPath, ".so");
+    auto algoNames = getFileNamesEndWith(algoPath, ".so");
     for(const auto& algoName:*algoNames) {
         std::string fullName = algoPath + "/" + algoName + ".so";
         char* fullNameChar = (char *)(malloc((fullName.size() + 1) * sizeof(char)));
@@ -93,12 +93,10 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
     auto algorithms = registrar.getAlgorithms();
     int i = 0;
     for(auto& algorithm: algorithms) {
-        runAlgoForAllTravels(*algorithm, travelPath, outputPath, vectorAlgoNames.at(i), dirs);
+        runAlgoForAllTravels(*algorithm, travelPath, outputPath, vectorAlgoNames.at(i), dirs.get());
         i++;
     }
 
-    delete(dirs);
-    delete(algoNames);
 }
 
 void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath, const std::string &outputPath,
@@ -214,15 +212,13 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
 }
 
 void getShipPlanAndRoutePaths(const std::string& pathToDir, std::string& shipPlanPath, std::string& shipRoutePath){
-    auto* res = getFileNamesEndWith(pathToDir, ".ship_plan");
+    auto res = getFileNamesEndWith(pathToDir, ".ship_plan");
     if(!res->empty())
         shipPlanPath = pathToDir + "/" + res->at(0) + ".ship_plan";
-    delete(res);
 
     res = getFileNamesEndWith(pathToDir, ".route");
     if(!res->empty())
         shipRoutePath = pathToDir + "/" + res->at(0) + ".route";
-    delete(res);
 }
 
 ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath){

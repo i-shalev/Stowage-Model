@@ -476,7 +476,7 @@ void getCargoData(const char *path, std::vector<std::string>& res){
 
     closedir(dir);
 }
-
+/*
 std::vector<std::string>* getDirsFromRootDir(const std::string &pathToDir) {
     auto* dirs = new std::vector<std::string>();
     char* path = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
@@ -514,7 +514,7 @@ std::vector<std::string>* getDirsFromRootDir(const std::string &pathToDir) {
     closedir(dir);
     return dirs;
 }
-
+*/
 void writeToFile(const std::string& filename, const std::string& data) {
     std::ofstream outfile;
     outfile.open(filename, std::ios_base::app);
@@ -558,9 +558,9 @@ void emptyFile(const std::string& filename){
     outfile.close();
 }
 
-std::vector<std::string>* getDirsNamesFromRootDir(const std::string &pathToDir) {
+std::unique_ptr<std::vector<std::string>> getDirsNamesFromRootDir(const std::string &pathToDir) {
 
-    auto* dirs = new std::vector<std::string>();
+    auto dirs = std::make_unique<std::vector<std::string>>();
     char* path = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
     stringToCharStar(path, pathToDir);
 
@@ -597,10 +597,10 @@ std::vector<std::string>* getDirsNamesFromRootDir(const std::string &pathToDir) 
     return dirs;
 }
 
-std::vector<std::string>* getFileNamesEndWith(const std::string &pathToDir, const std::string &endsWith){
+std::unique_ptr<std::vector<std::string>> getFileNamesEndWith(const std::string &pathToDir, const std::string &endsWith){
     char* path = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
     stringToCharStar(path, pathToDir);
-    auto* res = new std::vector<std::string>();
+    auto res = std::make_unique<std::vector<std::string>>();
 
     DIR *dir = opendir(path);
     struct dirent *entry = readdir(dir);
