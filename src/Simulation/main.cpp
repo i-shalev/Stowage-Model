@@ -6,7 +6,6 @@
 
 int main(int argc, char **argv){
     std::map<std::string, std::string> args;
-    std::cout << "1" << std::endl;
     if(createArgs(args, argc, argv)){
         std::vector<std::string> errors;
         errors.push_back("ERROR : travel_path not provided!");
@@ -14,9 +13,7 @@ int main(int argc, char **argv){
         writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
         return EXIT_FAILURE;
     }
-    std::cout << "2" << std::endl;
     runAllAlgo(args["-algorithm_path"], args["-travel_path"], args["-output"]);
-    std::cout << "end" << std::endl;
     return EXIT_SUCCESS;
 }
 
@@ -44,7 +41,7 @@ void printArgs(std::map<std::string, std::string>& args){
 }
 
 void runAllAlgo(const std::string& algoPath, const std::string &travelPath, const std::string &outputPath){
-    AlgorithmRegistrar& registrar = AlgorithmRegistrar::getInstance();
+    auto& registrar = AlgorithmRegistrar::getInstance();
 
     emptyFile(PATH_TO_EMPTY_FILE);
     emptyFile(outputPath + "/simulation.results");
@@ -72,14 +69,10 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
             errors.push_back(error);
             writeErrorsToFile(outputPath + "/errors/" + algoName + ".errors", outputPath + "/errors/", &errors);
         }
-        std::cout << algoName << std::endl;
     }
-    std::cout << 1 << std::endl;
     int i = 0;
     for (auto algo_iter = registrar.begin(); algo_iter != registrar.end(); ++algo_iter) {
-        std::cout << 2 << std::endl;
         auto algo = (*algo_iter)();
-        std::cout << 3 << std::endl;
         runAlgoForAllTravels(*algo, travelPath, outputPath, vectorAlgoNames.at(i), dirs.get());
         i++;
     }
@@ -87,7 +80,6 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
 
 void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath, const std::string &outputPath,
                           const std::string &algoName, std::vector<std::string>* dirs) {
-    std::cout << "start " << algoName << std::endl;
     std::vector<std::string> results;
     int sum = 0, numErrors = 0, tmp;
     results.push_back(algoName);
@@ -102,7 +94,6 @@ void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath
     results.push_back(std::to_string(sum));
     results.push_back(std::to_string(numErrors));
     writeToSuccessFile(outputPath + "/simulation.results", &results);
-    std::cout << "finished " << algoName << std::endl;
 }
 
 int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,

@@ -18,16 +18,16 @@ AlgorithmRegistrar::~AlgorithmRegistrar(){
 
 void AlgorithmRegistrar::DlCloser::operator()(void *dlhandle) const noexcept
 {
-    std::cout << "Closing..." << std::endl;
+//    std::cout << "Closing..." << std::endl;
     dlclose(dlhandle);
 //        (void)dlhandle;
-    std::cout << "Finished Closing..." << std::endl;
+//    std::cout << "Finished Closing..." << std::endl;
 }
 
 bool AlgorithmRegistrar::loadAlgorithmFromFile(const char *file_path, std::string& error)
 {
-    DlHandler algo_handle(dlopen(file_path, RTLD_LAZY));
     size_t lastLength = size();
+    DlHandler algo_handle(dlopen(file_path, RTLD_LAZY));
     if(!algo_handle){
         const char *dlopen_error = dlerror();
         error = dlopen_error ? dlopen_error : "ERROR : can't load algorithm!";
