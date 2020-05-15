@@ -1,17 +1,17 @@
 //
-// Created by zivco on 08/05/2020.
+// Created by zivco on 05/04/2020.
 //
 
-#include "NaiveAlgoWithTrick.h"
-REGISTER_ALGORITHM(NaiveAlgoWithTrick)
-NaiveAlgoWithTrick::NaiveAlgoWithTrick(){
+#include "_319088373_a.h"
+REGISTER_ALGORITHM(_319088373_a)
+_319088373_a::_319088373_a(){
     this->shipRoute = nullptr;
     this->ship = nullptr;
     this->shipPlan = nullptr;
     this->calc = nullptr;
 }
 
-int NaiveAlgoWithTrick::getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) {
+int _319088373_a::getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) {
     int rc = 0;
     if(ship == nullptr){
         if(shipPlan == nullptr)
@@ -111,61 +111,50 @@ int NaiveAlgoWithTrick::getInstructionsForCargo(const std::string& input_full_pa
     }
     //now load everything from port to ship. check valid ids and destinations.
     std::vector<Container*> toLoad;
-    int numPlacesOnShip = ship->numEmptyPlaces();
     port.getContainersByDistance(ship->getRoute(),toLoad);
-    std::vector<Container*> toLoadInOrder;
-
-    int maxIndex = min(toLoad.size(), numPlacesOnShip);
-
-    for(int i = maxIndex-1; i >= 0; i--) {
-        toLoadInOrder.push_back(toLoad.at(i));
-    }
-    for(size_t i = maxIndex; i < toLoad.size(); i++) {
-        toLoadInOrder.push_back(toLoad.at(i));
-    }
     int emptyPlacesAtPosition;
-    bool done = toLoadInOrder.empty();
+    bool done = toLoad.empty();
     for(int i=0; i<ship->getPlan().getLength() && !done; i++){
         for(int j=0; j< ship->getPlan().getWidth() && !done; j++){
             emptyPlacesAtPosition  = this->emptyPlacesInPosition(i,j,ship->getCurrentDestination());
             for(int level = ship->getPlan().getNumFloors() - emptyPlacesAtPosition; level<ship->getPlan().getNumFloors() && !done; level++){
-                if(checkContainer(toLoadInOrder.front())) {
-                    if (calc->tryOperation('L', toLoadInOrder.front()->getWeight(),i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED) {
+                if(checkContainer(toLoad.front())) {
+                    if (calc->tryOperation('L', toLoad.front()->getWeight(),i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED) {
 //                        std::cout << "unbalance..." << std::endl;
                     }
-                    fs << "L " << toLoadInOrder.front()->getId() << " " << level << " " << i << " " << j << std::endl;
+                    fs << "L " << toLoad.front()->getId() << " " << level << " " << i << " " << j << std::endl;
                 }
                 else{
-                    fs << "R " << toLoadInOrder.front()->getId() << std::endl;
+                    fs << "R " << toLoad.front()->getId() << std::endl;
                     level--;
                 }
-                toLoadInOrder.erase(toLoadInOrder.begin());
-                if(toLoadInOrder.empty()){
+                toLoad.erase(toLoad.begin());
+                if(toLoad.empty()){
                     done = true;
                 }
             }
         }
     }
-    while(!toLoadInOrder.empty()) {
-        fs << "R " << toLoadInOrder.back()->getId() << std::endl;
-        toLoadInOrder.pop_back();
+    while(!toLoad.empty()) {
+        fs << "R " << toLoad.back()->getId() << std::endl;
+        toLoad.pop_back();
         rc = turnToTrueBit(rc, 18);
     }
     fs.close();
     delete pathToDirChar;
     Crane crane(ship, &port);
     std::vector<std::string> err;
-    crane.executeOperationList(output_full_path_and_file_name, err);
+    crane.executeOperationList(output_full_path_and_file_name,err);
     ship->moveToNextPort();
     return rc;
 }
 
-int NaiveAlgoWithTrick::emptyPlacesInPosition(int i, int j, const std::string& portSymbol){
+int _319088373_a::emptyPlacesInPosition(int i, int j, const std::string& portSymbol){
     int sum = 0;
     for(int level=0; level<ship->getPlan().getNumFloors(); level++){
         if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)== nullptr ||
-           (!ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked() &&
-            ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()==portSymbol)){
+                (!ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked() &&
+                ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()==portSymbol)){
             sum++;
         }
     }
@@ -173,11 +162,11 @@ int NaiveAlgoWithTrick::emptyPlacesInPosition(int i, int j, const std::string& p
     //sum last positions are empty
 }
 
-bool NaiveAlgoWithTrick::checkContainer(Container* cont){
+bool _319088373_a::checkContainer(Container* cont){
     return cont->checkId() && ship->willVisit(cont->getDest());
 }
 
-int NaiveAlgoWithTrick::readShipPlan(const std::string &full_path_and_file_name) {
+int _319088373_a::readShipPlan(const std::string &full_path_and_file_name) {
     int errorCode = 0;
     bool fatalError = false;
     int numFloors=0 , length=0, width=0, numLines;
@@ -216,7 +205,7 @@ int NaiveAlgoWithTrick::readShipPlan(const std::string &full_path_and_file_name)
     return errorCode;
 }
 
-int NaiveAlgoWithTrick::readShipRoute(const std::string &full_path_and_file_name) {
+int _319088373_a::readShipRoute(const std::string &full_path_and_file_name) {
     int errorCode = 0;
     bool fatalError = false;
     auto* ports = new std::vector<std::string>();
@@ -246,21 +235,22 @@ int NaiveAlgoWithTrick::readShipRoute(const std::string &full_path_and_file_name
     return errorCode;
 }
 
-void NaiveAlgoWithTrick::createShip() {
+void _319088373_a::createShip() {
     if(this->shipPlan != nullptr and this->shipRoute != nullptr){
         ship = new Ship(shipRoute, shipPlan);
     }
 }
 
-void NaiveAlgoWithTrick::printShipPlan(){
+void _319088373_a::printShipPlan(){
     this->shipPlan->printShipPlan();
 }
 
-void NaiveAlgoWithTrick::printShipRoute() {
+void _319088373_a::printShipRoute() {
     this->shipRoute->printList();
 }
-int min(int x, int y) {
-    if( x < y )
-        return x;
-    return y;
+
+int turnToTrueBit(int num, int bit){
+    int mask = 1 << bit;
+    return num | mask;
 }
+

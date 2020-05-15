@@ -2,8 +2,8 @@
 // Created by zivco on 05/04/2020.
 //
 
-#ifndef STOWAGE_MODEL_NAIVEALGO_H
-#define STOWAGE_MODEL_NAIVEALGO_H
+#ifndef STOWAGE_MODEL__319088373_A_H
+#define STOWAGE_MODEL__319088373_A_H
 
 #include "../Common/Ship.h"
 #include "../Common/WeightBalanceCalculator.h"
@@ -15,14 +15,14 @@
 #include "../Common/AlgorithmRegistration.h"
 
 // this algorithm sort the Containers by their destinations from closest to farthest and Load them one by one.
-class NaiveAlgo : public AbstractAlgorithm{
+class _319088373_a : public AbstractAlgorithm{
     Ship* ship;
     ShipPlan* shipPlan;
     ShipRoute* shipRoute;
     WeightBalanceCalculator* calc;
 public:
-//    explicit NaiveAlgo(Ship* _ship): ship(_ship){}
-    NaiveAlgo();
+//    explicit _319088373_a(Ship* _ship): ship(_ship){}
+    _319088373_a();
     int getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) override ;
     int setWeightBalanceCalculator(WeightBalanceCalculator& calculator) override { this->calc = &calculator; return 0;}
     int readShipPlan(const std::string& full_path_and_file_name) override;
@@ -37,4 +37,4 @@ private:
 
 int turnToTrueBit(int num, int bit);
 
-#endif //STOWAGE_MODEL_NAIVEALGO_H
+#endif //STOWAGE_MODEL__319088373_A_H

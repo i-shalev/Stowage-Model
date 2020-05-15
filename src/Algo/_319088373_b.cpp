@@ -1,17 +1,17 @@
 //
-// Created by zivco on 05/04/2020.
+// Created by zivco on 08/05/2020.
 //
 
-#include "NaiveAlgo.h"
-REGISTER_ALGORITHM(NaiveAlgo)
-NaiveAlgo::NaiveAlgo(){
+#include "_319088373_b.h"
+REGISTER_ALGORITHM(_319088373_b)
+_319088373_b::_319088373_b(){
     this->shipRoute = nullptr;
     this->ship = nullptr;
     this->shipPlan = nullptr;
     this->calc = nullptr;
 }
 
-int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) {
+int _319088373_b::getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) {
     int rc = 0;
     if(ship == nullptr){
         if(shipPlan == nullptr)
@@ -111,50 +111,61 @@ int NaiveAlgo::getInstructionsForCargo(const std::string& input_full_path_and_fi
     }
     //now load everything from port to ship. check valid ids and destinations.
     std::vector<Container*> toLoad;
+    int numPlacesOnShip = ship->numEmptyPlaces();
     port.getContainersByDistance(ship->getRoute(),toLoad);
+    std::vector<Container*> toLoadInOrder;
+
+    int maxIndex = min(toLoad.size(), numPlacesOnShip);
+
+    for(int i = maxIndex-1; i >= 0; i--) {
+        toLoadInOrder.push_back(toLoad.at(i));
+    }
+    for(size_t i = maxIndex; i < toLoad.size(); i++) {
+        toLoadInOrder.push_back(toLoad.at(i));
+    }
     int emptyPlacesAtPosition;
-    bool done = toLoad.empty();
+    bool done = toLoadInOrder.empty();
     for(int i=0; i<ship->getPlan().getLength() && !done; i++){
         for(int j=0; j< ship->getPlan().getWidth() && !done; j++){
             emptyPlacesAtPosition  = this->emptyPlacesInPosition(i,j,ship->getCurrentDestination());
             for(int level = ship->getPlan().getNumFloors() - emptyPlacesAtPosition; level<ship->getPlan().getNumFloors() && !done; level++){
-                if(checkContainer(toLoad.front())) {
-                    if (calc->tryOperation('L', toLoad.front()->getWeight(),i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED) {
+                if(checkContainer(toLoadInOrder.front())) {
+                    if (calc->tryOperation('L', toLoadInOrder.front()->getWeight(),i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED) {
 //                        std::cout << "unbalance..." << std::endl;
                     }
-                    fs << "L " << toLoad.front()->getId() << " " << level << " " << i << " " << j << std::endl;
+                    fs << "L " << toLoadInOrder.front()->getId() << " " << level << " " << i << " " << j << std::endl;
                 }
                 else{
-                    fs << "R " << toLoad.front()->getId() << std::endl;
+                    fs << "R " << toLoadInOrder.front()->getId() << std::endl;
                     level--;
                 }
-                toLoad.erase(toLoad.begin());
-                if(toLoad.empty()){
+                toLoadInOrder.erase(toLoadInOrder.begin());
+                if(toLoadInOrder.empty()){
                     done = true;
                 }
             }
         }
     }
-    while(!toLoad.empty()) {
-        fs << "R " << toLoad.back()->getId() << std::endl;
-        toLoad.pop_back();
+    while(!toLoadInOrder.empty()) {
+        fs << "R " << toLoadInOrder.back()->getId() << std::endl;
+        toLoadInOrder.pop_back();
         rc = turnToTrueBit(rc, 18);
     }
     fs.close();
     delete pathToDirChar;
     Crane crane(ship, &port);
     std::vector<std::string> err;
-    crane.executeOperationList(output_full_path_and_file_name,err);
+    crane.executeOperationList(output_full_path_and_file_name, err);
     ship->moveToNextPort();
     return rc;
 }
 
-int NaiveAlgo::emptyPlacesInPosition(int i, int j, const std::string& portSymbol){
+int _319088373_b::emptyPlacesInPosition(int i, int j, const std::string& portSymbol){
     int sum = 0;
     for(int level=0; level<ship->getPlan().getNumFloors(); level++){
         if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)== nullptr ||
-                (!ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked() &&
-                ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()==portSymbol)){
+           (!ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked() &&
+            ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()==portSymbol)){
             sum++;
         }
     }
@@ -162,11 +173,11 @@ int NaiveAlgo::emptyPlacesInPosition(int i, int j, const std::string& portSymbol
     //sum last positions are empty
 }
 
-bool NaiveAlgo::checkContainer(Container* cont){
+bool _319088373_b::checkContainer(Container* cont){
     return cont->checkId() && ship->willVisit(cont->getDest());
 }
 
-int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
+int _319088373_b::readShipPlan(const std::string &full_path_and_file_name) {
     int errorCode = 0;
     bool fatalError = false;
     int numFloors=0 , length=0, width=0, numLines;
@@ -205,7 +216,7 @@ int NaiveAlgo::readShipPlan(const std::string &full_path_and_file_name) {
     return errorCode;
 }
 
-int NaiveAlgo::readShipRoute(const std::string &full_path_and_file_name) {
+int _319088373_b::readShipRoute(const std::string &full_path_and_file_name) {
     int errorCode = 0;
     bool fatalError = false;
     auto* ports = new std::vector<std::string>();
@@ -235,22 +246,21 @@ int NaiveAlgo::readShipRoute(const std::string &full_path_and_file_name) {
     return errorCode;
 }
 
-void NaiveAlgo::createShip() {
+void _319088373_b::createShip() {
     if(this->shipPlan != nullptr and this->shipRoute != nullptr){
         ship = new Ship(shipRoute, shipPlan);
     }
 }
 
-void NaiveAlgo::printShipPlan(){
+void _319088373_b::printShipPlan(){
     this->shipPlan->printShipPlan();
 }
 
-void NaiveAlgo::printShipRoute() {
+void _319088373_b::printShipRoute() {
     this->shipRoute->printList();
 }
-
-int turnToTrueBit(int num, int bit){
-    int mask = 1 << bit;
-    return num | mask;
+int min(int x, int y) {
+    if( x < y )
+        return x;
+    return y;
 }
-
