@@ -373,6 +373,14 @@ bool handleNameOfFile (const std::string& fileName, std::string& portName, int &
     return true;
 }
 
+bool findInVec(std::vector<Container*>& vec, const std::string& id){
+    for(auto& cont : vec){
+        if(cont->getId().compare(id) == 0){
+            return true;
+        }
+    }
+    return false;
+}
 
 int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::string& instructionsPath, std::vector<std::string>& errorReason){
     Port port;
@@ -395,7 +403,7 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
     if(!ship->isFull()){
         //check if algo took all the containers from the port
         for(auto& cont : leftOnPort){
-            if(ship->willVisit(cont->getDest()) && !ship->hasContainer(cont->getId())){
+            if(ship->willVisit(cont->getDest()) && !ship->hasContainer(cont->getId()) && !findInVec(problematics, cont->getId())){
                 errorReason.push_back("Ship is not empty, reject container " + cont->getId() + " without reason.");
                 return -1;
             }
@@ -429,14 +437,7 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
 
 }
 
-bool findInVec(std::vector<Container*>& vec, const std::string& id){
-    for(auto& cont : vec){
-        if(cont->getId().compare(id) == 0){
-            return true;
-        }
-    }
-    return false;
-}
+
 
 bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>& was, std::vector<Container*> contByDist){
     std::vector<Container*> took;
