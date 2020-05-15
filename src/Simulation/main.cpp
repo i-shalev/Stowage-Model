@@ -168,7 +168,14 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
     while(!ship->finishRoute()){
         //std::cout << ship->getCurrentDestinationWithIndex() << std::endl;
         std::string pathToInstructions = pathToDir + "/" + ship->getCurrentDestinationWithIndex() + ".instructions";
-        algo.getInstructionsForCargo(mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);
+        int instErrorCode = algo.getInstructionsForCargo(mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);
+        if(instErrorCode > 0){
+            std::string errorCodeStr;
+            getStringOfErrors(instErrorCode, errorCodeStr);
+            errorCodeStr = "While get instructions for port "+ ship->getCurrentDestinationWithIndex()
+                    + ", the algorithm return the errors: " + errorCodeStr;
+            errors->push_back(errorCodeStr);
+        }
         std::vector<std::string> errorReason;
         //TODO
 //        int numOpTmp = runAlgoOnPort(ship, mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), R"(C:\Users\itay\Desktop\ex\sim4\AAAAA_1.instructions)", errorReason);
