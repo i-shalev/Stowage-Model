@@ -481,6 +481,11 @@ void writeErrorsToFile(const std::string &filename, const std::string &folderPat
     if(! errors->empty()){
         char* path = (char *)(malloc((folderPath.size() + 1) * sizeof(char)));
         stringToCharStar(path, folderPath);
+        char* cmd = (char *)(malloc((folderPath.size() + 1 + 10) * sizeof(char)));
+        strcpy(cmd, "mkdir -p ");
+        strcat(cmd,path);
+        system(cmd);
+        delete cmd;
         
         std::ofstream outfile;
         outfile.open(filename);
