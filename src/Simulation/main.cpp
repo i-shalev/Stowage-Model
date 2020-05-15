@@ -1,7 +1,16 @@
-
 #include "main.h"
-#include "../Algo/NaiveAlgo.h"
-#include "../Algo/NaiveAlgoWithTrick.h"
+#include <iostream>
+#include <dlfcn.h>
+#include <memory>
+
+struct DlCloser{
+    void operator()(void *dlhandle) const noexcept{
+        //std::cout << "Closing..." << std::endl;
+        //dlclose(dlhandle);
+        (void)dlhandle;
+        //std::cout << "Finished Closing..." << std::endl;
+    }
+};
 
 #define PATH_TO_EMPTY_FILE R"(.\empty.empty_file)"
 
@@ -10,12 +19,12 @@ int main(int argc, char **argv){
     if(createArgs(args, argc, argv)){
         std::vector<std::string> errors;
         errors.push_back("ERROR : travel_path not provided!");
+        //std::cout << "ERROR : travel_path not provided!" << std::endl;
         writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
         return EXIT_FAILURE;
     }
-
     runAllAlgo(args["-algorithm_path"], args["-travel_path"], args["-output"]);
-
+    std::cout << "end" << std::endl;
     return EXIT_SUCCESS;
 }
 
@@ -23,14 +32,14 @@ int createArgs(std::map<std::string, std::string>& args, int& argc, char **argv)
     for(int i = 1; i < argc-1; i += 2){
         args[argv[i]] = argv[i+1];
     }
-    if(args["-travel_path"].empty()){
-        return EXIT_FAILURE;
-    }
     if(args["-algorithm_path"].empty()){
         args["-algorithm_path"] = "./";
     }
     if(args["-output"].empty()){
         args["-output"] = "./";
+    }
+    if(args["-travel_path"].empty()){
+        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;
@@ -55,23 +64,38 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
     firstLine.push_back("Sum");
     firstLine.push_back("Num Errors");
     writeToSuccessFile(outputPath + "/simulation.results", &firstLine);
-
-    if(registrar.size() == 0) {
-        // TODO: no algorithms loaded - print usage etc.
-    }
-
-    // get new instances of the algorithms and run them
-    auto algorithms = registrar.getAlgorithms();
-    for(auto& algorithm: algorithms) {
-        runAlgoForAllTravels(*algorithm, travelPath, outputPath, "NaiveAlgo", dirs);
-    }
-
+    
+    std::vector<std::string> vectorAlgoNames;
+    size_t lastLength = 0;
     auto* algoNames = getFileNamesEndWith(algoPath, ".so");
     for(const auto& algoName:*algoNames) {
-        std::cout << algoName << std::endl;
+        std::string fullName = algoPath + "/" + algoName + ".so";
+        char* fullNameChar = (char *)(malloc((fullName.size() + 1) * sizeof(char)));
+        stringToCharStar(fullNameChar, fullName);
+        std::unique_ptr<void, DlCloser> handle(dlopen(fullNameChar, RTLD_LAZY));
+        if(!handle){
+          std::vector<std::string> errors;
+          errors.push_back("ERROR : can't load algorithm!");
+          writeErrorsToFile(outputPath + "/errors/" + algoName + ".errors", outputPath + "/errors/", &errors);
+          // The algo didn't opeded
+        } else {
+          if(lastLength == registrar.size()){
+            std::vector<std::string> errors;
+            errors.push_back("ERROR : the algorithm didn't registered!");
+            writeErrorsToFile(outputPath + "/errors/" + algoName + ".errors", outputPath + "/errors/", &errors);
+          } else {
+            lastLength = registrar.size();
+            vectorAlgoNames.push_back(algoName);
+          }
+        }
     }
-    NaiveAlgoWithTrick algo1;
-    runAlgoForAllTravels(algo1, travelPath, outputPath, "NaiveAlgoWithTrick", dirs);
+
+    auto algorithms = registrar.getAlgorithms();
+    int i = 0;
+    for(auto& algorithm: algorithms) {
+        runAlgoForAllTravels(*algorithm, travelPath, outputPath, vectorAlgoNames.at(i), dirs);
+        i++;
+    }
 
     delete(dirs);
     delete(algoNames);
@@ -97,7 +121,7 @@ void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath
 
 int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
                      const std::string &algoName, const std::string &travelName) {
-    std::cout << "dir: " << pathToDir << std::endl;
+    std::cout << "start" << algoName << " - " << travelName << pathToDir << std::endl;
     auto* errors = new std::vector<std::string>();
     bool fatalError = false;
     std::string shipPlanPath, shipRoutePath;
@@ -185,6 +209,7 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
     delete(mapPortVisits);
     delete(ship);
     delete(errors);
+    std::cout << "finished:" << algoName << " - " << travelName << pathToDir << std::endl;
     return numOp;
 }
 
@@ -490,4 +515,9 @@ bool containsFatalError(int errorCode){
             return true;
     }
     return false;
+}
+
+int turnToTrueBit(int num, int bit){
+    int mask = 1 << bit;
+    return num | mask;
 }

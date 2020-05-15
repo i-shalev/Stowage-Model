@@ -8,7 +8,6 @@
 #include "../Common/Files.h"
 #include "../Common/Port.h"
 #include "../Common/Crane.h"
-#include "AlgoRunner.h"
 #include "../Common/AbstractAlgorithm.h"
 #include "AlgorithmRegistrar.h"
 
@@ -18,6 +17,7 @@ class main {
 };
 
 int main(int argc, char **argv);
+int turnToTrueBit(int num, int bit);
 int createArgs(std::map<std::string, std::string>& args, int& argc, char **argv);
 void printArgs(std::map<std::string, std::string>& args);
 void runAllAlgo(const std::string& algoPath, const std::string &travelPath, const std::string &outputPath);
