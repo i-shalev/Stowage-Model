@@ -388,7 +388,7 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
     if(!ship->isFull()){
         //check if algo took all the containers from the port
         for(auto& cont : leftOnPort){
-            if(ship->willVisit(cont->getDest())){
+            if(ship->willVisit(cont->getDest()) && !ship->hasContainer(cont->getId())){
                 errorReason.push_back("Ship is not empty, reject container " + cont->getId() + " without reason.");
                 return -1;
             }
