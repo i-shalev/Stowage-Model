@@ -42,4 +42,6 @@ bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>&
 void getStringOfErrors(int num, std::string& result);
 bool containsFatalError(int errorCode);
 int getBitInNumber(int num, int bit);
+int folderIsExistOrCanBeBuilt(const std::string& path);
+bool isFolderExist(char* pathChar);
 #endif //STOWAGE_MODEL_MAIN_H

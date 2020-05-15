@@ -476,61 +476,11 @@ void getCargoData(const char *path, std::vector<std::string>& res){
 
     closedir(dir);
 }
-/*
-std::vector<std::string>* getDirsFromRootDir(const std::string &pathToDir) {
-    auto* dirs = new std::vector<std::string>();
-    char* path = (char *)(malloc((pathToDir.size() + 1) * sizeof(char)));
-    stringToCharStar(path, pathToDir);
-
-    DIR *dir = opendir(path);
-    struct dirent *entry = readdir(dir);
-    std::string name;
-    while (entry != nullptr)
-    {
-        name = entry->d_name;
-        entry = readdir(dir);
-        if(name == "." or name == "..") {
-            continue;
-        }
-        std::string pathString(path);
-        char* fullPath = (char *)(malloc((strlen(path) + name.size() + 2) * sizeof(char)));
-        for (size_t i = 0; i < strlen(path); i++) {
-            fullPath[i] = path[i];
-        }
-        fullPath[strlen(path)] = '/';
-
-        for (size_t i = 0; i < name.size(); i++) {
-            fullPath[i + strlen(path) + 1] = name.at(i);
-        }
-        fullPath[strlen(path) + name.size() + 1] = '\0';
-
-        if(isDirectory(fullPath)) {
-            dirs->push_back(fullPath);
-        }
-
-        delete fullPath;
-    }
-    delete path;
-    closedir(dir);
-    return dirs;
-}
-*/
-void writeToFile(const std::string& filename, const std::string& data) {
-    std::ofstream outfile;
-    outfile.open(filename, std::ios_base::app);
-    outfile << data;
-    outfile.close();
-}
 
 void writeErrorsToFile(const std::string &filename, const std::string &folderPath, const std::vector<std::string> *errors) {
     if(! errors->empty()){
         char* path = (char *)(malloc((folderPath.size() + 1) * sizeof(char)));
         stringToCharStar(path, folderPath);
-        char* cmd = (char *)(malloc((folderPath.size() + 1 + 10) * sizeof(char)));
-        strcpy(cmd, "mkdir -p ");
-        strcat(cmd,path);
-        system(cmd);
-        delete cmd;
         
         std::ofstream outfile;
         outfile.open(filename);
