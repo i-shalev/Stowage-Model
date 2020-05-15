@@ -60,15 +60,16 @@ bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int 
     fin.close();
     return true;
 }
-
 // return vector (bool0, bool1, bool2, bool3, bool4). bool0 - indicates 2^2.
 //                                                    bool1 - indicates 2^3.
 //                                                    bool2 - indicates 2^0.
 //                                                    bool3 - indicates 2^1.
 //                                                    bool4 - indicates 2^4.
-std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, const std::string &path,
+std::unique_ptr<std::vector<bool>> readShipPlanInFiles(std::vector<std::vector<int>> &blocks, const std::string &path,
         int numFloors, int length, int width) {
-    auto* results = new std::vector<bool>{false, false, false, false, false};
+    std::unique_ptr<std::vector<bool>> results = std::make_unique<std::vector<bool>>(5);
+    for(int i=0; i<5; i++)
+        results->at(i) = false;
     // set to save the X,Y we already saw
     std::map<std::tuple<int, int>, int> map;
 
@@ -159,9 +160,11 @@ std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, co
 //                                             bool1 - indicates 2^6.
 //                                             bool2 - indicates 2^7.
 //                                             bool3 - indicates 2^8.
-std::vector<bool> *readShipPorts(std::vector<std::string> &ports, const std::string &path) {
+std::unique_ptr<std::vector<bool>> readShipPorts(std::vector<std::string> &ports, const std::string &path) {
     std::ifstream fin;
-    auto* results = new std::vector<bool>{false, false, false, false};
+    std::unique_ptr<std::vector<bool>> results = std::make_unique<std::vector<bool>>(4);
+    for(int i=0; i<4; i++)
+        results->at(i) = false;
     int count = 0;
     std::string lastPort = "";
     try{
@@ -219,9 +222,11 @@ bool isLegalPortName(std::string portName){
 
 // return vector (bool0, bool1). bool0 - indicates 2^14.
 //                               bool1 - indicates 2^16.
-std::vector<bool> * readPortContainers(Port *port, const std::string &path) {
+std::unique_ptr<std::vector<bool>> readPortContainers(Port *port, const std::string &path) {
     std::ifstream fin;
-    auto* results = new std::vector<bool>{false, false};
+    std::unique_ptr<std::vector<bool>> results = std::make_unique<std::vector<bool>>(2);
+    for(int i=0; i<2; i++)
+        results->at(i) = false;
     try{
         fin.open(path, std::ios::in);
         if(!fin.is_open()){
@@ -264,7 +269,7 @@ std::vector<bool> * readPortContainers(Port *port, const std::string &path) {
     fin.close();
     return results;
 }
-
+/*
 // return vector (bool0, bool1, bool2, bool3). bool0 - indicates 2^12.
 //                                             bool1 - indicates 2^13.
 //                                             bool2 - indicates 2^14.
@@ -358,7 +363,7 @@ std::vector<bool> * readPortContainersOld(Port *port, const std::string &path) {
     fin.close();
     return results;
 }
-
+*/
 int getWeightIfLegal(std::string weight){
     try{
         int _weight = stoi(weight);

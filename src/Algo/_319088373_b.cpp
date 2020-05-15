@@ -25,10 +25,9 @@ int _319088373_b::getInstructionsForCargo(const std::string& input_full_path_and
     std::remove(pathToDirChar);
     //create a port object from input file
     Port port;
-    std::vector<bool> * res  =readPortContainers(&port, input_full_path_and_file_name);
+    auto res  =readPortContainers(&port, input_full_path_and_file_name);
     if(res->at(0)){ rc = turnToTrueBit(rc, 14);}
     if(res->at(1)){ rc = turnToTrueBit(rc, 16);}
-    delete res;
     if(ship->lastStop()){
         if(port.hasContainers()){
             rc = turnToTrueBit(rc,17);
@@ -187,7 +186,7 @@ int _319088373_b::readShipPlan(const std::string &full_path_and_file_name) {
 
     // create the ShipPlanVector
     auto* blocks = new std::vector<std::vector<int>>(numLines-1);
-    auto* results = readShipPlanInFiles(*blocks, full_path_and_file_name, numFloors, length, width);
+    auto results = readShipPlanInFiles(*blocks, full_path_and_file_name, numFloors, length, width);
     if(results->at(1)){
         errorCode = turnToTrueBit(errorCode,3);
         fatalError = true;
@@ -211,7 +210,6 @@ int _319088373_b::readShipPlan(const std::string &full_path_and_file_name) {
 
     this->shipPlan = new ShipPlan(numFloors, length, width, *blocks);
     delete blocks;
-    delete results;
     createShip();
     return errorCode;
 }
@@ -220,7 +218,7 @@ int _319088373_b::readShipRoute(const std::string &full_path_and_file_name) {
     int errorCode = 0;
     bool fatalError = false;
     auto* ports = new std::vector<std::string>();
-    auto* results = readShipPorts(*ports, full_path_and_file_name);
+    auto results = readShipPorts(*ports, full_path_and_file_name);
     if(results->at(2)){
         errorCode = turnToTrueBit(errorCode,7);
         fatalError = true;
@@ -241,7 +239,6 @@ int _319088373_b::readShipRoute(const std::string &full_path_and_file_name) {
     this->shipRoute = new ShipRoute(ports);
 
     delete ports;
-    delete results;
     createShip();
     return errorCode;
 }

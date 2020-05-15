@@ -235,7 +235,7 @@ ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath){
 
     // create the ShipPlanVector
     auto* blocks = new std::vector<std::vector<int>>(numLines-1);
-    auto* results = readShipPlanInFiles(*blocks, shipPlanPath, numFloors, length, width);
+    auto results = readShipPlanInFiles(*blocks, shipPlanPath, numFloors, length, width);
     if(results->at(1)){
         errorCode = turnToTrueBit(errorCode,3);
         fatalError = true;
@@ -259,7 +259,6 @@ ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath){
 
     auto* shipPlan = new ShipPlan(numFloors, length, width, *blocks);
     delete blocks;
-    delete results;
 
     return shipPlan;
 }
@@ -267,7 +266,7 @@ ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath){
 ShipRoute* createShipRoute(int &errorCode, const std::string& shipRoutePath){
     bool fatalError = false;
     auto* ports = new std::vector<std::string>();
-    auto* results = readShipPorts(*ports, shipRoutePath);
+    auto results = readShipPorts(*ports, shipRoutePath);
     if(results->at(2)){
         errorCode = turnToTrueBit(errorCode,7);
         fatalError = true;
@@ -286,7 +285,6 @@ ShipRoute* createShipRoute(int &errorCode, const std::string& shipRoutePath){
         return nullptr;
     auto* shipRoute = new ShipRoute(ports);
     delete ports;
-    delete results;
     return shipRoute;
 }
 
@@ -393,8 +391,7 @@ bool handleNameOfFile (const std::string& fileName, std::string& portName, int &
 
 int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::string& instructionsPath, std::vector<std::string>& errorReason){
     Port port;
-    std::vector<bool> * res  = readPortContainers(&port, cargoDataPath);
-    delete res;
+    auto res  = readPortContainers(&port, cargoDataPath);
     std::vector<Container*> problematics;
     std::vector<bool> errors;
     port.fixPort(errors, problematics);

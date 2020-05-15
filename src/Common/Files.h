@@ -7,6 +7,7 @@
 #include <istream>
 #include <cstring>
 #include <dirent.h>
+#include <memory>
 #include <sys/stat.h>
 #include "Container.h"
 #include "Port.h"
@@ -23,14 +24,14 @@ class Files {
 // read the file and fill the data to the args.
 bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int &width, int &numLines);
 
-std::vector<bool> *readShipPlanInFiles(std::vector<std::vector<int>> &blocks, const std::string &path,
+std::unique_ptr<std::vector<bool>> readShipPlanInFiles(std::vector<std::vector<int>> &blocks, const std::string &path,
         int numFloors, int length, int width);
 
 bool isLegalPortName(std::string portName);
 
-std::vector<bool> * readPortContainers(Port *port, const std::string &path);
+std::unique_ptr<std::vector<bool>> readPortContainers(Port *port, const std::string &path);
 
-std::vector<bool> *readShipPorts(std::vector<std::string> &ports, const std::string &path);
+std::unique_ptr<std::vector<bool>> readShipPorts(std::vector<std::string> &ports, const std::string &path);
 
 int getWeightIfLegal(std::string weight);
 
