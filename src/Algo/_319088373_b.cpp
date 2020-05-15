@@ -185,7 +185,7 @@ int _319088373_b::readShipPlan(const std::string &full_path_and_file_name) {
     }
 
     // create the ShipPlanVector
-    auto* blocks = new std::vector<std::vector<int>>(numLines-1);
+    auto blocks = std::make_unique<std::vector<std::vector<int>>>(numLines-1);
     auto results = readShipPlanInFiles(*blocks, full_path_and_file_name, numFloors, length, width);
     if(results->at(1)){
         errorCode = turnToTrueBit(errorCode,3);
@@ -208,8 +208,7 @@ int _319088373_b::readShipPlan(const std::string &full_path_and_file_name) {
     if(fatalError)
         return errorCode;
 
-    this->shipPlan = new ShipPlan(numFloors, length, width, *blocks);
-    delete blocks;
+    this->shipPlan = new ShipPlan(numFloors, length, width, *(blocks.get()));
     createShip();
     return errorCode;
 }
@@ -217,7 +216,7 @@ int _319088373_b::readShipPlan(const std::string &full_path_and_file_name) {
 int _319088373_b::readShipRoute(const std::string &full_path_and_file_name) {
     int errorCode = 0;
     bool fatalError = false;
-    auto* ports = new std::vector<std::string>();
+    auto ports = std::make_unique<std::vector<std::string>>();
     auto results = readShipPorts(*ports, full_path_and_file_name);
     if(results->at(2)){
         errorCode = turnToTrueBit(errorCode,7);
@@ -236,9 +235,7 @@ int _319088373_b::readShipRoute(const std::string &full_path_and_file_name) {
     if(fatalError)
         return errorCode;
 
-    this->shipRoute = new ShipRoute(ports);
-
-    delete ports;
+    this->shipRoute = new ShipRoute(ports.get());
     createShip();
     return errorCode;
 }
