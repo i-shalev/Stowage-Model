@@ -1,6 +1,6 @@
 COMP = g++-8.3.0
 #put all your object files here
-OBJS = AlgorithmRegistration.o main.o 
+OBJS = AlgorithmRegistrar.o AlgorithmRegistration.o main.o
 COMMON_OBJS = WeightBalanceCalculator.o ShipRoute.o ShipPlan.o Ship.o Files.o  Crane.o Port.o Floor.o Container.o 
 
 #The executable filename DON'T CHANGE

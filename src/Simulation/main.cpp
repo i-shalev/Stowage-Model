@@ -1,21 +1,12 @@
 #include "main.h"
 #include <iostream>
-#include <dlfcn.h>
 #include <memory>
-
-struct DlCloser{
-    void operator()(void *dlhandle) const noexcept{
-        //std::cout << "Closing..." << std::endl;
-        //dlclose(dlhandle);
-        (void)dlhandle;
-        //std::cout << "Finished Closing..." << std::endl;
-    }
-};
 
 #define PATH_TO_EMPTY_FILE R"(.\empty.empty_file)"
 
 int main(int argc, char **argv){
     std::map<std::string, std::string> args;
+    std::cout << "1" << std::endl;
     if(createArgs(args, argc, argv)){
         std::vector<std::string> errors;
         errors.push_back("ERROR : travel_path not provided!");
@@ -23,6 +14,7 @@ int main(int argc, char **argv){
         writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
         return EXIT_FAILURE;
     }
+    std::cout << "2" << std::endl;
     runAllAlgo(args["-algorithm_path"], args["-travel_path"], args["-output"]);
     std::cout << "end" << std::endl;
     return EXIT_SUCCESS;
@@ -64,43 +56,38 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
     firstLine.push_back("Sum");
     firstLine.push_back("Num Errors");
     writeToSuccessFile(outputPath + "/simulation.results", &firstLine);
-    
+
     std::vector<std::string> vectorAlgoNames;
-    size_t lastLength = 0;
     auto algoNames = getFileNamesEndWith(algoPath, ".so");
     for(const auto& algoName:*algoNames) {
         std::string fullName = algoPath + "/" + algoName + ".so";
         char* fullNameChar = (char *)(malloc((fullName.size() + 1) * sizeof(char)));
         stringToCharStar(fullNameChar, fullName);
-        std::unique_ptr<void, DlCloser> handle(dlopen(fullNameChar, RTLD_LAZY));
-        if(!handle){
-          std::vector<std::string> errors;
-          errors.push_back("ERROR : can't load algorithm!");
-          writeErrorsToFile(outputPath + "/errors/" + algoName + ".errors", outputPath + "/errors/", &errors);
-          // The algo didn't opeded
-        } else {
-          if(lastLength == registrar.size()){
-            std::vector<std::string> errors;
-            errors.push_back("ERROR : the algorithm didn't registered!");
-            writeErrorsToFile(outputPath + "/errors/" + algoName + ".errors", outputPath + "/errors/", &errors);
-          } else {
-            lastLength = registrar.size();
-            vectorAlgoNames.push_back(algoName);
-          }
-        }
-    }
 
-    auto algorithms = registrar.getAlgorithms();
+        std::string error;
+        if(registrar.loadAlgorithmFromFile(fullNameChar, error)){
+            vectorAlgoNames.push_back(algoName);
+        } else {
+            std::vector<std::string> errors;
+            errors.push_back(error);
+            writeErrorsToFile(outputPath + "/errors/" + algoName + ".errors", outputPath + "/errors/", &errors);
+        }
+        std::cout << algoName << std::endl;
+    }
+    std::cout << 1 << std::endl;
     int i = 0;
-    for(auto& algorithm: algorithms) {
-        runAlgoForAllTravels(*algorithm, travelPath, outputPath, vectorAlgoNames.at(i), dirs.get());
+    for (auto algo_iter = registrar.begin(); algo_iter != registrar.end(); ++algo_iter) {
+        std::cout << 2 << std::endl;
+        auto algo = (*algo_iter)();
+        std::cout << 3 << std::endl;
+        runAlgoForAllTravels(*algo, travelPath, outputPath, vectorAlgoNames.at(i), dirs.get());
         i++;
     }
-
 }
 
 void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath, const std::string &outputPath,
                           const std::string &algoName, std::vector<std::string>* dirs) {
+    std::cout << "start " << algoName << std::endl;
     std::vector<std::string> results;
     int sum = 0, numErrors = 0, tmp;
     results.push_back(algoName);
@@ -115,6 +102,7 @@ void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath
     results.push_back(std::to_string(sum));
     results.push_back(std::to_string(numErrors));
     writeToSuccessFile(outputPath + "/simulation.results", &results);
+    std::cout << "finished " << algoName << std::endl;
 }
 
 int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
