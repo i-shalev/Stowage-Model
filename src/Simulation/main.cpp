@@ -1,19 +1,28 @@
 #include "main.h"
 #include <iostream>
-#include <memory>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #define PATH_TO_EMPTY_FILE R"(.\empty.empty_file)"
 
 int main(int argc, char **argv){
     std::map<std::string, std::string> args;
-    if(createArgs(args, argc, argv)){
-        std::vector<std::string> errors;
+    std::vector<std::string> errors;
+    bool errorInCreateArgs = createArgs(args, argc, argv);
+    int res = folderIsExistOrCanBeBuilt(args["-output"]);
+    if(res == 1){
+        errors.push_back("Warning : output path that provided is non existent folder but we successfully create it.");
+    } else if (res == 2) {
+        errors.push_back("Warning : output path that provided is not a valid path, the output files will be under the folder you run the program.");
+        args["-output"] = "./";
+    }
+    if(errorInCreateArgs){
         errors.push_back("ERROR : travel_path not provided!");
-        //std::cout << "ERROR : travel_path not provided!" << std::endl;
         writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
         return EXIT_FAILURE;
     }
     runAllAlgo(args["-algorithm_path"], args["-travel_path"], args["-output"]);
+    writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
     return EXIT_SUCCESS;
 }
 
@@ -492,4 +501,38 @@ bool containsFatalError(int errorCode){
 int turnToTrueBit(int num, int bit){
     int mask = 1 << bit;
     return num | mask;
+}
+
+// 0 the path is dir
+// 1 the path is non existent dir but we create that
+// 2 the path is non existent dir and we didn't create that or not a dir
+int folderIsExistOrCanBeBuilt(const std::string& path){
+    char* pathChar = (char *)(malloc((path.size() + 1) * sizeof(char)));
+    stringToCharStar(pathChar, path);
+
+    struct stat info;
+
+    if( stat( pathChar, &info ) != 0 ){
+        char* cmd = (char *)(malloc((path.size() + 1 + 10) * sizeof(char)));
+        strcpy(cmd, "mkdir -p ");
+        strcat(cmd,pathChar);
+        system(cmd);
+        delete cmd;
+        if(isFolderExist(pathChar))
+            return 1;
+        else
+            return 2;
+    }
+    else if( info.st_mode & S_IFDIR )
+        return 0;
+    else
+        return 2;
+}
+
+bool isFolderExist(char* pathChar){
+    struct stat info;
+
+    if( stat( pathChar, &info ) != 0 )
+        return false;
+    else return (info.st_mode & S_IFDIR) != 0;
 }
