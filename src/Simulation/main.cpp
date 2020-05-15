@@ -99,7 +99,7 @@ void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath
 int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
                      const std::string &algoName, const std::string &travelName) {
     std::cout << "start" << algoName << " - " << travelName << pathToDir << std::endl;
-    auto* errors = new std::vector<std::string>();
+    auto errors = std::make_unique<std::vector<std::string>>();
     bool fatalError = false;
     std::string shipPlanPath, shipRoutePath;
     getShipPlanAndRoutePaths(pathToDir, shipPlanPath, shipRoutePath);
@@ -112,8 +112,7 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
         errors->push_back("ERROR : no shipRoute file!");
     }
     if(fatalError){
-        writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/", errors);
-        delete errors;
+        writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/", errors.get());
         return -1;
     }
 
@@ -127,8 +126,7 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
         errors->push_back(errorCodeStr);
         if(containsFatalError(errorCode)){
             writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/",
-                              errors);
-            delete errors;
+                              errors.get());
             delete shipPlan;
             return -1;
         }
@@ -145,8 +143,7 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
         errors->push_back(errorCodeStr);
         if(containsFatalError(errorCode)){
             writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/",
-                              errors);
-            delete errors;
+                              errors.get());
             delete shipPlan;
             delete shipRoute;
             return -1;
@@ -156,7 +153,7 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
     Ship* ship = new Ship(shipRoute, shipPlan);
     auto* mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());
     auto* mapPortFullNameToCargoPath = createMapPortFullNameToCargoPath(pathToDir, mapPortVisits,
-            shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1), errors);
+            shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1), errors.get());
 
     int numOp = 0;
     while(!ship->finishRoute()){
@@ -182,10 +179,9 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
         errors->push_back("The ship is not empty after finish all the instructions from the algorithm.");
     }
 
-    writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/", errors);
+    writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/", errors.get());
     delete(mapPortVisits);
     delete(ship);
-    delete(errors);
     std::cout << "finished:" << algoName << " - " << travelName << pathToDir << std::endl;
     return numOp;
 }
@@ -209,7 +205,7 @@ ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath){
     }
 
     // create the ShipPlanVector
-    auto* blocks = new std::vector<std::vector<int>>(numLines-1);
+    auto blocks = std::make_unique<std::vector<std::vector<int>>>(numLines-1);
     auto results = readShipPlanInFiles(*blocks, shipPlanPath, numFloors, length, width);
     if(results->at(1)){
         errorCode = turnToTrueBit(errorCode,3);
@@ -232,15 +228,14 @@ ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath){
     if(fatalError)
         return nullptr;
 
-    auto* shipPlan = new ShipPlan(numFloors, length, width, *blocks);
-    delete blocks;
+    auto* shipPlan = new ShipPlan(numFloors, length, width, *(blocks.get()));
 
     return shipPlan;
 }
 
 ShipRoute* createShipRoute(int &errorCode, const std::string& shipRoutePath){
     bool fatalError = false;
-    auto* ports = new std::vector<std::string>();
+    auto ports = std::make_unique<std::vector<std::string>>();
     auto results = readShipPorts(*ports, shipRoutePath);
     if(results->at(2)){
         errorCode = turnToTrueBit(errorCode,7);
@@ -258,8 +253,7 @@ ShipRoute* createShipRoute(int &errorCode, const std::string& shipRoutePath){
     }
     if(fatalError)
         return nullptr;
-    auto* shipRoute = new ShipRoute(ports);
-    delete ports;
+    auto* shipRoute = new ShipRoute(ports.get());
     return shipRoute;
 }
 
