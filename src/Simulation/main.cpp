@@ -167,7 +167,8 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
     int numOp = 0;
     while(!ship->finishRoute()){
         //std::cout << ship->getCurrentDestinationWithIndex() << std::endl;
-        std::string pathToInstructions = pathToDir + "/" + ship->getCurrentDestinationWithIndex() + ".instructions";
+        std::string pathToInstructions = outputPath + "/" + algoName + "_" + travelName + "_crane_instructions" + "/" + ship->getCurrentDestinationWithIndex() + ".instructions";
+        createFolder(outputPath + "/" + algoName + "_" + travelName + "_crane_instructions");
         int instErrorCode = algo.getInstructionsForCargo(mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);
         if(instErrorCode > 0){
             std::string errorCodeStr;
@@ -515,11 +516,7 @@ int folderIsExistOrCanBeBuilt(const std::string& path){
     struct stat info;
 
     if( stat( pathChar, &info ) != 0 ){
-        char* cmd = (char *)(malloc((path.size() + 1 + 10) * sizeof(char)));
-        strcpy(cmd, "mkdir -p ");
-        strcat(cmd,pathChar);
-        system(cmd);
-        delete cmd;
+        createFolder(path);
         if(isFolderExist(pathChar))
             return 1;
         else
@@ -537,4 +534,15 @@ bool isFolderExist(char* pathChar){
     if( stat( pathChar, &info ) != 0 )
         return false;
     else return (info.st_mode & S_IFDIR) != 0;
+}
+
+void createFolder(const std::string& path){
+    char* pathChar = (char *)(malloc((path.size() + 1) * sizeof(char)));
+    stringToCharStar(pathChar, path);
+
+    char* cmd = (char *)(malloc((path.size() + 1 + 10) * sizeof(char)));
+    strcpy(cmd, "mkdir -p ");
+    strcat(cmd,pathChar);
+    system(cmd);
+    delete cmd;
 }

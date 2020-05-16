@@ -44,4 +44,5 @@ bool containsFatalError(int errorCode);
 int getBitInNumber(int num, int bit);
 int folderIsExistOrCanBeBuilt(const std::string& path);
 bool isFolderExist(char* pathChar);
+void createFolder(const std::string& path);
 #endif //STOWAGE_MODEL_MAIN_H
