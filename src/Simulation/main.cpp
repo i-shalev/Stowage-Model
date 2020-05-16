@@ -11,25 +11,25 @@ int main(int argc, char **argv){
     bool errorInCreateArgs;
     if(createArgs(args, argc, argv)){
         errorInCreateArgs = true;
-        errors.push_back("ERROR : travel_path not provided!");
+        errors.push_back("ERROR: travel_path not provided!");
     }
     int res = folderIsExistOrCanBeBuilt(args["-output"]);
     if(res == 1){
-        errors.push_back("Warning : output path that provided is non existent folder but we successfully create it.");
+        errors.push_back("Warning: output path that provided is non existent folder but we successfully create it.");
     } else if (res == 2) {
-        errors.push_back("Warning : output path that provided is not a valid path, the output files will be under the folder you run the program.");
+        errors.push_back("Warning: output path that provided is not a valid path, the output files will be under the folder you run the program.");
         args["-output"] = "./";
     }
     if(!errorInCreateArgs and !isFolderExist(args["-travel_path"])){
         errorInCreateArgs = true;
-        errors.push_back("ERROR : travel_path that provided is not a valid path.");
+        errors.push_back("ERROR: travel_path that provided is not a valid path.");
     }
     if(errorInCreateArgs){
         writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
         return EXIT_FAILURE;
     }
     if(!isFolderExist(args["-algorithm_path"])){
-        errors.push_back("Warning : algorithm_path that provided is not a valid path. so no algorithms runs.");
+        errors.push_back("Warning: algorithm_path that provided is not a valid path. so no algorithms runs.");
     } else {
         runAllAlgo(args["-algorithm_path"], args["-travel_path"], args["-output"]);
     }
@@ -128,11 +128,11 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
     int result = getShipPlanAndRoutePaths(pathToDir, shipPlanPath, shipRoutePath);
     if(shipPlanPath.empty()){
         fatalError = true;
-        errors->push_back("ERROR : no shipPlan file!");
+        errors->push_back("ERROR: no shipPlan file!");
     }
     if(shipRoutePath.empty()){
         fatalError = true;
-        errors->push_back("ERROR : no shipRoute file!");
+        errors->push_back("ERROR: no shipRoute file!");
     }
     if(fatalError){
         writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/", errors.get());
@@ -141,9 +141,9 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
 
     if(result != 0){
         if(result == 1 or result == 3)
-            errors->push_back("Warning : there are more than 1 ship_plan file!");
+            errors->push_back("Warning: there are more than 1 ship_plan file!");
         if(result > 1)
-            errors->push_back("Warning : there are more than 1 route file!");
+            errors->push_back("Warning: there are more than 1 route file!");
     }
 
     int res = 0;
