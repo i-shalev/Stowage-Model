@@ -107,7 +107,7 @@ void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath
 
 int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
                      const std::string &algoName, const std::string &travelName) {
-    std::cout << "start" << algoName << " - " << travelName << pathToDir << std::endl;
+//    std::cout << "start" << algoName << " - " << travelName << pathToDir << std::endl;
     auto errors = std::make_unique<std::vector<std::string>>();
     bool fatalError = false;
     std::string shipPlanPath, shipRoutePath;
@@ -198,7 +198,7 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
     writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/", errors.get());
     delete(mapPortVisits);
     delete(ship);
-    std::cout << "finished:" << algoName << " - " << travelName << pathToDir << std::endl;
+//    std::cout << "finished:" << algoName << " - " << travelName << pathToDir << std::endl;
     return numOp;
 }
 
@@ -319,11 +319,11 @@ void addPortsWithFileToMap(const std::string &pathToDir, std::map<std::string, i
                 mapPortFullNameToCargoPath->insert({name, fullname});
             } else {
                 errors->push_back("Warning: the file " + name + ".cargo_data is not necessary");
-                std::cout << "Warning: the file " << name << ".cargo_data is not necessary" << std::endl;
+//                std::cout << "Warning: the file " << name << ".cargo_data is not necessary" << std::endl;
             }
         } else {
             errors->push_back("Warning: the file " + name + ".cargo_data is not in the right format");
-            std::cout << "Warning: the file " << name << ".cargo_data is not in the right format" << std::endl;
+//            std::cout << "Warning: the file " << name << ".cargo_data is not in the right format" << std::endl;
         }
     }
     delete pathToDirChar;
@@ -344,7 +344,7 @@ void addPortsWithNoFileToMap(std::map<std::string, int> *mapPortVisits,
 
             if(!(lastPort == elem.first and i == elem.second - 1)){
                 errors->push_back("Warning: the file " + elem.first + "_" + std::to_string(i) + ".cargo_data is missing.");
-                std::cout << "Warning: the file " << elem.first + "_" + std::to_string(i) << ".cargo_data is missing." << std::endl;
+//                std::cout << "Warning: the file " << elem.first + "_" + std::to_string(i) << ".cargo_data is missing." << std::endl;
             } else {
                 // the last port - dont need to do anything for now
             }
