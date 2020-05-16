@@ -20,9 +20,9 @@ int main(int argc, char **argv){
         errors.push_back("Warning : output path that provided is not a valid path, the output files will be under the folder you run the program.");
         args["-output"] = "./";
     }
-    if(!isFolderExist(args["-travel_path"])){
+    if(!errorInCreateArgs and !isFolderExist(args["-travel_path"])){
         errorInCreateArgs = true;
-        errors.push_back("Error : travel_path that provided is not a valid path.");
+        errors.push_back("ERROR : travel_path that provided is not a valid path.");
     }
     if(errorInCreateArgs){
         writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
