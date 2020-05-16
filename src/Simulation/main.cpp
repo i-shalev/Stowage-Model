@@ -8,7 +8,11 @@
 int main(int argc, char **argv){
     std::map<std::string, std::string> args;
     std::vector<std::string> errors;
-    bool errorInCreateArgs = createArgs(args, argc, argv);
+    bool errorInCreateArgs;
+    if(createArgs(args, argc, argv)){
+        errorInCreateArgs = true;
+        errors.push_back("ERROR : travel_path not provided!");
+    }
     int res = folderIsExistOrCanBeBuilt(args["-output"]);
     if(res == 1){
         errors.push_back("Warning : output path that provided is non existent folder but we successfully create it.");
@@ -16,12 +20,19 @@ int main(int argc, char **argv){
         errors.push_back("Warning : output path that provided is not a valid path, the output files will be under the folder you run the program.");
         args["-output"] = "./";
     }
+    if(!isFolderExist(args["-travel_path"])){
+        errorInCreateArgs = true;
+        errors.push_back("Error : travel_path that provided is not a valid path.");
+    }
     if(errorInCreateArgs){
-        errors.push_back("ERROR : travel_path not provided!");
         writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
         return EXIT_FAILURE;
     }
-    runAllAlgo(args["-algorithm_path"], args["-travel_path"], args["-output"]);
+    if(!isFolderExist(args["-algorithm_path"])){
+        errors.push_back("Warning : algorithm_path that provided is not a valid path. so no algorithms runs.");
+    } else {
+        runAllAlgo(args["-algorithm_path"], args["-travel_path"], args["-output"]);
+    }
     writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
     return EXIT_SUCCESS;
 }
@@ -50,6 +61,10 @@ void printArgs(std::map<std::string, std::string>& args){
 }
 
 void runAllAlgo(const std::string& algoPath, const std::string &travelPath, const std::string &outputPath){
+    auto algoNames = getFileNamesEndWith(algoPath, ".so");
+    if(algoNames->size() == 0) {
+        std::cout << "There was no .so files in the algorithm_path" << std::endl;
+    }
     auto& registrar = AlgorithmRegistrar::getInstance();
 
     emptyFile(PATH_TO_EMPTY_FILE);
@@ -64,7 +79,6 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
     writeToSuccessFile(outputPath + "/simulation.results", &firstLine);
 
     std::vector<std::string> vectorAlgoNames;
-    auto algoNames = getFileNamesEndWith(algoPath, ".so");
     for(const auto& algoName:*algoNames) {
         std::string fullName = algoPath + "/" + algoName + ".so";
         char* fullNameChar = (char *)(malloc((fullName.size() + 1) * sizeof(char)));
@@ -517,7 +531,7 @@ int folderIsExistOrCanBeBuilt(const std::string& path){
 
     if( stat( pathChar, &info ) != 0 ){
         createFolder(path);
-        if(isFolderExist(pathChar))
+        if(isFolderExist(path))
             return 1;
         else
             return 2;
@@ -528,7 +542,9 @@ int folderIsExistOrCanBeBuilt(const std::string& path){
         return 2;
 }
 
-bool isFolderExist(char* pathChar){
+bool isFolderExist(const std::string& path){
+    char* pathChar = (char *)(malloc((path.size() + 1) * sizeof(char)));
+    stringToCharStar(pathChar, path);
     struct stat info;
 
     if( stat( pathChar, &info ) != 0 )

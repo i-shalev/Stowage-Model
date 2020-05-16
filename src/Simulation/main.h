@@ -43,6 +43,6 @@ void getStringOfErrors(int num, std::string& result);
 bool containsFatalError(int errorCode);
 int getBitInNumber(int num, int bit);
 int folderIsExistOrCanBeBuilt(const std::string& path);
-bool isFolderExist(char* pathChar);
+bool isFolderExist(const std::string& path);
 void createFolder(const std::string& path);
 #endif //STOWAGE_MODEL_MAIN_H
