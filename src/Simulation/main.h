@@ -26,7 +26,7 @@ void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath
 int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
                      const std::string &algoName, const std::string &travelName);
 int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::string& instructionsPath, std::vector<std::string>& errorReason);
-void getShipPlanAndRoutePaths(const std::string& travelPath, std::string& shipPlanPath, std::string& shipRoutePath);
+int getShipPlanAndRoutePaths(const std::string& pathToDir, std::string& shipPlanPath, std::string& shipRoutePath);
 ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath);
 ShipRoute* createShipRoute(int &errorCode, const std::string& shipRoutePath);
 std::map<std::string, int>* createMapOfPortAndNumberOfVisits(std::vector<std::string>* portList);

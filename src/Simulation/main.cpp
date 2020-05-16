@@ -125,7 +125,7 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
     auto errors = std::make_unique<std::vector<std::string>>();
     bool fatalError = false;
     std::string shipPlanPath, shipRoutePath;
-    getShipPlanAndRoutePaths(pathToDir, shipPlanPath, shipRoutePath);
+    int result = getShipPlanAndRoutePaths(pathToDir, shipPlanPath, shipRoutePath);
     if(shipPlanPath.empty()){
         fatalError = true;
         errors->push_back("ERROR : no shipPlan file!");
@@ -137,6 +137,13 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
     if(fatalError){
         writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/", errors.get());
         return -1;
+    }
+
+    if(result != 0){
+        if(result == 1 or result == 3)
+            errors->push_back("Warning : there are more than 1 ship_plan file!");
+        if(result > 1)
+            errors->push_back("Warning : there are more than 1 route file!");
     }
 
     int res = 0;
@@ -217,14 +224,22 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
     return numOp;
 }
 
-void getShipPlanAndRoutePaths(const std::string& pathToDir, std::string& shipPlanPath, std::string& shipRoutePath){
+int getShipPlanAndRoutePaths(const std::string& pathToDir, std::string& shipPlanPath, std::string& shipRoutePath){
+    int num = 0;
     auto res = getFileNamesEndWith(pathToDir, ".ship_plan");
-    if(!res->empty())
+    if(!res->empty()){
         shipPlanPath = pathToDir + "/" + res->at(0) + ".ship_plan";
+        if(res->size() > 1)
+            num += 1;
+    }
 
     res = getFileNamesEndWith(pathToDir, ".route");
-    if(!res->empty())
+    if(!res->empty()) {
         shipRoutePath = pathToDir + "/" + res->at(0) + ".route";
+        if(res->size() > 1)
+            num += 2;
+    }
+    return num;
 }
 
 ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath){
