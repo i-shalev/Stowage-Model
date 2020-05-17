@@ -158,5 +158,5 @@ void Ship::addOneVisitToMap(){
 
 int Ship::getIndexOfPort() const{
     auto res = mapPortNameToNumberOfVisitsUntilNow->find(this->route->getHead());
-    return res->second;
+    return res->second + 1;
 }

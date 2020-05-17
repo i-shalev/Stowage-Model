@@ -342,7 +342,7 @@ void addPortsWithFileToMap(const std::string &pathToDir, std::map<std::string, i
     for (const auto& name: namesOfFilesEndsWithCargoData) {
         if (handleNameOfFile(name, portName, indexNumber)) {
             auto res = mapPortVisits->find(portName);
-            if(res !=  mapPortVisits->end() and res->second > indexNumber) {
+            if(res !=  mapPortVisits->end() and res->second >= indexNumber and indexNumber > 0) {
                 fullname =  pathToDir + '/';
                 fullname += name;
                 fullname += R"(.cargo_data)";
@@ -364,7 +364,7 @@ void addPortsWithNoFileToMap(std::map<std::string, int> *mapPortVisits,
                              const std::string &lastPort, std::vector<std::string> *errors) {
     for(const auto& elem : *mapPortVisits)
     {
-        for(int i = 0; i < elem.second; i++)
+        for(int i = 1; i <= elem.second; i++)
         {
             std::string port_index = elem.first + "_" + std::to_string(i);
             auto res = mapPortFullNameToCargoPath->find(port_index);
@@ -372,7 +372,7 @@ void addPortsWithNoFileToMap(std::map<std::string, int> *mapPortVisits,
                 continue;
             }
 
-            if(!(lastPort == elem.first and i == elem.second - 1)){
+            if(!(lastPort == elem.first and i == elem.second)){
                 errors->push_back("Warning: the file " + elem.first + "_" + std::to_string(i) + ".cargo_data is missing.");
 //                std::cout << "Warning: the file " << elem.first + "_" + std::to_string(i) << ".cargo_data is missing." << std::endl;
             } else {
