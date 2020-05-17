@@ -8,16 +8,16 @@ EXEC = simulator
 COMMON = ../Common/
 SIMULATOR = ./
 CPP_COMP_FLAG = -std=c++2a -Wall -Wextra -Werror -pedantic-errors -DNDEBUG
-CPP_LINK_FLAG = -ldl -export-dynamic #(-rdynamic)
+CPP_LINK_FLAG = -ldl -export-dynamic -Wl,--whole-archive -lstdc++fs -Wl,--no-whole-archive#(-rdynamic)
 
 $(EXEC): $(COMMON_OBJS) $(OBJS)
-	$(COMP) $(COMMON_OBJS) $(OBJS) $(CPP_LINK_FLAG) -o $@
+	$(COMP) $(COMMON_OBJS) $(OBJS) $(CPP_LINK_FLAG) -o $@ -lstdc++fs
 #a rule for building a simple c++ source file
 #use g++ -MM main.cpp to see dependencies
 $(COMMON_OBJS):
-	$(COMP) $(CPP_COMP_FLAG) -c $(COMMON)$*.cpp
+	$(COMP) $(CPP_COMP_FLAG) -c $(COMMON)/$*.cpp -o $@
 $(OBJS):
-	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp
+	$(COMP) $(CPP_COMP_FLAG) -c $*.cpp -o $@
 
 
 clean:
