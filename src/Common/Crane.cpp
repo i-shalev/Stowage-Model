@@ -90,11 +90,11 @@ int Crane::executeOperationList(const std::string& path, std::vector<std::string
     int level, i, j;
     while(getline(fin, line)) {
         if( line.at(0) == 'U'){
-            id =  line.substr(2,11) ;
-            level = std::stoi(line.substr(14,line.length()-1),&sz);
-            last_index = 14 + sz + 1;
+            id =  line.substr(3,11) ;
+            level = std::stoi(line.substr(16,line.length()-1),&sz);
+            last_index = 16 + sz + 2;
             i =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
-            last_index = last_index + sz + 1;
+            last_index = last_index + sz + 2;
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             int rc = this->Unload(id,level,i,j);
             if( rc!= SUCCESS){
@@ -118,11 +118,11 @@ int Crane::executeOperationList(const std::string& path, std::vector<std::string
             price++;
         }
         else if( line.at(0) == 'L'){
-            id =  line.substr(2,11) ;
-            level = std::stoi(line.substr(14,line.length()-1),&sz);
-            last_index = 14 + sz + 1;
+            id =  line.substr(3,11) ;
+            level = std::stoi(line.substr(16,line.length()-1),&sz);
+            last_index = 16 + sz + 2;
             i =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
-            last_index = last_index + sz + 1;
+            last_index = last_index + sz + 2;
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             int rc = this->Load(id,level,i,j);
             if(rc != SUCCESS){
@@ -149,17 +149,17 @@ int Crane::executeOperationList(const std::string& path, std::vector<std::string
             price++;
         }
         else if( line.at(0) == 'M'){
-            id =  line.substr(2,11) ;
-            level = std::stoi(line.substr(14,line.length()-1),&sz);
-            last_index = 14 + sz + 1;
+            id =  line.substr(3,11) ;
+            level = std::stoi(line.substr(16,line.length()-1),&sz);
+            last_index = 16 + sz + 2;
             i =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
-            last_index = last_index + sz + 1;
+            last_index = last_index + sz + 2;
             j =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
-            last_index = last_index + sz + 1;
+            last_index = last_index + sz + 2;
             int toLevel =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
-            last_index = last_index + sz + 1;
+            last_index = last_index + sz + 2;
             int toI =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
-            last_index = last_index + sz + 1;
+            last_index = last_index + sz + 2;
             int toJ =  std::stoi(line.substr(last_index,line.length()-1),&sz) ;
             int rc = this->Move(id,level,i,j, toLevel, toI, toJ);
             if(rc != SUCCESS){
@@ -193,7 +193,7 @@ int Crane::executeOperationList(const std::string& path, std::vector<std::string
             price++;
         }
         else if( line.at(0) == 'R'){
-            id =  line.substr(2,11);
+            id =  line.substr(3,11);
         }
         else{
             errors.emplace_back("wrong file format");

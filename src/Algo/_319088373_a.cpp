@@ -51,14 +51,14 @@ int _319088373_a::getInstructionsForCargo(const std::string& input_full_path_and
     fs.open(output_full_path_and_file_name, std::ios::out | std::ios::app);
 
     for(auto& cont : problematics){
-        fs << "R " << cont->getId() << std::endl;
+        fs << "R, " << cont->getId() << std::endl;
         delete cont;
     }
     std::vector<Container*> conts;
     port.getVectorOfContainers(conts);
     for(auto& cont : conts){
         if(ship->hasContainer(cont->getId())) {
-            fs << "R " << cont->getId() << std::endl;
+            fs << "R, " << cont->getId() << std::endl;
             rc = turnToTrueBit(rc, 11);
             port.removeContainer(cont->getId());
             delete cont;
@@ -89,7 +89,7 @@ int _319088373_a::getInstructionsForCargo(const std::string& input_full_path_and
                 if(calc->tryOperation('U', ship->getPlan().getFloor(level)->getContainerAtPosition(i, j)->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){
 //                    std::cout <<"unbalance..." << std::endl;
                 }
-                fs << "U "<< ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId() << " " << level << " " << i << " " << j <<std::endl;
+                fs << "U, "<< ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId() << ", " << level << ", " << i << ", " << j <<std::endl;
                 if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()!=ship->getCurrentDestination()){
                     temporaryUnloaded.push_back(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j));
                 }
@@ -102,7 +102,7 @@ int _319088373_a::getInstructionsForCargo(const std::string& input_full_path_and
                 if(calc->tryOperation('L', temporaryUnloaded.back()->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){
 //                    std::cout <<"unbalance..." << std::endl;
                 }
-                fs << "L "<< temporaryUnloaded.back()->getId() << " " << loadBackLevel << " " << i << " " << j <<std::endl;
+                fs << "L, "<< temporaryUnloaded.back()->getId() << ", " << loadBackLevel << ", " << i << ", " << j <<std::endl;
                 loadBackLevel++;
                 temporaryUnloaded.pop_back();
             }
@@ -121,10 +121,10 @@ int _319088373_a::getInstructionsForCargo(const std::string& input_full_path_and
                     if (calc->tryOperation('L', toLoad.front()->getWeight(),i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED) {
 //                        std::cout << "unbalance..." << std::endl;
                     }
-                    fs << "L " << toLoad.front()->getId() << " " << level << " " << i << " " << j << std::endl;
+                    fs << "L, " << toLoad.front()->getId() << ", " << level << ", " << i << ", " << j << std::endl;
                 }
                 else{
-                    fs << "R " << toLoad.front()->getId() << std::endl;
+                    fs << "R, " << toLoad.front()->getId() << std::endl;
                     level--;
                 }
                 toLoad.erase(toLoad.begin());
@@ -135,7 +135,7 @@ int _319088373_a::getInstructionsForCargo(const std::string& input_full_path_and
         }
     }
     while(!toLoad.empty()) {
-        fs << "R " << toLoad.back()->getId() << std::endl;
+        fs << "R, " << toLoad.back()->getId() << std::endl;
         toLoad.pop_back();
         rc = turnToTrueBit(rc, 18);
     }
