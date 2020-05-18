@@ -1,4 +1,5 @@
 #include "main.h"
+#include "../common/WeightBalanceCalculator.h"
 #include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -179,6 +180,8 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
             return -1;
         }
     }
+    WeightBalanceCalculator wb;
+    algo.setWeightBalanceCalculator(wb);
 
     Ship* ship = new Ship(shipRoute, shipPlan);
     auto* mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());

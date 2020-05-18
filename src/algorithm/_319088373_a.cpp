@@ -188,7 +188,7 @@ int _319088373_a::readShipRoute(const std::string &full_path_and_file_name) {
 }
 
 void _319088373_a::createShip() {
-    if(this->shipPlan != nullptr and this->shipRoute != nullptr){
+    if(this->shipPlan != nullptr and this->shipRoute != nullptr and this->calc != nullptr){
         ship = new Ship(shipRoute, shipPlan);
     }
 }
@@ -201,8 +201,13 @@ void _319088373_a::printShipRoute() {
     this->shipRoute->printList();
 }
 
+int _319088373_a::setWeightBalanceCalculator(WeightBalanceCalculator& calculator){
+    this->calc = &calculator;
+    createShip();
+    return SUCCESS;
+}
+
 int turnToTrueBit(int num, int bit){
     int mask = 1 << bit;
     return num | mask;
 }
-

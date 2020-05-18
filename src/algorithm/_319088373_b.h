@@ -26,7 +26,7 @@ public:
     _319088373_b();
     ~_319088373_b(){delete ship;}
     int getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) override ;
-    int setWeightBalanceCalculator(WeightBalanceCalculator& calculator) override { this->calc = &calculator; return 0;}
+    int setWeightBalanceCalculator(WeightBalanceCalculator& calculator) override;
     int readShipPlan(const std::string& full_path_and_file_name) override;
     int readShipRoute(const std::string& full_path_and_file_name) override;
     void printShipPlan();

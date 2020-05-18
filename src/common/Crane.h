@@ -6,6 +6,7 @@
 #define STOWAGE_MODEL_CRANE_H
 
 #include "Ship.h"
+#include "Files.h"
 #include <list>
 #include <fstream>
 #include <set>

@@ -53,5 +53,6 @@ void writeToSuccessFile(const std::string &filename, const std::vector<std::stri
 void emptyFile(const std::string& filename);
 std::unique_ptr<std::vector<std::string>> getDirsNamesFromRootDir(const std::string &pathToDir);
 std::unique_ptr<std::vector<std::string>> getFileNamesEndWith(const std::string &pathToDir, const std::string &endsWith);
+void getArgsFromInstruction(std::vector<std::string>& vec, std::string line);
 
 #endif //STOWAGE_MODEL_FILES_H

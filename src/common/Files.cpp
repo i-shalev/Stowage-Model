@@ -137,14 +137,12 @@ std::unique_ptr<std::vector<bool>> readShipPlanInFiles(std::vector<std::vector<i
                     blocks.at(i - 1).push_back(x1);
                     blocks.at(i - 1).push_back(x2);
                 } else {
-                    // ToDo replace that with i-- (i believe it will work just do that after all work)
                     blocks.at(i - 1).push_back(-1);
                     blocks.at(i - 1).push_back(-1);
                     blocks.at(i - 1).push_back(-1);
                 }
             } else {
                 results->at(0) = true;
-                // ToDo replace that with i-- (i believe it will work just do that after all work)
                 blocks.at(i - 1).push_back(-1);
                 blocks.at(i - 1).push_back(-1);
                 blocks.at(i - 1).push_back(-1);
@@ -493,4 +491,12 @@ std::unique_ptr<std::vector<std::string>> getFileNamesEndWith(const std::string 
     delete path;
     closedir(dir);
     return res;
+}
+
+void getArgsFromInstruction(std::vector<std::string>& vec, std::string line){
+    std::string word;
+    std::stringstream s(line);
+    while (getline(s, word, ',')) {
+        vec.push_back(removeLeadingAndTrailingWhitespaces(word));
+    }
 }
