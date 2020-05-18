@@ -29,7 +29,7 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
 int getShipPlanAndRoutePaths(const std::string& pathToDir, std::string& shipPlanPath, std::string& shipRoutePath);
 ShipPlan* createShipPlan(int &errorCode, const std::string& shipPlanPath);
 ShipRoute* createShipRoute(int &errorCode, const std::string& shipRoutePath);
-std::map<std::string, int>* createMapOfPortAndNumberOfVisits(std::vector<std::string>* portList);
+std::unique_ptr<std::map<std::string, int>>  createMapOfPortAndNumberOfVisits(std::vector<std::string>* portList);
 std::unique_ptr<std::map<std::string, std::string>> createMapPortFullNameToCargoPath(const std::string &pathToDir,
         std::map<std::string, int> *mapPortVisits, const std::string &lastPort, std::vector<std::string>* errors);
 bool handleNameOfFile (const std::string& fileName, std::string& portName, int & indexNumber);

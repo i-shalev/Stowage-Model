@@ -184,8 +184,8 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
     algo.setWeightBalanceCalculator(wb);
 
     Ship* ship = new Ship(shipRoute, shipPlan);
-    auto* mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());
-    auto mapPortFullNameToCargoPath = createMapPortFullNameToCargoPath(pathToDir, mapPortVisits,
+    auto mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());
+    auto mapPortFullNameToCargoPath = createMapPortFullNameToCargoPath(pathToDir, mapPortVisits.get(),
             shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1), errors.get());
 
     int numOp = 0;
@@ -219,7 +219,6 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
     }
 
     writeErrorsToFile(outputPath + "/errors/" + algoName + "_" + travelName + ".errors", outputPath + "/errors/", errors.get());
-    delete(mapPortVisits);
     delete(ship);
 //    std::cout << "finished:" << algoName << " - " << travelName << pathToDir << std::endl;
     return numOp;
@@ -304,8 +303,8 @@ ShipRoute* createShipRoute(int &errorCode, const std::string& shipRoutePath){
     return shipRoute;
 }
 
-std::map<std::string, int>* createMapOfPortAndNumberOfVisits(std::vector<std::string>* portList) {
-    auto* mapPortVisits = new std::map<std::string, int>();
+std::unique_ptr<std::map<std::string, int>> createMapOfPortAndNumberOfVisits(std::vector<std::string>* portList) {
+    auto mapPortVisits = std::make_unique<std::map<std::string, int>>();
     for(const auto& port : *portList) {
         auto res = mapPortVisits->find(port);
         int ans;
