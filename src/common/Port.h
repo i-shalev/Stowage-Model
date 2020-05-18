@@ -15,6 +15,7 @@ class Port{
     const std::string symbol;
     int number;
     std::vector<Container*>* ContainersAwaiting;
+    std::vector<std::string>* originalsIds;
 
 public:
     Port();
@@ -25,6 +26,7 @@ public:
     void removeContainer(const std::string& id);
     bool hasContainers() const;
     Container* getContainerByID(const std::string& id) const;
+    bool wasContainerWithID(const std::string& id) const;
     void getVectorOfContainers(std::vector<Container*>& vector) const;
     void getContainersWithDest(const std::string& dest, std::vector<Container*>& vec) const;
     void getContainersByDistance(ShipRoute& sr, std::vector<Container*>& vec) const;

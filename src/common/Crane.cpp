@@ -90,6 +90,7 @@ int Crane::executeOperationList(const std::string& path, std::vector<std::string
         }
         if(vec.size() == 2 && vec.at(0) == "R"){
             id =  vec.at(1);
+            if(!(curPort->wasContainerWithID(id))){errors.emplace_back("Error: bad instruction (reject non exist id)."); return -1;}
         } else if (vec.size() == 5) {
             id =  vec.at(1);
             try{

@@ -6,6 +6,7 @@
 
 Port::Port(){
     ContainersAwaiting = new std::vector<Container*>;
+    originalsIds = new std::vector<std::string>;
 }
 
 Port::~Port(){
@@ -15,6 +16,8 @@ Port::~Port(){
     }
     this->ContainersAwaiting->clear();
     delete this->ContainersAwaiting;
+    this->originalsIds->clear();
+    delete this->originalsIds;
 }
 
 const std::string& Port::getSymbol() const {
@@ -23,6 +26,7 @@ const std::string& Port::getSymbol() const {
 
 void Port::addContainer(Container* container){
     ContainersAwaiting->push_back(container);
+    originalsIds->push_back(container->getId());
 }
 
 void Port::removeContainer(const std::string& id){
@@ -113,4 +117,12 @@ void Port::fixPort(std::vector<bool>& errors, std::vector<Container*>& reject) {
         ContainersAwaiting->push_back(container);
     }
 
+}
+bool Port::wasContainerWithID(const std::string& id) const{
+    for(const auto& elem : *(this->originalsIds) )
+    {
+        if(elem.compare(id)==0)
+            return true;
+    }
+    return false;
 }
