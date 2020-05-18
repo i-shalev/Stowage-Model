@@ -49,14 +49,20 @@ void ShipRoute::printList() const
     }
 }
 
+//will visit in the future...
 bool ShipRoute::willVisit(const std::string& dest) const{
-    for(const auto& i : *this->dstList)
+    for(size_t i=1; i<(*(this->dstList)).size(); i++){
+        if((*(this->dstList)).at(i).compare(dest) == 0)
+            return true;
+    }
+    return false;
+    /*for(const auto& i : *this->dstList)
     {
         if(i==dest){
             return true;
         }
     }
-    return false;
+    return false;*/
 }
 
 int ShipRoute::getRouteLength() const{
