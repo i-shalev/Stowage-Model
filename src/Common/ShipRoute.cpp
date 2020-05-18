@@ -56,13 +56,6 @@ bool ShipRoute::willVisit(const std::string& dest) const{
             return true;
     }
     return false;
-    /*for(const auto& i : *this->dstList)
-    {
-        if(i==dest){
-            return true;
-        }
-    }
-    return false;*/
 }
 
 int ShipRoute::getRouteLength() const{

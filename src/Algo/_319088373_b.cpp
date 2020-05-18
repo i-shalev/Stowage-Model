@@ -14,17 +14,12 @@ _319088373_b::_319088373_b(){
 int _319088373_b::getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) {
     int rc = 0;
     if(ship == nullptr){
-        if(shipPlan == nullptr)
-            rc = turnToTrueBit(rc, 3);
-        if(shipRoute == nullptr)
-            rc = turnToTrueBit(rc, 7);
+        if(shipPlan == nullptr){rc = turnToTrueBit(rc, 3);}
+        if(shipRoute == nullptr){rc = turnToTrueBit(rc, 7);}
         return rc;
     }
     char* pathToDirChar = (char *)(malloc((output_full_path_and_file_name.size() + 1) * sizeof(char)));
-    stringToCharStar(pathToDirChar, output_full_path_and_file_name);
-    std::remove(pathToDirChar);
-    //create a port object from input file
-    Port port;
+    stringToCharStar(pathToDirChar, output_full_path_and_file_name); std::remove(pathToDirChar); Port port;
     auto res  =readPortContainers(&port, input_full_path_and_file_name);
     if(res->at(0)){ rc = turnToTrueBit(rc, 14);}
     if(res->at(1)){ rc = turnToTrueBit(rc, 16);}
@@ -33,29 +28,17 @@ int _319088373_b::getInstructionsForCargo(const std::string& input_full_path_and
             rc = turnToTrueBit(rc,17);
             std::vector<Container*> ignore;
             port.getVectorOfContainers(ignore);
-            for(auto& cont: ignore){
-                port.removeContainer(cont->getId());
-                delete cont;
-            }
+            for(auto& cont: ignore){port.removeContainer(cont->getId()); delete cont;}
         }
     }
-    std::vector<Container*> problematics;
-    std::vector<bool> errors;
-    port.fixPort(errors, problematics);
+    std::vector<Container*> problematics; std::vector<bool> errors; port.fixPort(errors, problematics);
     if(errors.at(0)){ rc = turnToTrueBit(rc, 10);}
     if(errors.at(1)){ rc = turnToTrueBit(rc, 12);}
     if(errors.at(2)){ rc = turnToTrueBit(rc, 13);}
     if(errors.at(3)){ rc = turnToTrueBit(rc, 15);}
-
-    std::fstream fs;
-    fs.open(output_full_path_and_file_name, std::ios::out | std::ios::app);
-
-    for(auto& cont : problematics){
-        fs << "R, " << cont->getId() << std::endl;
-        delete cont;
-    }
-    std::vector<Container*> conts;
-    port.getVectorOfContainers(conts);
+    std::fstream fs; fs.open(output_full_path_and_file_name, std::ios::out | std::ios::app);
+    for(auto& cont : problematics){ fs << "R, " << cont->getId() << std::endl; delete cont;}
+    std::vector<Container*> conts; port.getVectorOfContainers(conts);
     for(auto& cont : conts){
         if(ship->hasContainer(cont->getId())) {
             fs << "R, " << cont->getId() << std::endl;
@@ -64,74 +47,42 @@ int _319088373_b::getInstructionsForCargo(const std::string& input_full_path_and
             delete cont;
         }
     }
-
     std::vector<Container*> temporaryUnloaded;
-    //first unload from ship all the containers with this destination
     for(int i=0; i<ship->getPlan().getLength();i++){
         for(int j=0; j<ship->getPlan().getWidth(); j++){
             int lowestFloor = -1;
             for(int level=0;level<ship->getPlan().getNumFloors(); level++){
-                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j) == nullptr)
-                    break;
-                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()==ship->getCurrentDestination()){
-                    //we need to unload all containers above
-                    lowestFloor = level;
-                    break;
-                }
+                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j) == nullptr) {break;}
+                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()==ship->getCurrentDestination()){ lowestFloor = level; break;}
             }
-            if(lowestFloor == -1) // no need to unload this tower
-                continue;
+            if(lowestFloor == -1) {continue;}
             for(int level = ship->getPlan().getNumFloors()-1; level>=lowestFloor; level --){
-                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j) == nullptr)
-                    continue;
-                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked())
-                    break;
-                if(calc->tryOperation('U', ship->getPlan().getFloor(level)->getContainerAtPosition(i, j)->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){
-//                    std::cout <<"unbalance..." << std::endl;
-                }
+                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j) == nullptr){continue;}
+                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getBlocked()){break;}
+                if(calc->tryOperation('U', ship->getPlan().getFloor(level)->getContainerAtPosition(i, j)->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){}
                 fs << "U, "<< ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getId() << ", " << level << ", " << i << ", " << j <<std::endl;
-                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()!=ship->getCurrentDestination()){
-                    temporaryUnloaded.push_back(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j));
-                }
+                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest()!=ship->getCurrentDestination()){temporaryUnloaded.push_back(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j));}
             }
             int loadBackLevel=0;
-            while(ship->getPlan().getFloor(loadBackLevel)->getContainerAtPosition(i,j)->getBlocked()){
-                loadBackLevel++;
-            }
+            while(ship->getPlan().getFloor(loadBackLevel)->getContainerAtPosition(i,j)->getBlocked()){loadBackLevel++;}
             while(!(temporaryUnloaded.empty())){
-                if(calc->tryOperation('L', temporaryUnloaded.back()->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){
-//                    std::cout <<"unbalance..." << std::endl;
-                }
+                if(calc->tryOperation('L', temporaryUnloaded.back()->getWeight(), i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED){}
                 fs << "L, "<< temporaryUnloaded.back()->getId() << ", " << loadBackLevel << ", " << i << ", " << j <<std::endl;
-                loadBackLevel++;
-                temporaryUnloaded.pop_back();
+                loadBackLevel++; temporaryUnloaded.pop_back();
             }
         }
     }
-    //now load everything from port to ship. check valid ids and destinations.
-    std::vector<Container*> toLoad;
-    int numPlacesOnShip = ship->numEmptyPlaces();
-    port.getContainersByDistance(ship->getRoute(),toLoad);
-    std::vector<Container*> toLoadInOrder;
-
+    std::vector<Container*> toLoad; int numPlacesOnShip = ship->numEmptyPlaces(); port.getContainersByDistance(ship->getRoute(),toLoad); std::vector<Container*> toLoadInOrder;
     int maxIndex = min(toLoad.size(), numPlacesOnShip);
-
-    for(int i = maxIndex-1; i >= 0; i--) {
-        toLoadInOrder.push_back(toLoad.at(i));
-    }
-    for(size_t i = maxIndex; i < toLoad.size(); i++) {
-        toLoadInOrder.push_back(toLoad.at(i));
-    }
-    int emptyPlacesAtPosition;
-    bool done = toLoadInOrder.empty();
+    for(int i = maxIndex-1; i >= 0; i--) {toLoadInOrder.push_back(toLoad.at(i));}
+    for(size_t i = maxIndex; i < toLoad.size(); i++) {toLoadInOrder.push_back(toLoad.at(i));}
+    int emptyPlacesAtPosition; bool done = toLoadInOrder.empty();
     for(int i=0; i<ship->getPlan().getLength() && !done; i++){
         for(int j=0; j< ship->getPlan().getWidth() && !done; j++){
             emptyPlacesAtPosition  = this->emptyPlacesInPosition(i,j,ship->getCurrentDestination());
             for(int level = ship->getPlan().getNumFloors() - emptyPlacesAtPosition; level<ship->getPlan().getNumFloors() && !done; level++){
                 if(checkContainer(toLoadInOrder.front())) {
-                    if (calc->tryOperation('L', toLoadInOrder.front()->getWeight(),i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED) {
-//                        std::cout << "unbalance..." << std::endl;
-                    }
+                    if (calc->tryOperation('L', toLoadInOrder.front()->getWeight(),i, j) != WeightBalanceCalculator::BalanceStatus::APPROVED) {}
                     fs << "L, " << toLoadInOrder.front()->getId() << ", " << level << ", " << i << ", " << j << std::endl;
                 }
                 else{
@@ -139,9 +90,7 @@ int _319088373_b::getInstructionsForCargo(const std::string& input_full_path_and
                     level--;
                 }
                 toLoadInOrder.erase(toLoadInOrder.begin());
-                if(toLoadInOrder.empty()){
-                    done = true;
-                }
+                if(toLoadInOrder.empty()){done = true;}
             }
         }
     }
