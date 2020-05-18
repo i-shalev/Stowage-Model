@@ -185,7 +185,7 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
 
     Ship* ship = new Ship(shipRoute, shipPlan);
     auto* mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());
-    auto* mapPortFullNameToCargoPath = createMapPortFullNameToCargoPath(pathToDir, mapPortVisits,
+    auto mapPortFullNameToCargoPath = createMapPortFullNameToCargoPath(pathToDir, mapPortVisits,
             shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1), errors.get());
 
     int numOp = 0;
@@ -193,7 +193,7 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
         //std::cout << ship->getCurrentDestinationWithIndex() << std::endl;
         std::string pathToInstructions = outputPath + "/" + algoName + "_" + travelName + "_crane_instructions" + "/" + ship->getCurrentDestinationWithIndex() + ".instructions";
         createFolder(outputPath + "/" + algoName + "_" + travelName + "_crane_instructions");
-        int instErrorCode = algo.getInstructionsForCargo(mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);
+        int instErrorCode = algo.getInstructionsForCargo(mapPortFullNameToCargoPath.get()->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);
         if(instErrorCode > 0){
             std::string errorCodeStr;
             getStringOfErrors(instErrorCode, errorCodeStr);
@@ -202,7 +202,7 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
             errors->push_back(errorCodeStr);
         }
         std::vector<std::string> errorReason;
-        int numOpTmp = runAlgoOnPort(ship, mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions, errorReason);
+        int numOpTmp = runAlgoOnPort(ship, mapPortFullNameToCargoPath.get()->at(ship->getCurrentDestinationWithIndex()), pathToInstructions, errorReason);
         if(numOpTmp < 0){
             numOp = -1;
             if(!errorReason.empty())
@@ -320,11 +320,11 @@ std::map<std::string, int>* createMapOfPortAndNumberOfVisits(std::vector<std::st
     return mapPortVisits;
 }
 
-std::map<std::string, std::string>* createMapPortFullNameToCargoPath(const std::string &pathToDir,
+std::unique_ptr<std::map<std::string, std::string>> createMapPortFullNameToCargoPath(const std::string &pathToDir,
         std::map<std::string, int> *mapPortVisits, const std::string &lastPort, std::vector<std::string>* errors){
-    auto* mapPortFullNameToCargoPath = new std::map<std::string, std::string>();
-    addPortsWithFileToMap(pathToDir, mapPortVisits, mapPortFullNameToCargoPath, errors);
-    addPortsWithNoFileToMap(mapPortVisits, mapPortFullNameToCargoPath, lastPort, errors);
+    auto mapPortFullNameToCargoPath = std::make_unique<std::map<std::string, std::string>>();
+    addPortsWithFileToMap(pathToDir, mapPortVisits, mapPortFullNameToCargoPath.get(), errors);
+    addPortsWithNoFileToMap(mapPortVisits, mapPortFullNameToCargoPath.get(), lastPort, errors);
     return mapPortFullNameToCargoPath;
 }
 
