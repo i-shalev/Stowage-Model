@@ -11,7 +11,7 @@
 #include <vector>
 #include <list>
 #include <functional>
-#include "../Common/AlgorithmRegistration.h"
+#include "../common/AlgorithmRegistration.h"
 
 class AlgorithmRegistrar {
 

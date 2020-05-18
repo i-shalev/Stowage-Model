@@ -199,8 +199,6 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
             errors->push_back(errorCodeStr);
         }
         std::vector<std::string> errorReason;
-        //TODO
-//        int numOpTmp = runAlgoOnPort(ship, mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), R"(C:\Users\itay\Desktop\ex\sim4\AAAAA_1.instructions)", errorReason);
         int numOpTmp = runAlgoOnPort(ship, mapPortFullNameToCargoPath->at(ship->getCurrentDestinationWithIndex()), pathToInstructions, errorReason);
         if(numOpTmp < 0){
             numOp = -1;
@@ -427,7 +425,7 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
     if (result == -1) {
         errorReason.emplace_back("The algorithm's instruction: " + err.at(0));
         return -1;
-    } //Algo Did some invalid operation
+    } //algorithm Did some invalid operation
     std::vector<Container*> leftOnPort;
     port.getVectorOfContainers(leftOnPort);
     if(!ship->isFull()){

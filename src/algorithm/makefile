@@ -5,7 +5,7 @@ COMMON_OBJS = WeightBalanceCalculator.o ShipRoute.o ShipPlan.o Ship.o Files.o  C
 OBJS = _319088373_a.o _319088373_b.o
 CPP_COMP_FLAG = -std=c++2a -Wall -Wextra -Werror -pedantic-errors -DNDEBUG -fPIC -fvisibility=hidden
 CPP_LINK_FLAG = -shared
-COMMON = ../Common/
+COMMON = ../common/
 
 all: $(SHARED_OBJS)
 

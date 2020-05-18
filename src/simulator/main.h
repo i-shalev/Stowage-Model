@@ -5,10 +5,10 @@
 #ifndef STOWAGE_MODEL_MAIN_H
 #define STOWAGE_MODEL_MAIN_H
 #include <iostream>
-#include "../Common/Files.h"
-#include "../Common/Port.h"
-#include "../Common/Crane.h"
-#include "../Common/AbstractAlgorithm.h"
+#include "../common/Files.h"
+#include "../common/Port.h"
+#include "../common/Crane.h"
+#include "../common/AbstractAlgorithm.h"
 #include "AlgorithmRegistrar.h"
 
 //using namespace std;

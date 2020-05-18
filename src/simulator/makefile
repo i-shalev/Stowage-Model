@@ -5,7 +5,7 @@ COMMON_OBJS = WeightBalanceCalculator.o ShipRoute.o ShipPlan.o Ship.o Files.o  C
 
 #The executable filename DON'T CHANGE
 EXEC = simulator
-COMMON = ../Common/
+COMMON = ../common/
 SIMULATOR = ./
 CPP_COMP_FLAG = -std=c++2a -Wall -Wextra -Werror -pedantic-errors -DNDEBUG
 CPP_LINK_FLAG = -ldl -export-dynamic -Wl,--whole-archive -lstdc++fs -Wl,--no-whole-archive#(-rdynamic)

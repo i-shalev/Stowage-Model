@@ -2,7 +2,7 @@
 // Created by itay on 15/05/2020.
 //
 
-#include "../Common/AlgorithmRegistration.h"
+#include "../common/AlgorithmRegistration.h"
 #include "AlgorithmRegistrar.h"
 #include <dlfcn.h>
 
