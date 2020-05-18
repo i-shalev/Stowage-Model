@@ -258,3 +258,8 @@ int min(int x, int y) {
         return x;
     return y;
 }
+
+int turnToTrueBit(int num, int bit){
+    int mask = 1 << bit;
+    return num | mask;
+}
