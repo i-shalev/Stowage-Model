@@ -3,6 +3,8 @@
 //
 
 #include <map>
+#include <utility>
+#include <memory>
 #include "ShipRoute.h"
 #include "ShipPlan.h"
 #include "Port.h"
@@ -15,7 +17,7 @@ class Ship {
 private:
     ShipRoute* route;
     ShipPlan* plan;
-    std::map<std::string, int>* mapPortNameToNumberOfVisitsUntilNow;
+    std::unique_ptr<std::map<std::string, int>> mapPortNameToNumberOfVisitsUntilNow;
 
 public:
     Ship(ShipRoute *sr, ShipPlan *sp);

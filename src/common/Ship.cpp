@@ -4,10 +4,10 @@
 
 #include "Ship.h"
 
-#include <utility>
+
 
 Ship::Ship(ShipRoute *sr, ShipPlan *sp): route(sr), plan(sp),
-    mapPortNameToNumberOfVisitsUntilNow(new std::map<std::string,int>){
+    mapPortNameToNumberOfVisitsUntilNow(std::make_unique<std::map<std::string,int>>()){
     if(!this->plan->isValid()){
 //        errors->push_back("Warning: invalid plan");
 //        std::cout << "invalid plan!" << std::endl;
@@ -19,7 +19,6 @@ Ship::~Ship() {
     this->mapPortNameToNumberOfVisitsUntilNow->clear();
     delete this->plan;
     delete this->route;
-    delete this->mapPortNameToNumberOfVisitsUntilNow;
 }
 
 ShipPlan& Ship::getPlan() { return *(this->plan);}
