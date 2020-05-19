@@ -1,0 +1,45 @@
+1. In case of some errors on the same file we get all the errors and report them together.
+for example you can see 'duplicateXY' and 'onePort' scenarios.
+
+2. In case there are more than 1 file of 'ship_plan' or 'route' we give appropriate error message and
+continue with one of the files.
+for example you can see '2filesForEachType' scenario.
+
+3. In case the output folder is not exist and can be created we create the folder. 
+In case the path is to object that is not a folder (for example 1.txt) we give appropriate error message
+to general_errors and use the current directory.
+for example try give invalid parameter in the command line.
+
+4. In case the algorithm path is not exist we know to identify that and write to the general_errors file appropriate error message.
+In case the algorithm path exsist but don't contain .so files we print the error that there no .so files in the folder.
+Because we belive that was honest mistake and he just forgot to add them, so it easier to see that on the screen.
+for example try give invalid parameter in the command line and valid path to empty folder.
+
+5. We tried as much as we can to not let the simulation to crush in case of a crush in the algorithm,
+for example you can see 'badAlgoNotFound' scenario.
+
+
+scenarios:
+
+2filesForEachType:
+Run our simulation and algorithm with the travel folder '2filesForEachType'.
+Then go for the errors folder and check the algoName_2filesForEachType.errors file.
+
+duplicateXY:
+Run our simulation and algorithm with the travel folder 'duplicateXY'.
+In the ship_plan file there are 2 lines with the same x,y different data(fatal error for the travel).
+But we report all the errors we collected.
+After run the simulation on that folder go to the errors folder and check the algoName_duplicateXY.errors file.
+
+onePort:
+Run our simulation and algorithm with the travel folder 'onePort'.
+In the route file there are only one legal port name(fatal error for the travel).
+But we report all the errors we collected.
+After run the simulation on that folder go to the errors folder and check the algoName_onePort.errors file.
+
+badAlgoNotFound:
+The folder conatins an algorithm that cause crush but it write it to a the error file.
+Just run the algorithm on simulation with any travel.
+
+
+
