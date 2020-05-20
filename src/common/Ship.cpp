@@ -159,3 +159,16 @@ int Ship::getIndexOfPort() const{
     auto res = mapPortNameToNumberOfVisitsUntilNow->find(this->route->getHead());
     return res->second + 1;
 }
+
+void Ship::getAllContainerIds(std::vector<std::string> &res) const{
+    for (int level = 0; level < this->plan->getNumFloors(); level++) {
+        for (int i = 0; i < this->plan->getLength(); i++) {
+            for (int j = 0; j < this->plan->getWidth(); j++) {
+                if (this->plan->getFloor(level)->getContainerAtPosition(i, j) != nullptr &&
+                    !(this->plan->getFloor(level)->getContainerAtPosition(i, j)->getBlocked())) {
+                    res.push_back(plan->getFloor(level)->getContainerAtPosition(i, j)->getId());
+                }
+            }
+        }
+    }
+}

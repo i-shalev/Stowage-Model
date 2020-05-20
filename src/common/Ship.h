@@ -27,6 +27,7 @@ public:
     bool willVisit(const std::string& dest) const;
     bool isFull() const;
     void getAllContainersWithDest(const std::string &dest, std::vector<Container*> &res);
+    void getAllContainerIds(std::vector<std::string> &res) const;
     std::string getCurrentDestination() const {return route->getHead();}
     std::string getCurrentDestinationWithIndex() const;
     void getContainerPosition(const std::string &id, std::vector<int> &res);

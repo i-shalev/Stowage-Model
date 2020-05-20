@@ -411,6 +411,14 @@ bool findInVec(std::vector<Container*>& vec, const std::string& id){
     }
     return false;
 }
+bool findInVec(std::vector<std::string>& vec, const std::string& id){
+    for(auto& cont : vec){
+        if(cont.compare(id) == 0){
+            return true;
+        }
+    }
+    return false;
+}
 
 int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::string& instructionsPath, std::vector<std::string>& errorReason){
     Port port;
@@ -421,7 +429,8 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
     Crane crane(ship, &port);
     std::vector<Container*> wasOnPort;
     port.getVectorOfContainers(wasOnPort);
-
+    std::vector<std::string> wasOnShip;
+    ship->getAllContainerIds(wasOnShip);
     std::vector<std::string> err;
     int result = crane.executeOperationList(instructionsPath, err);
     if (result == -1) {
@@ -433,7 +442,7 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
     if(!ship->isFull()){
         //check if algo took all the containers from the port
         for(auto& cont : leftOnPort){
-            if(ship->willVisit(cont->getDest()) && !ship->hasContainer(cont->getId()) && !findInVec(problematics, cont->getId())){
+            if(ship->willVisit(cont->getDest()) && !ship->hasContainer(cont->getId()) && !findInVec(problematics, cont->getId()) && !findInVec(wasOnShip, cont->getId())){
                 errorReason.push_back("Ship is not empty, reject container " + cont->getId() + " without reason.");
                 return -1;
             }
