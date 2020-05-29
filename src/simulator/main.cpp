@@ -9,30 +9,36 @@
 int main(int argc, char **argv){
     std::map<std::string, std::string> args;
     std::vector<std::string> errors;
-    int numThreads = 1;
-    bool errorInCreateArgs;
+    int numThreads;
+    bool errorInCreateArgs = false;
     if(createArgs(args, argc, argv)){
         errorInCreateArgs = true;
-        errors.push_back("ERROR: travel_path not provided!");
+        errors.emplace_back("ERROR: travel_path not provided!");
     }
-    printArgs(args);
+//    printArgs(args);
+    try{
+        numThreads = stoi(args["-num_threads"]);
+    } catch (const std::exception& e) {
+        numThreads = 1;
+        errors.emplace_back("ERROR: num_threads that provided is not a number!");
+    }
     int res = folderIsExistOrCanBeBuilt(args["-output"]);
     if(res == 1){
-        errors.push_back("Warning: output path that provided is non existent folder but we successfully create it.");
+        errors.emplace_back("Warning: output path that provided is non existent folder but we successfully create it.");
     } else if (res == 2) {
-        errors.push_back("Warning: output path that provided is not a valid path, the output files will be under the folder you run the program.");
+        errors.emplace_back("Warning: output path that provided is not a valid path, the output files will be under the folder you run the program.");
         args["-output"] = "./";
     }
     if(!errorInCreateArgs and !isFolderExist(args["-travel_path"])){
         errorInCreateArgs = true;
-        errors.push_back("ERROR: travel_path that provided is not a valid path.");
+        errors.emplace_back("ERROR: travel_path that provided is not a valid path.");
     }
     if(errorInCreateArgs){
         writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
         return EXIT_FAILURE;
     }
     if(!isFolderExist(args["-algorithm_path"])){
-        errors.push_back("Warning: algorithm_path that provided is not a valid path. so no algorithms runs.");
+        errors.emplace_back("Warning: algorithm_path that provided is not a valid path. so no algorithms runs.");
     } else {
       if(numThreads == 1) {
         runAllAlgo(args["-algorithm_path"], args["-travel_path"], args["-output"]);
@@ -73,7 +79,7 @@ void printArgs(std::map<std::string, std::string>& args){
 
 void runAllAlgo(const std::string& algoPath, const std::string &travelPath, const std::string &outputPath){
     auto algoNames = getFileNamesEndWith(algoPath, ".so");
-    if(algoNames->size() == 0) {
+    if(algoNames->empty()) {
         std::cout << "There was no .so files in the algorithm_path" << std::endl;
     }
     auto& registrar = AlgorithmRegistrar::getInstance();
@@ -82,11 +88,11 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
     emptyFile(outputPath + "/simulation.results");
     auto dirs = getDirsNamesFromRootDir(travelPath);
     std::vector<std::string> firstLine;
-    firstLine.push_back("RESULTS");
+    firstLine.emplace_back("RESULTS");
     for(const auto& dir:*dirs)
         firstLine.push_back(dir);
-    firstLine.push_back("Sum");
-    firstLine.push_back("Num Errors");
+    firstLine.emplace_back("Sum");
+    firstLine.emplace_back("Num Errors");
     writeToSuccessFile(outputPath + "/simulation.results", &firstLine);
 
     std::vector<std::string> vectorAlgoNames;
@@ -462,7 +468,7 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
         std::vector<Container*> byDist;
         port.getContainersByDistance(ship->getRoute(), byDist);
         if(!validateFarRejected(leftOnPort, wasOnPort,byDist)) {
-            errorReason.push_back("The algorithm did not reject further containers.");
+            errorReason.emplace_back("The algorithm did not reject further containers.");
             return -1;
         }
     }
@@ -477,7 +483,7 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
                 }
             }
             if(!found) {
-                errorReason.push_back("The algorithm unload containers which is not their target (and didn't upload them back).");
+                errorReason.emplace_back("The algorithm unload containers which is not their target (and didn't upload them back).");
                 return -1;
             } // left on port container with different destination
         }
