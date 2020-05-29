@@ -10,6 +10,12 @@
 #include "../common/Crane.h"
 #include "../common/AbstractAlgorithm.h"
 #include "AlgorithmRegistrar.h"
+#include "SimpleTasksProducer.h"
+#include "../common/WeightBalanceCalculator.h"
+#include <iostream>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include "ThreadPoolExecuter.h"
 
 //using namespace std;
 class main {

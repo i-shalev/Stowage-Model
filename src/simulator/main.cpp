@@ -1,9 +1,5 @@
 #include "main.h"
-#include "../common/WeightBalanceCalculator.h"
-#include <iostream>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include "ThreadPoolExecuter.h"
+
 
 #define PATH_TO_EMPTY_FILE R"(.\empty.empty_file)"
 
