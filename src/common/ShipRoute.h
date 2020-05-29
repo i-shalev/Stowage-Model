@@ -16,6 +16,7 @@ class ShipRoute {
     public:
         explicit ShipRoute(const std::vector<std::string> *_dstList);
         ShipRoute();
+        ShipRoute(const ShipRoute &route);
         ~ShipRoute();
         void addDstAtEnd(const std::string& dst);
         void deleteFirst();

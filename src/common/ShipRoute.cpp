@@ -13,6 +13,15 @@ ShipRoute::ShipRoute(const std::vector<std::string> *_dstList) : dstList(new std
     this->errors = {};
 }
 
+ShipRoute::ShipRoute(const ShipRoute &route) : dstList(new std::vector<std::string>())
+{
+    for(const auto & i : *(route.dstList))
+    {
+        this->addDstAtEnd(i);
+    }
+    this->errors = {};
+}
+
 ShipRoute::ShipRoute(): dstList(new std::vector<std::string>()){}
 
 ShipRoute::~ShipRoute() {
