@@ -114,7 +114,7 @@ int Crane::executeOperationList(const std::string& path, std::vector<std::string
                     }
                     return -1;
                 }
-                price++;
+                price+=5;
             } else if(vec.at(0) == "U"){
                 int rc = this->Unload(id,level,i,j);
                 if( rc!= SUCCESS){
@@ -131,7 +131,7 @@ int Crane::executeOperationList(const std::string& path, std::vector<std::string
                     }
                     return -1;
                 }
-                price++;
+                price+=5;
             } else {
                 errors.emplace_back("Error: instruction wrong format (invalid instruction).");
                 return -1;
@@ -166,7 +166,7 @@ int Crane::executeOperationList(const std::string& path, std::vector<std::string
                 }
                 return -1;
             }
-            price++;
+            price+=3;
         } else{ errors.emplace_back("wrong file format");}
     }
     fin.close();
