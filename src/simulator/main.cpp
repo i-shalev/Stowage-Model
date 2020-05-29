@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "ThreadPoolExecuter.h"
 
 #define PATH_TO_EMPTY_FILE R"(.\empty.empty_file)"
 
@@ -44,6 +45,27 @@ int main(int argc, char **argv){
         runAllAlgo(args["-algorithm_path"], args["-travel_path"], args["-output"]);
       } else {
         // here we call the threads function.
+        //Amir's code
+          ThreadPoolExecuter<SimpleTasksProducer> executer1 {
+                  SimpleTasksProducer{NumTasks{8}, IterationsPerTask{200}},
+                  NumThreads{5}
+          };
+          std::cout << "first cycle started" << std::endl;
+          executer1.start();
+          executer1.wait_till_finish();
+          std::cout << "first cycle finished" << std::endl;
+
+          ThreadPoolExecuter<SimpleTasksProducer> executer2 {
+                  SimpleTasksProducer{NumTasks{5}, IterationsPerTask{500}},
+                  NumThreads{2}
+          };
+          std::cout << "second cycle started" << std::endl;
+          executer2.start();
+          using namespace std::chrono_literals;
+          std::this_thread::sleep_for(10ms);
+          executer2.stop_gracefully();
+          std::cout << "second cycle stopped" << std::endl;
+          // end of Amir's code
       }
     }
     writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
