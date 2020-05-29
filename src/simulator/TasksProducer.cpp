@@ -15,6 +15,8 @@ TasksProducer::TasksProducer(std::vector<std::string>* dirs, std::vector<std::st
             results.at(i).push_back(0);
         }
     }
+
+    createShipDetails();
 }
 
 TasksProducer::~TasksProducer() {
@@ -56,7 +58,7 @@ std::optional<int> TasksProducer::next_task_index(){
     }
     return {};
 }
-//
+
 //std::optional<int> TasksProducer::next_task_index_simple(){
 //    // this is a more simple approach for getting the next task index
 //    // it will return each time an unused index in the range[0, numTasks)
@@ -85,15 +87,19 @@ std::optional<std::function<void(void)>> TasksProducer::getTask() {
         int travelIndex = (*task_index) / (this->numAlgo);
         int algoIndex = (*task_index) % (this->numAlgo);
         return [this, travelIndex ,algoIndex]{
+            std::lock_guard g{m};
             std::cout << "travel index: " << travelIndex << ", algo index: " << algoIndex << std::endl;
 //            for(int i=0; i<iterationsPerTask; ++i) {
-//                std::lock_guard g{m};
+//
 //                std::cout << std::this_thread::get_id() << "-" << *task_index << ": " << i << std::endl;
-//                std::this_thread::yield();
+            std::this_thread::yield();
 //            }
         };
     }
     else return {};
 }
 
+void TasksProducer::createShipDetails() {
+
+}
 
