@@ -2,10 +2,10 @@
 // Created by zivco on 29/05/2020.
 //
 
-#include "SimpleTasksProducer.h"
+#include "TasksProducer.h"
 
 
-std::optional<int> SimpleTasksProducer::next_task_index(){
+std::optional<int> TasksProducer::next_task_index(){
     for(int curr_counter = task_counter.load(); curr_counter < numTasks; ) {
         // see: https://en.cppreference.com/w/cpp/atomic/atomic/compare_exchange
         // note that in case compare_exchange_weak fails because the value of
@@ -18,7 +18,7 @@ std::optional<int> SimpleTasksProducer::next_task_index(){
     return {};
 }
 
-std::optional<int> SimpleTasksProducer::next_task_index_simple(){
+std::optional<int> TasksProducer::next_task_index_simple(){
     // this is a more simple approach for getting the next task index
     // it will return each time an unused index in the range[0, numTasks)
     // the difference from the one above is that at certain point of time
@@ -40,7 +40,7 @@ std::optional<int> SimpleTasksProducer::next_task_index_simple(){
     return {};
 }
 
-std::optional<std::function<void(void)>> SimpleTasksProducer::getTask() {
+std::optional<std::function<void(void)>> TasksProducer::getTask() {
     auto task_index = next_task_index(); // or: next_task_index_simple();
     if(task_index) {
         return [task_index, this]{

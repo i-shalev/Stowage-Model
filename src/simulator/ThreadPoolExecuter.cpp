@@ -4,7 +4,7 @@
 
 #include "ThreadPoolExecuter.h"
 
-template<> void ThreadPoolExecuter<SimpleTasksProducer>::worker_function()  {
+template<> void ThreadPoolExecuter<TasksProducer>::worker_function()  {
     while(!stopped) {
         auto task = producer.getTask();
         if(!task) break;
@@ -21,7 +21,7 @@ template<> void ThreadPoolExecuter<SimpleTasksProducer>::worker_function()  {
 }
 
 
-template<> bool ThreadPoolExecuter<SimpleTasksProducer>::start() {
+template<> bool ThreadPoolExecuter<TasksProducer>::start() {
     bool running_status = false;
     // see: https://en.cppreference.com/w/cpp/atomic/atomic/compare_exchange
     if(!running.compare_exchange_strong(running_status, true)) {

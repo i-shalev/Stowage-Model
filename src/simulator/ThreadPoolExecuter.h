@@ -11,7 +11,7 @@
 #include<optional>
 #include<functional>
 #include<chrono>
-#include "SimpleTasksProducer.h"
+#include "TasksProducer.h"
 #include "HelperCleses.h"
 
 template<typename Producer>

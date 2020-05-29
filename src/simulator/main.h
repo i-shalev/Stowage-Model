@@ -10,7 +10,7 @@
 #include "../common/Crane.h"
 #include "../common/AbstractAlgorithm.h"
 #include "AlgorithmRegistrar.h"
-#include "SimpleTasksProducer.h"
+#include "TasksProducer.h"
 #include "../common/WeightBalanceCalculator.h"
 #include <iostream>
 #include <sys/types.h>

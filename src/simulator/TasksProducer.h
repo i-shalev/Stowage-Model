@@ -2,8 +2,8 @@
 // Created by zivco on 29/05/2020.
 //
 
-#ifndef STOWAGE_MODEL_SIMPLETASKSPRODUCER_H
-#define STOWAGE_MODEL_SIMPLETASKSPRODUCER_H
+#ifndef STOWAGE_MODEL_TASKSPRODUCER_H
+#define STOWAGE_MODEL_TASKSPRODUCER_H
 
 #include<iostream>
 #include<thread>
@@ -15,7 +15,7 @@
 #include<chrono>
 #include "HelperCleses.h"
 
-class SimpleTasksProducer {
+class TasksProducer {
     const int numTasks = -1;
     const int iterationsPerTask = -1;
     std::atomic_int task_counter = 0;
@@ -26,12 +26,12 @@ class SimpleTasksProducer {
     std::optional<int> next_task_index_simple();
 
 public:
-    SimpleTasksProducer(NumTasks numTasks, IterationsPerTask iterations)
+    TasksProducer(NumTasks numTasks, IterationsPerTask iterations)
             : numTasks(numTasks), iterationsPerTask(iterations) {}
-    SimpleTasksProducer(SimpleTasksProducer&& other)
+    TasksProducer(TasksProducer&& other)
             : numTasks(other.numTasks), iterationsPerTask(other.iterationsPerTask), task_counter(other.task_counter.load()) {}
     std::optional<std::function<void(void)>> getTask();
 };
 
 
-#endif //STOWAGE_MODEL_SIMPLETASKSPRODUCER_H
+#endif //STOWAGE_MODEL_TASKSPRODUCER_H
