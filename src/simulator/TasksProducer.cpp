@@ -44,18 +44,18 @@ TasksProducer::~TasksProducer() {
     }
 }
 
-//std::optional<int> TasksProducer::next_task_index(){
-//    for(int curr_counter = task_counter.load(); curr_counter < 5; ) {
-//        // see: https://en.cppreference.com/w/cpp/atomic/atomic/compare_exchange
-//        // note that in case compare_exchange_weak fails because the value of
-//        // task_counter != curr_counter than task_counter.load() is copied into curr_counter
-//        // in case of spurious failure (value not checked) curr_counter would not change
-//        if(task_counter.compare_exchange_weak(curr_counter, curr_counter + 1)) {
-//            return {curr_counter}; // zero based
-//        }
-//    }
-//    return {};
-//}
+std::optional<int> TasksProducer::next_task_index(){
+    for(int curr_counter = task_counter.load(); curr_counter < (this->numAlgo * this->numTravels); ) {
+        // see: https://en.cppreference.com/w/cpp/atomic/atomic/compare_exchange
+        // note that in case compare_exchange_weak fails because the value of
+        // task_counter != curr_counter than task_counter.load() is copied into curr_counter
+        // in case of spurious failure (value not checked) curr_counter would not change
+        if(task_counter.compare_exchange_weak(curr_counter, curr_counter + 1)) {
+            return {curr_counter}; // zero based
+        }
+    }
+    return {};
+}
 //
 //std::optional<int> TasksProducer::next_task_index_simple(){
 //    // this is a more simple approach for getting the next task index
@@ -80,18 +80,20 @@ TasksProducer::~TasksProducer() {
 //}
 
 std::optional<std::function<void(void)>> TasksProducer::getTask() {
-//    auto task_index = next_task_index(); // or: next_task_index_simple();
-//    if(task_index) {
-//        return [task_index, this]{
+    auto task_index = next_task_index(); // or: next_task_index_simple();
+    if(task_index) {
+        int travelIndex = (*task_index) / (this->numAlgo);
+        int algoIndex = (*task_index) % (this->numAlgo);
+        return [this, travelIndex ,algoIndex]{
+            std::cout << "travel index: " << travelIndex << ", algo index: " << algoIndex << std::endl;
 //            for(int i=0; i<iterationsPerTask; ++i) {
 //                std::lock_guard g{m};
 //                std::cout << std::this_thread::get_id() << "-" << *task_index << ": " << i << std::endl;
 //                std::this_thread::yield();
 //            }
-//        };
-//    }
-//    else return {};
-    return {};
+        };
+    }
+    else return {};
 }
 
 

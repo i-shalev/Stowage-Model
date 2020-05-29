@@ -107,12 +107,11 @@ void runThreads(int numThreads, const std::string& algoPath, const std::string &
     //Amir's code
     ThreadPoolExecuter<TasksProducer> executer{
             NumThreads{numThreads},
-//            dirs.get(),
-            &vectorAlgoNames,
+            dirs.get(),
+//            &vectorAlgoNames,
             vectorAlgoNames,
             outputPath
     };
-//    (NumThreads(0), nullptr, <#initializer#>, <#initializer#>);
     std::cout << "first cycle started" << std::endl;
     executer.start();
     executer.wait_till_finish();
