@@ -502,7 +502,8 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
     if(!ship->isFull()){
         //check if algo took all the containers from the port
         for(auto& cont : leftOnPort){
-            if(ship->willVisit(cont->getDest()) && !ship->hasContainer(cont->getId()) && !findInVec(problematics, cont->getId()) && !findInVec(wasOnShip, cont->getId())){
+            if(ship->willVisit(cont->getDest()) && !ship->hasContainer(cont->getId()) && !findInVec(problematics, cont->getId())
+            && !findInVec(wasOnShip, cont->getId()) && (ship->getCurrentDestination().compare(cont->getDest()) != 0)){
                 errorReason.push_back("Ship is not empty, reject container " + cont->getId() + " without reason.");
                 return -1;
             }
@@ -530,6 +531,18 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
                 errorReason.emplace_back("The algorithm unload containers which is not their target (and didn't upload them back).");
                 return -1;
             } // left on port container with different destination
+        }
+    }
+    for(int level=0; level<ship->getPlan().getNumFloors(); level++){
+        for (int i = 0; i < ship->getPlan().getLength(); ++i) {
+            for (int j = 0; j < ship->getPlan().getWidth(); ++j) {
+                if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j) != nullptr
+                && ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)->getDest().compare(ship->getCurrentDestination())==0){
+                    errorReason.emplace_back("The algorithm visited a port and didnt unload all the containers that needs to be unloaded at this port.");
+                    return -1;
+                }
+            }
+
         }
     }
     return result;

@@ -122,7 +122,7 @@ int _319088373_b::emptyPlacesInPosition(int i, int j, const std::string& portSym
 }
 
 bool _319088373_b::checkContainer(Container* cont){
-    return cont->checkId() && ship->willVisit(cont->getDest());
+    return cont->checkId() && ship->willVisit(cont->getDest()) && (ship->getCurrentDestination().compare(cont->getDest()) != 0);
 }
 
 int _319088373_b::readShipPlan(const std::string &full_path_and_file_name) {
