@@ -27,6 +27,7 @@ TasksProducer::~TasksProducer() {
         firstLine.push_back(dir);
     firstLine.emplace_back("Sum");
     firstLine.emplace_back("Num Errors");
+    emptyFile(outputPath + "/simulation.results");
     writeToSuccessFile(outputPath + "/simulation.results", &firstLine);
 
     for(int j = 0 ; j < numAlgo ; j++){
@@ -87,14 +88,109 @@ std::optional<std::function<void(void)>> TasksProducer::getTask() {
     if(task_index) {
         int travelIndex = (*task_index) / (this->numAlgo);
         int algoIndex = (*task_index) % (this->numAlgo);
+
         return [this, travelIndex ,algoIndex]{
-            std::lock_guard g{m};
-            std::cout << "travel: " << this->dirs->at(travelIndex) << ", algo index: " << algoIndex << ", code: " << this->travelDoubleFilesCode.at(travelIndex) << std::endl;
-//            for(int i=0; i<iterationsPerTask; ++i) {
-//
-//                std::cout << std::this_thread::get_id() << "-" << *task_index << ": " << i << std::endl;
-            std::this_thread::yield();
-//            }
+            auto& registrar = AlgorithmRegistrar::getInstance();
+            auto algo_iter = registrar.at(algoIndex);
+            auto algo = (*algo_iter)();
+            auto errors = std::make_unique<std::vector<std::string>>();
+            bool fatalError = false;
+
+            if(this->shipPlans.at(travelIndex) == nullptr){
+                fatalError = true;
+                errors->push_back("ERROR: no shipPlan file!");
+            }
+            if(this->shipRoutes.at(travelIndex) == nullptr){
+                fatalError = true;
+                errors->push_back("ERROR: no shipRoute file!");
+            }
+            if(this->travelDoubleFilesCode.at(travelIndex) != 0){
+                if(this->travelDoubleFilesCode.at(travelIndex) == 1 or this->travelDoubleFilesCode.at(travelIndex) == 3)
+                    errors->push_back("Warning: there are more than 1 ship_plan file!");
+                if(this->travelDoubleFilesCode.at(travelIndex) > 1)
+                    errors->push_back("Warning: there are more than 1 route file!");
+            }
+
+            if(fatalError){
+                writeErrorsToFile(this->outputPath + "/errors/" + this->algoNames.at(algoIndex) + "_" + this->dirs->at(travelIndex) + ".errors", this->outputPath + "/errors/", errors.get());
+                this->results.at(travelIndex).at(algoIndex) = -1;
+                return;
+            }
+
+            auto* shipPlan = new ShipPlan(*this->shipPlans.at(travelIndex));
+            std::string path = this->shipPlansPaths.at(travelIndex);
+            int errorCode = algo->readShipPlan(path);
+            if(errorCode > 0){
+                std::string errorCodeStr;
+                getStringOfErrors(errorCode, errorCodeStr);
+                errorCodeStr = "While read the ShipPlan, the algorithm return the errors: " + errorCodeStr;
+                errors->push_back(errorCodeStr);
+                if(containsFatalError(errorCode)){
+                    writeErrorsToFile(this->outputPath + "/errors/" + this->algoNames.at(algoIndex) + "_" + this->dirs->at(travelIndex) + ".errors", this->outputPath + "/errors/", errors.get());
+                    delete shipPlan;
+                    this->results.at(travelIndex).at(algoIndex) = -1;
+                    return;
+                }
+            }
+
+            auto* shipRoute = new ShipRoute(*this->shipRoutes.at(travelIndex));
+
+            errorCode = algo->readShipRoute(this->shipRoutesPaths.at(travelIndex));
+            if(errorCode > 0){
+                std::string errorCodeStr;
+                getStringOfErrors(errorCode, errorCodeStr);
+                errorCodeStr = "While read the ShipRoute, the algorithm return the errors: " + errorCodeStr;
+                errors->push_back(errorCodeStr);
+                if(containsFatalError(errorCode)){
+                    writeErrorsToFile(this->outputPath + "/errors/" + this->algoNames.at(algoIndex) + "_" + this->dirs->at(travelIndex) + ".errors", this->outputPath + "/errors/", errors.get());
+                    delete shipPlan;
+                    delete shipRoute;
+                    this->results.at(travelIndex).at(algoIndex) = -1;
+                    return;
+                }
+            }
+
+            WeightBalanceCalculator wb;
+            algo->setWeightBalanceCalculator(wb);
+
+            Ship* ship = new Ship(shipRoute, shipPlan);
+            auto mapPortVisits = createMapOfPortAndNumberOfVisits(shipRoute->getDstList());
+            auto mapPortFullNameToCargoPath = createMapPortFullNameToCargoPath(this->travelPath + "/" + this->dirs->at(travelIndex), mapPortVisits.get(),
+                                                                               shipRoute->getDstList()->at(shipRoute->getDstList()->size()-1), errors.get());
+
+            int numOp = 0;
+            while(!ship->finishRoute()){
+                std::string pathToInstructions = this->outputPath + "/" + this->algoNames.at(algoIndex) + "_" + this->dirs->at(travelIndex) + "_crane_instructions" + "/" + ship->getCurrentDestinationWithIndex() + ".instructions";
+                createFolder(this->outputPath + "/" + this->algoNames.at(algoIndex) + "_" + this->dirs->at(travelIndex) + "_crane_instructions");
+                int instErrorCode = algo->getInstructionsForCargo(mapPortFullNameToCargoPath.get()->at(ship->getCurrentDestinationWithIndex()), pathToInstructions);
+                if(instErrorCode > 0){
+                    std::string errorCodeStr;
+                    getStringOfErrors(instErrorCode, errorCodeStr);
+                    errorCodeStr = "While get instructions for port "+ ship->getCurrentDestinationWithIndex()
+                                   + ", the algorithm return the errors: " + errorCodeStr;
+                    errors->push_back(errorCodeStr);
+                }
+                std::vector<std::string> errorReason;
+                int numOpTmp = runAlgoOnPort(ship, mapPortFullNameToCargoPath.get()->at(ship->getCurrentDestinationWithIndex()), pathToInstructions, errorReason);
+                if(numOpTmp < 0){
+                    numOp = -1;
+                    if(!errorReason.empty())
+                        errors->push_back(errorReason.at(0));
+                    break;
+                } else {
+                    numOp += numOpTmp;
+                }
+                ship->moveToNextPort();
+            }
+            if(numOp > 0 and !ship->isEmpty()){
+                numOp = -1;
+                errors->push_back("The ship is not empty after finish all the instructions from the algorithm.");
+            }
+
+            writeErrorsToFile(outputPath + "/errors/" + this->algoNames.at(algoIndex) + "_" + this->dirs->at(travelIndex) + ".errors", outputPath + "/errors/", errors.get());
+            delete(ship);
+            this->results.at(travelIndex).at(algoIndex) = numOp;
+            return;
         };
     }
     else return {};
@@ -109,17 +205,21 @@ void TasksProducer::createShipDetails() {
         // push the shipPlan for travel - null if file don't exist
         if(shipPlanPath.empty()){
             shipPlans.push_back(nullptr);
+            shipPlansPaths.emplace_back();
         } else {
             int res = 0;
             shipPlans.push_back(createShipPlan(res, shipPlanPath));
+            shipPlansPaths.push_back(shipPlanPath);
         }
 
         // push the shipRoute for travel - null if file don't exist
         if(shipRoutePath.empty()){
             shipRoutes.push_back(nullptr);
+            shipRoutesPaths.emplace_back();
         } else {
             int res = 0;
             shipRoutes.push_back(createShipRoute(res, shipRoutePath));
+            shipRoutesPaths.push_back(shipRoutePath);
         }
 
         // push error code for travel - indicates more than 1 file

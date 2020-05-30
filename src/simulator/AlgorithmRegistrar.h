@@ -63,6 +63,16 @@ public:
 
     // Returns an iterator that points to the end
     inline const_iterator end() const { return _factories.end(); }
+
+    const_iterator at(int i) {
+        int j = 0;
+        for (auto algo_iter = begin(); algo_iter != end(); ++algo_iter) {
+            if( j == i)
+                return algo_iter;
+            j++;
+        }
+        return begin();
+    }
 };
 
 
