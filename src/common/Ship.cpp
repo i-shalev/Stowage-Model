@@ -15,6 +15,14 @@ Ship::Ship(ShipRoute *sr, ShipPlan *sp): route(sr), plan(sp),
     addOneVisitToMap();
 }
 
+Ship::Ship(const Ship &s): mapPortNameToNumberOfVisitsUntilNow(std::make_unique<std::map<std::string,int>>()){
+    route = new ShipRoute(*(s.route));
+    plan = new ShipPlan(*(s.plan));
+    if(!this->plan->isValid()){
+    }
+    addOneVisitToMap();
+}
+
 Ship::~Ship() {
     this->mapPortNameToNumberOfVisitsUntilNow->clear();
     delete this->plan;
