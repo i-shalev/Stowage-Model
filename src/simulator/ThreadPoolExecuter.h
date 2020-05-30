@@ -26,8 +26,8 @@ class ThreadPoolExecuter {
 
     void worker_function();
 public:
-    ThreadPoolExecuter(NumThreads numThreads, std::vector<std::string> *dirs, std::vector<std::string> &algoNames,
-                       const std::string &outputPath) : producer(TasksProducer(dirs, algoNames, outputPath)), numThreads(numThreads) {
+    ThreadPoolExecuter(NumThreads numThreads, std::vector<std::string> *dirs, std::vector<std::string> &algoNames, const std::string &outputPath,
+            const std::string &travelPath) : producer(TasksProducer(dirs, algoNames, outputPath, travelPath)), numThreads(numThreads) {
         workers.reserve(numThreads);
     }
     bool start();
