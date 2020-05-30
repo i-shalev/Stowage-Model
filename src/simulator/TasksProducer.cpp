@@ -46,6 +46,14 @@ TasksProducer::~TasksProducer() {
         lineResults.push_back(std::to_string(numErrors));
         writeToSuccessFile(outputPath + "/simulation.results", &lineResults);
     }
+
+    for(auto & shipRoute : shipRoutes){
+        delete shipRoute;
+    }
+
+    for(auto & shipPlan : shipPlans){
+        delete shipPlan;
+    }
 }
 
 std::optional<int> TasksProducer::next_task_index(){
