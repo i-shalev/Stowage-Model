@@ -150,19 +150,19 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
     }
     int i = 0;
     for (auto algo_iter = registrar.begin(); algo_iter != registrar.end(); ++algo_iter) {
-        auto algo = (*algo_iter)();
-        runAlgoForAllTravels(*algo, travelPath, outputPath, vectorAlgoNames.at(i), dirs.get());
+        runAlgoForAllTravels(&algo_iter, travelPath, outputPath, vectorAlgoNames.at(i), dirs.get());
         i++;
     }
 }
 
-void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath, const std::string &outputPath,
+void runAlgoForAllTravels(AlgorithmRegistrar::const_iterator *algoFactory, const std::string &travelPath, const std::string &outputPath,
                           const std::string &algoName, std::vector<std::string>* dirs) {
     std::vector<std::string> results;
     int sum = 0, numErrors = 0, tmp;
     results.push_back(algoName);
     for(const auto& dir:*dirs) {
-        tmp = runAlgoForTravel(algo, travelPath + "/" + dir, outputPath, algoName, dir);
+        auto algo = (**algoFactory)();
+        tmp = runAlgoForTravel(*algo, travelPath + "/" + dir, outputPath, algoName, dir);
         if(tmp == -1)
             numErrors++;
         else

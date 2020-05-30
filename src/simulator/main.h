@@ -28,7 +28,7 @@ int createArgs(std::map<std::string, std::string>& args, int& argc, char **argv)
 void printArgs(std::map<std::string, std::string>& args);
 void runThreads(int numThreads, const std::string& algoPath, const std::string &travelPath, const std::string &outputPath);
 void runAllAlgo(const std::string& algoPath, const std::string &travelPath, const std::string &outputPath);
-void runAlgoForAllTravels(AbstractAlgorithm &algo, const std::string &travelPath, const std::string &outputPath,
+void runAlgoForAllTravels(AlgorithmRegistrar::const_iterator *algoFactory, const std::string &travelPath, const std::string &outputPath,
                           const std::string &algoName, std::vector<std::string>* dirs);
 int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
                      const std::string &algoName, const std::string &travelName);
