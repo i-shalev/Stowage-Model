@@ -14,10 +14,21 @@
 #include<functional>
 #include<chrono>
 #include "HelperCleses.h"
+#include "../common/ShipPlan.h"
+#include "../common/ShipRoute.h"
 
 class TasksProducer {
-    const int numTasks = -1;
-    const int iterationsPerTask = -1;
+    const std::vector<std::string>* dirs;
+    const std::vector<std::string> algoNames;
+    const std::vector<ShipPlan> shipPlans;
+    const std::vector<ShipRoute> shipRoutes;
+    std::vector<std::vector<int>> results;
+    int numTravels;
+    int numAlgo;
+    const std::string outputPath;
+
+
+
     std::atomic_int task_counter = 0;
     std::mutex m;
 
@@ -26,11 +37,10 @@ class TasksProducer {
     std::optional<int> next_task_index_simple();
 
 public:
-    TasksProducer(NumTasks numTasks, IterationsPerTask iterations)
-            : numTasks(numTasks), iterationsPerTask(iterations) {}
-    TasksProducer(TasksProducer&& other)
-            : numTasks(other.numTasks), iterationsPerTask(other.iterationsPerTask), task_counter(other.task_counter.load()) {}
+    TasksProducer(std::vector<std::string>* dirs, std::vector<std::string>& algoNames, const std::string &outputPath);
+    ~TasksProducer();
     std::optional<std::function<void(void)>> getTask();
+    void createShipDetails();
 };
 
 

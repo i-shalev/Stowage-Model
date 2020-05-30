@@ -17,7 +17,7 @@
 template<typename Producer>
 class ThreadPoolExecuter {
     Producer producer;
-    const int numThreads = -1;
+    int numThreads;
     std::vector<std::thread> workers;
     std::atomic_bool running {false};
     std::atomic_bool stopped {false};
@@ -26,7 +26,8 @@ class ThreadPoolExecuter {
 
     void worker_function();
 public:
-    ThreadPoolExecuter(Producer producer, NumThreads numThreads): producer(std::move(producer)), numThreads(numThreads) {
+    ThreadPoolExecuter(NumThreads numThreads, std::vector<std::string> *dirs, std::vector<std::string> &algoNames,
+                       const std::string &outputPath) : producer(TasksProducer(dirs, algoNames, outputPath)), numThreads(numThreads) {
         workers.reserve(numThreads);
     }
     bool start();

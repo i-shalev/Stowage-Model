@@ -41,16 +41,7 @@ int main(int argc, char **argv){
         runAllAlgo(args["-algorithm_path"], args["-travel_path"], args["-output"]);
       } else {
         // here we call the threads function.
-        //Amir's code
-          ThreadPoolExecuter<TasksProducer> executer1 {
-                  TasksProducer{NumTasks{8}, IterationsPerTask{200}},
-                  NumThreads{5}
-          };
-          std::cout << "first cycle started" << std::endl;
-          executer1.start();
-          executer1.wait_till_finish();
-          std::cout << "first cycle finished" << std::endl;
-          // end of Amir's code
+        runThreads(numThreads, args["-algorithm_path"], args["-travel_path"], args["-output"]);
       }
     }
     writeErrorsToFile(args["-output"] + "/errors/" + "general_errors.errors", args["-output"] + "/errors/", &errors);
@@ -82,6 +73,52 @@ void printArgs(std::map<std::string, std::string>& args){
     std::cout << "num_threads: " << args["-num_threads"] << std::endl;
     std::cout << "algorithm_path: " << args["-algorithm_path"] << std::endl;
     std::cout << "output: " << args["-output"] << std::endl;
+}
+
+void runThreads(int numThreads, const std::string& algoPath, const std::string &travelPath, const std::string &outputPath){
+    auto algoNames = getFileNamesEndWith(algoPath, ".so");
+    if(algoNames->empty()) {
+        std::cout << "There was no .so files in the algorithm_path" << std::endl;
+        return;
+    }
+    auto& registrar = AlgorithmRegistrar::getInstance();
+
+    emptyFile(PATH_TO_EMPTY_FILE);
+    auto dirs = getDirsNamesFromRootDir(travelPath);
+    std::vector<std::string> firstLine;
+
+
+    std::vector<std::string> vectorAlgoNames;
+    for(const auto& algoName:*algoNames) {
+        std::string fullName = algoPath + "/" + algoName + ".so";
+        char* fullNameChar = (char *)(malloc((fullName.size() + 1) * sizeof(char)));
+        stringToCharStar(fullNameChar, fullName);
+
+        std::string error;
+        if(registrar.loadAlgorithmFromFile(fullNameChar, error)){
+            vectorAlgoNames.push_back(algoName);
+        } else {
+            std::vector<std::string> errors;
+            errors.push_back(error);
+            writeErrorsToFile(outputPath + "/errors/" + algoName + ".errors", outputPath + "/errors/", &errors);
+        }
+    }
+
+    //Amir's code
+    ThreadPoolExecuter<TasksProducer> executer{
+            NumThreads{numThreads},
+            dirs.get(),
+//            &vectorAlgoNames,
+            vectorAlgoNames,
+            outputPath
+    };
+    std::cout << "first cycle started" << std::endl;
+    executer.start();
+    executer.wait_till_finish();
+    std::cout << "first cycle finished" << std::endl;
+    // end of Amir's code
+
+
 }
 
 void runAllAlgo(const std::string& algoPath, const std::string &travelPath, const std::string &outputPath){
@@ -498,8 +535,6 @@ int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::strin
     return result;
 
 }
-
-
 
 bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>& was, std::vector<Container*> contByDist){
     std::vector<Container*> took;
