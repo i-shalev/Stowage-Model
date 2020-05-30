@@ -20,12 +20,14 @@
 class TasksProducer {
     const std::vector<std::string>* dirs;
     const std::vector<std::string> algoNames;
-    const std::vector<ShipPlan> shipPlans;
-    const std::vector<ShipRoute> shipRoutes;
+    std::vector<ShipPlan*> shipPlans;
+    std::vector<ShipRoute*> shipRoutes;
+    std::vector<int> travelDoubleFilesCode;
     std::vector<std::vector<int>> results;
     int numTravels;
     int numAlgo;
     const std::string outputPath;
+    const std::string travelPath;
 
 
 
@@ -37,7 +39,8 @@ class TasksProducer {
     std::optional<int> next_task_index_simple();
 
 public:
-    TasksProducer(std::vector<std::string>* dirs, std::vector<std::string>& algoNames, const std::string &outputPath);
+    TasksProducer(std::vector<std::string> *dirs, std::vector<std::string> &algoNames, const std::string &outputPath,
+                  const std::string &travelPath);
     ~TasksProducer();
     std::optional<std::function<void(void)>> getTask();
     void createShipDetails();

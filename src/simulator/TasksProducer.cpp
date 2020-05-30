@@ -4,9 +4,10 @@
 
 #include "TasksProducer.h"
 #include "../common/Files.h"
+#include "main.h"
 
-TasksProducer::TasksProducer(std::vector<std::string>* dirs, std::vector<std::string>& algoNames,
-        const std::string &outputPath) : dirs(dirs), algoNames(algoNames), outputPath(outputPath){
+TasksProducer::TasksProducer(std::vector<std::string> *dirs, std::vector<std::string> &algoNames, const std::string &outputPath,
+        const std::string &travelPath) : dirs(dirs), algoNames(algoNames), outputPath(outputPath), travelPath(travelPath){
     this->numTravels = dirs->size();
     this->numAlgo = algoNames.size();
     for(int i = 0 ; i < numTravels ; i++){
@@ -88,7 +89,7 @@ std::optional<std::function<void(void)>> TasksProducer::getTask() {
         int algoIndex = (*task_index) % (this->numAlgo);
         return [this, travelIndex ,algoIndex]{
             std::lock_guard g{m};
-            std::cout << "travel index: " << travelIndex << ", algo index: " << algoIndex << std::endl;
+            std::cout << "travel: " << this->dirs->at(travelIndex) << ", algo index: " << algoIndex << ", code: " << this->travelDoubleFilesCode.at(travelIndex) << std::endl;
 //            for(int i=0; i<iterationsPerTask; ++i) {
 //
 //                std::cout << std::this_thread::get_id() << "-" << *task_index << ": " << i << std::endl;
@@ -100,6 +101,36 @@ std::optional<std::function<void(void)>> TasksProducer::getTask() {
 }
 
 void TasksProducer::createShipDetails() {
+    for(const auto& dir:*dirs) {
+        std::string pathToDir = travelPath + "/" + dir;
+        std::string shipPlanPath, shipRoutePath;
+        int result = getShipPlanAndRoutePaths(pathToDir, shipPlanPath, shipRoutePath);
 
+        // push the shipPlan for travel - null if file don't exist
+        if(shipPlanPath.empty()){
+            shipPlans.push_back(nullptr);
+        } else {
+            int res = 0;
+            shipPlans.push_back(createShipPlan(res, shipPlanPath));
+        }
+
+        // push the shipRoute for travel - null if file don't exist
+        if(shipRoutePath.empty()){
+            shipRoutes.push_back(nullptr);
+        } else {
+            int res = 0;
+            shipRoutes.push_back(createShipRoute(res, shipRoutePath));
+        }
+
+        // push error code for travel - indicates more than 1 file
+        travelDoubleFilesCode.push_back(result);
+
+//        if(result != 0){
+//            if(result == 1 or result == 3)
+//                errors->push_back("Warning: there are more than 1 ship_plan file!");
+//            if(result > 1)
+//                errors->push_back("Warning: there are more than 1 route file!");
+//        }
+    }
 }
 
