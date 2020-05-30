@@ -181,6 +181,7 @@ std::unique_ptr<std::vector<bool>> readShipPorts(std::vector<std::string> &ports
         if(! isCommentLine(line)) {
             std::string lineAfterRemoval = removeLeadingAndTrailingWhitespaces(line);
             if(isLegalPortName(lineAfterRemoval)){
+                for (auto & c: lineAfterRemoval){c = toupper(c);}
                 if(lineAfterRemoval != lastPort) {
                     ports.push_back(lineAfterRemoval);
                     count++;
