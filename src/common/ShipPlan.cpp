@@ -38,6 +38,34 @@ ShipPlan::ShipPlan(int numFloors, int length, int width, const std::vector<std::
     }
 }
 
+ShipPlan::ShipPlan(const ShipPlan &s)
+{
+    this->numFloors = s.numFloors;
+    this->length = s.length;
+    this->width = s.width;
+    this->floors = (Floor**) malloc(numFloors * sizeof(Floor*));
+
+    for(int i=0; i<numFloors; i++)
+    {
+        this->floors[i] = new Floor(i, length, width);
+    }
+    for(int level=0; level<numFloors; level++){
+        for(int i=0; i<length; i++){
+            for(int j=0; j<width; j++){
+                if(s.getFloor(level)->getContainerAtPosition(i,j) != nullptr &&
+                s.getFloor(level)->getContainerAtPosition(i,j)->getBlocked()){
+                    this->floors[level]->setContainerAtPosition(i,j,blockingContainer);
+                }
+                else{
+                    this->floors[level]->setContainerAtPosition(i,j, nullptr);
+                }
+            }
+        }
+    }
+}
+
+
+
 ShipPlan::~ShipPlan() {
     delete blockingContainer;
     for(int i=0; i<numFloors; i++) {

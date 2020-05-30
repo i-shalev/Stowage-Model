@@ -19,7 +19,7 @@ class ShipPlan {
 
     public:
         ShipPlan(int numFloors, int length, int width, const std::vector<std::vector<int>> &blocks);
-        ShipPlan(const ShipPlan& s) = delete; // disable copy constr'. need deep copy
+        ShipPlan(const ShipPlan& s); // need deep copy
         ~ShipPlan();
         int getNumFloors() const;
         int getLength() const;
