@@ -2,6 +2,7 @@
 // Created by zivco on 29/05/2020.
 //
 
+#include <algorithm>
 #include "TasksProducer.h"
 #include "../common/Files.h"
 #include "main.h"
@@ -30,20 +31,49 @@ TasksProducer::~TasksProducer() {
     emptyFile(outputPath + "/simulation.results");
     writeToSuccessFile(outputPath + "/simulation.results", &firstLine);
 
+    std::vector<int> vec;
+    std::vector<int> sums;
+    std::vector<int> numErrs;
+
     for(int j = 0 ; j < numAlgo ; j++){
-        std::vector<std::string> lineResults;
-        int sum = 0, numErrors = 0, tmp;
-        lineResults.push_back(algoNames.at(j));
+        vec.push_back(j);
+        int tmp, numErrors = 0, sum = 0;
         for(int i = 0 ; i < numTravels ; i++){
             tmp = results.at(i).at(j);
             if(tmp == -1)
                 numErrors++;
             else
                 sum += tmp;
-            lineResults.push_back(std::to_string(tmp));
         }
-        lineResults.push_back(std::to_string(sum));
-        lineResults.push_back(std::to_string(numErrors));
+        sums.push_back(sum);
+        numErrs.push_back(numErrors);
+    }
+
+    std::sort(std::begin(vec ), std::end(vec ),
+            [sums, numErrs](int a, int b) {
+                        if(numErrs.at(a) != numErrs.at(b)){
+                            if(numErrs.at(a) > numErrs.at(b)){
+                                return a < b;
+                            } else {
+                                return a > b;
+                            }
+                        } else {
+                            if(sums.at(a) < sums.at(b)){
+                                return a > b;
+                            }
+                            return a < b;
+                        }
+    });
+
+    for(int k = 0 ; k < numAlgo ; k++){
+        int j = vec.at(k);
+        std::vector<std::string> lineResults;
+        lineResults.push_back(algoNames.at(j));
+        for(int i = 0 ; i < numTravels ; i++){
+            lineResults.push_back(std::to_string(results.at(i).at(j)));
+        }
+        lineResults.push_back(std::to_string(sums.at(j)));
+        lineResults.push_back(std::to_string(numErrs.at(j)));
         writeToSuccessFile(outputPath + "/simulation.results", &lineResults);
     }
 

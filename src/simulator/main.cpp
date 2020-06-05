@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "main.h"
 
 
@@ -106,10 +107,9 @@ void runThreads(int numThreads, const std::string& algoPath, const std::string &
 
     //Amir's code
     ThreadPoolExecuter<TasksProducer> executer{NumThreads{numThreads}, dirs.get(),vectorAlgoNames, outputPath, travelPath };
-    std::cout << "first cycle started" << std::endl;
+    std::cout << "start "<< numThreads <<" threads" << std::endl;
     executer.start();
     executer.wait_till_finish();
-    std::cout << "first cycle finished" << std::endl;
     // end of Amir's code
 
 
@@ -148,35 +148,86 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
             writeErrorsToFile(outputPath + "/errors/" + algoName + ".errors", outputPath + "/errors/", &errors);
         }
     }
+
+    std::vector<std::vector<int>> results;
+    std::vector<int> sums;
+    std::vector<int> numErrs;
+    int numTravels = dirs->size();
+    int numAlgo = algoNames->size();
+    for(int i = 0 ; i < numTravels ; i++){
+        results.emplace_back();
+        sums.push_back(0);
+        numErrs.push_back(0);
+        for(int j = 0 ; j < numAlgo ; j++){
+            results.at(i).push_back(0);
+        }
+    }
+
     int i = 0;
     for (auto algo_iter = registrar.begin(); algo_iter != registrar.end(); ++algo_iter) {
-        runAlgoForAllTravels(&algo_iter, travelPath, outputPath, vectorAlgoNames.at(i), dirs.get());
+        runAlgoForAllTravels(&algo_iter, travelPath, outputPath, vectorAlgoNames.at(i), dirs.get(), results, sums, numErrs, i);
         i++;
+    }
+    std::vector<int> vec;
+    for(int j = 0 ; j < numAlgo ; j++){
+        vec.push_back(j);
+    }
+
+    std::sort(std::begin(vec ), std::end(vec ),
+              [sums, numErrs](int a, int b) {
+                  if(numErrs.at(a) != numErrs.at(b)){
+                      if(numErrs.at(a) > numErrs.at(b)){
+                          return a < b;
+                      } else {
+                          return a > b;
+                      }
+                  } else {
+                      if(sums.at(a) < sums.at(b)){
+                          return a > b;
+                      }
+                      return a < b;
+                  }
+              });
+
+    for(int k = 0 ; k < numAlgo ; k++){
+        int j = vec.at(k);
+        std::vector<std::string> lineResults;
+        lineResults.push_back(algoNames->at(j));
+        for(i = 0 ; i < numTravels ; i++){
+            lineResults.push_back(std::to_string(results.at(i).at(j)));
+        }
+        lineResults.push_back(std::to_string(sums.at(j)));
+        lineResults.push_back(std::to_string(numErrs.at(j)));
+        writeToSuccessFile(outputPath + "/simulation.results", &lineResults);
     }
 }
 
 void runAlgoForAllTravels(AlgorithmRegistrar::const_iterator *algoFactory, const std::string &travelPath, const std::string &outputPath,
-                          const std::string &algoName, std::vector<std::string>* dirs) {
-    std::vector<std::string> results;
+                          const std::string &algoName, std::vector<std::string>* dirs, std::vector<std::vector<int>>& results,
+                          std::vector<int>& sums, std::vector<int>& numErrs, int index) {
+//    std::vector<std::string> results;
     int sum = 0, numErrors = 0, tmp;
-    results.push_back(algoName);
+//    results.push_back(algoName);
+    int j = 0;
     for(const auto& dir:*dirs) {
         auto algo = (**algoFactory)();
         tmp = runAlgoForTravel(*algo, travelPath + "/" + dir, outputPath, algoName, dir);
+        results.at(j).at(index) = tmp;
         if(tmp == -1)
             numErrors++;
         else
             sum += tmp;
-        results.push_back(std::to_string(tmp));
+        j++;
     }
-    results.push_back(std::to_string(sum));
-    results.push_back(std::to_string(numErrors));
-    writeToSuccessFile(outputPath + "/simulation.results", &results);
+    sums.at(index) = sum;
+    numErrs.at(index) = numErrors;
+//    results.push_back(std::to_string(sum));
+//    results.push_back(std::to_string(numErrors));
+//    writeToSuccessFile(outputPath + "/simulation.results", &results);
 }
 
 int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, const std::string &outputPath,
                      const std::string &algoName, const std::string &travelName) {
-//    std::cout << "start" << algoName << " - " << travelName << pathToDir << std::endl;
     auto errors = std::make_unique<std::vector<std::string>>();
     bool fatalError = false;
     std::string shipPlanPath, shipRoutePath;
