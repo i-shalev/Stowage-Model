@@ -135,12 +135,16 @@ std::optional<std::function<void(void)>> TasksProducer::getTask() {
             bool fatalError = false;
 
             if(this->shipPlans.at(travelIndex) == nullptr){
-                fatalError = true;
-                errors->push_back("ERROR: no shipPlan file!");
+                if(this->shipPlansPaths.at(travelIndex) == ""){
+                    fatalError = true;
+                    errors->push_back("ERROR: no shipPlan file!");
+                }
             }
             if(this->shipRoutes.at(travelIndex) == nullptr){
-                fatalError = true;
-                errors->push_back("ERROR: no shipRoute file!");
+                if(this->shipRoutesPaths.at(travelIndex) == ""){
+                    fatalError = true;
+                    errors->push_back("ERROR: no shipRoute file!");
+                }
             }
             if(this->travelDoubleFilesCode.at(travelIndex) != 0){
                 if(this->travelDoubleFilesCode.at(travelIndex) == 1 or this->travelDoubleFilesCode.at(travelIndex) == 3)
@@ -155,7 +159,6 @@ std::optional<std::function<void(void)>> TasksProducer::getTask() {
                 return;
             }
 
-            auto* shipPlan = new ShipPlan(*this->shipPlans.at(travelIndex));
             std::string path = this->shipPlansPaths.at(travelIndex);
             int errorCode = algo->readShipPlan(path);
             if(errorCode > 0){
@@ -165,13 +168,11 @@ std::optional<std::function<void(void)>> TasksProducer::getTask() {
                 errors->push_back(errorCodeStr);
                 if(containsFatalError(errorCode)){
                     writeErrorsToFile(this->outputPath + "/errors/" + this->algoNames.at(algoIndex) + "_" + this->dirs->at(travelIndex) + ".errors", this->outputPath + "/errors/", errors.get());
-                    delete shipPlan;
                     this->results.at(travelIndex).at(algoIndex) = -1;
                     return;
                 }
             }
 
-            auto* shipRoute = new ShipRoute(*this->shipRoutes.at(travelIndex));
 
             errorCode = algo->readShipRoute(this->shipRoutesPaths.at(travelIndex));
             if(errorCode > 0){
@@ -181,12 +182,20 @@ std::optional<std::function<void(void)>> TasksProducer::getTask() {
                 errors->push_back(errorCodeStr);
                 if(containsFatalError(errorCode)){
                     writeErrorsToFile(this->outputPath + "/errors/" + this->algoNames.at(algoIndex) + "_" + this->dirs->at(travelIndex) + ".errors", this->outputPath + "/errors/", errors.get());
-                    delete shipPlan;
-                    delete shipRoute;
                     this->results.at(travelIndex).at(algoIndex) = -1;
                     return;
                 }
             }
+
+            if(this->shipPlans.at(travelIndex) == nullptr){
+                errors->push_back("ERROR: no shipPlan file!");
+                return;
+            }
+            if(this->shipRoutes.at(travelIndex) == nullptr){
+                errors->push_back("ERROR: no shipRoute file!");
+            }
+            auto* shipPlan = new ShipPlan(*this->shipPlans.at(travelIndex));
+            auto* shipRoute = new ShipRoute(*this->shipRoutes.at(travelIndex));
 
             WeightBalanceCalculator wb;
             algo->setWeightBalanceCalculator(wb);
