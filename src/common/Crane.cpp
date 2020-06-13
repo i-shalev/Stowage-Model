@@ -139,6 +139,7 @@ int Crane::executeOperationList(const std::string& path, std::vector<std::string
         } else if (vec.size() == 8 and vec.at(0) == "M") {
             int toLevel, toI, toJ;
             try{
+                id =  vec.at(1);
                 level = std::stoi(vec.at(2)); i =  std::stoi(vec.at(3)) ; j =  std::stoi(vec.at(4)) ;
                 toLevel = std::stoi(vec.at(5)) ; toI = std::stoi(vec.at(6)) ; toJ = std::stoi(vec.at(7)) ;
             } catch (const std::exception& e) {
