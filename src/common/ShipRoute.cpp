@@ -71,6 +71,18 @@ int ShipRoute::getRouteLength() const{
     return this->dstList->size();
 }
 
+bool ShipRoute::seenBefore(const std::string dest1, const std::string dest2) {
+    for(const auto & i : *this->dstList)
+    {
+        if(i==dest1)
+            return true;
+        if(i==dest2)
+            return false;
+    }
+    return false; //shuld not be here...
+}
+
+
 std::vector<std::string>* ShipRoute::getDstList(){
     return this->dstList;
 }

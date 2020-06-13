@@ -25,6 +25,7 @@ class ShipRoute {
         bool willVisit(const std::string& dest) const;
         int getRouteLength() const;
         std::vector<std::string>* getDstList();
+        bool seenBefore(const std::string dest1, const std::string dest2); //is dest1 before dest2?
 };
 bool checkDestination(std::string dest);
 
