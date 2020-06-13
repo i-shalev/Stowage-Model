@@ -12,7 +12,7 @@ _319088373_c::_319088373_c(){
 }
 //return the position of the highest container, need to add 1 to height to get the position of the new one
 std::tuple<int, int, int> getColWithSameDestOnTop(const std::string dest, Ship* ship){
-    std::tuple<int, int, int> ans{-1, -1, -1};
+    std::tuple<int, int, int> ans;
     for(int i=0; i<ship->getPlan().getLength();i++) {
         for (int j = 0; j < ship->getPlan().getWidth(); j++) {
             std::string highestDestSeen = "";
@@ -26,11 +26,12 @@ std::tuple<int, int, int> getColWithSameDestOnTop(const std::string dest, Ship* 
             }
             if (highestDestSeen == "")
                 continue;
-            if (highestDestSeen == dest)
+            if (highestDestSeen == dest) {
                 return ans;
+            }
         }
     }
-    return ans;
+    return std::tuple<int, int, int> {-1, -1, -1};
 }
 
 //return the position of the highest container, need to add 1 to height to get the position of the new one
@@ -58,7 +59,7 @@ std::tuple<int, int, int> getColWithoutContainers(Ship* ship){
 
 //return the position of the highest container, need to add 1 to height to get the position of the new one
 std::tuple<int, int, int> getColWithFarDestinationOnTop(const std::string dest, Ship* ship){
-    std::tuple<int, int, int> ans{-1, -1, -1};
+    std::tuple<int, int, int> ans;
     for(int i=0; i<ship->getPlan().getLength();i++) {
         for (int j = 0; j < ship->getPlan().getWidth(); j++) {
             std::string highestDestSeen = "";
@@ -76,7 +77,7 @@ std::tuple<int, int, int> getColWithFarDestinationOnTop(const std::string dest, 
                 return ans;
         }
     }
-    return ans;
+    return std::tuple<int, int, int>{-1, -1, -1};
 }
 /*
 //return the position of the highest container, need to add 1 to height to get the position of the new one
@@ -131,18 +132,22 @@ std::tuple<int, int, int> findBestPlaceToLoad(const std::string dest, Ship* ship
     std::tuple<int, int, int> ans;
     ans = getColWithSameDestOnTop(dest, ship);
     if(std::get<0>(ans) != -1){
+        std::cout << "best: same dest" << std::endl;
         return std::tuple<int, int, int>{ std::get<0>(ans), std::get<1>(ans), std::get<2>(ans) + 1};
     }
     ans = getColWithFarDestinationOnTop(dest, ship);
     if(std::get<0>(ans) != -1){
+        std::cout << "best: on far dest" << std::endl;
         return std::tuple<int, int, int>{ std::get<0>(ans), std::get<1>(ans), std::get<2>(ans) + 1};
     }
     ans = getColWithoutContainers(ship);
     if(std::get<0>(ans) != -1){
+        std::cout << "best: empty col" << std::endl;
         return std::tuple<int, int, int>{ std::get<0>(ans), std::get<1>(ans), std::get<2>(ans) + 1};
     }
     ans = findEmptyLegalPositionExceptXY(ship, -1,-1);
     if(std::get<0>(ans) != -1) {
+        std::cout << "best: I have no options..." << std::endl;
         return std::tuple<int, int, int>{std::get<0>(ans), std::get<1>(ans), std::get<2>(ans) + 1};
     }
     return std::tuple<int,int,int>{-1,-1,-1}; // ship is full...
@@ -200,14 +205,21 @@ void unloadProcedure(Ship* ship, Port* port, std::fstream& fs){
             while(!operations.empty()){
                 auto op = operations.back();
                 if(std::get<0>(op) == 'U') {
-                    c.Load(std::get<1>(op), std::get<2>(op), std::get<3>(op), std::get<4>(op));
-                    fs << "L, "<< std::get<1>(op) << ", " << calculateHeight(ship, std::get<3>(op), std::get<4>(op)) << ", " << std::get<3>(op) << ", " << std::get<4>(op) <<std::endl;
+                    int x = std::get<3>(op);
+                    int y = std::get<4>(op);
+                    int height =  calculateHeight(ship, x, y);
+                    c.Load(std::get<1>(op), height, x, y);
+                    fs << "L, "<< std::get<1>(op) << ", " << height << ", " << x << ", " << y <<std::endl;
                 }
                 else {
-                    c.Move(std::get<1>(op), std::get<5>(op), std::get<6>(op), std::get<7>(op), std::get<2>(op),
-                           std::get<3>(op), std::get<4>(op));
-                    fs << "M, "<< std::get<1>(op) << ", " << std::get<5>(op) << ", " << std::get<6>(op) << ", " << std::get<7>(op) << ", "
-                            << calculateHeight(ship, std::get<3>(op), std::get<4>(op)) << ", " << std::get<3>(op) << ", " << std::get<4>(op) <<std::endl;
+                    int tox = std::get<3>(op);
+                    int toy = std::get<4>(op);
+                    int origHeight = std::get<5>(op);
+                    int x = std::get<6>(op);
+                    int y = std::get<7>(op);
+                    int height =  calculateHeight(ship, tox, toy);
+                    c.Move(std::get<1>(op), origHeight, x, y, height,tox, toy);
+                    fs << "M, "<< std::get<1>(op) << ", " << origHeight << ", " << x << ", " << y << ", " << height << ", " << tox << ", " << toy <<std::endl;
 
                 }
                 operations.pop_back();
@@ -224,10 +236,16 @@ bool LoadProcedure(Ship* ship, Port* port, std::vector<Container*> toLoad, std::
     bool rejectBecauseFull = false;
     while(!toLoad.empty()) {
         if(checkContainer(ship, toLoad.front())) {
+            std::cout << "calculate best place for "<<toLoad.front()->getId() << std::endl;
             auto pos = findBestPlaceToLoad(toLoad.front()->getDest(), ship);
-            if(std::get<0>(pos) != -1){
-                fs << "L, " << toLoad.front()->getId() << ", " << std::get<2>(pos) << ", " << std::get<0>(pos) << ", " << std::get<1>(pos) << std::endl;
-                c.Load(toLoad.front()->getId(), std::get<2>(pos), std::get<0>(pos), std::get<1>(pos));
+            std::cout << "found" << toLoad.front()->getId() << ", " << std::get<2>(pos) << ", " << std::get<0>(pos) << ", " << std::get<1>(pos) << std::endl;
+            int x = std::get<0>(pos);
+            int y = std::get<1>(pos);
+            int height = std::get<2>(pos);
+            std::cout << "found" << toLoad.front()->getId() << ", " << height << ", " << x << ", " << y << std::endl;
+            if(x != -1){
+                fs << "L, " << toLoad.front()->getId() << ", " << height << ", " << x << ", " << y << std::endl;
+                c.Load(toLoad.front()->getId(), height, x, y);
             }
             else{
                 fs << "R, " << toLoad.front()->getId() << std::endl;
