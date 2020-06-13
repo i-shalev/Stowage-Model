@@ -132,22 +132,22 @@ std::tuple<int, int, int> findBestPlaceToLoad(const std::string dest, Ship* ship
     std::tuple<int, int, int> ans;
     ans = getColWithSameDestOnTop(dest, ship);
     if(std::get<0>(ans) != -1){
-        std::cout << "best: same dest" << std::endl;
+        //std::cout << "best: same dest" << std::endl;
         return std::tuple<int, int, int>{ std::get<0>(ans), std::get<1>(ans), std::get<2>(ans) + 1};
     }
     ans = getColWithFarDestinationOnTop(dest, ship);
     if(std::get<0>(ans) != -1){
-        std::cout << "best: on far dest" << std::endl;
+        //std::cout << "best: on far dest" << std::endl;
         return std::tuple<int, int, int>{ std::get<0>(ans), std::get<1>(ans), std::get<2>(ans) + 1};
     }
     ans = getColWithoutContainers(ship);
     if(std::get<0>(ans) != -1){
-        std::cout << "best: empty col" << std::endl;
+        //std::cout << "best: empty col" << std::endl;
         return std::tuple<int, int, int>{ std::get<0>(ans), std::get<1>(ans), std::get<2>(ans) + 1};
     }
     ans = findEmptyLegalPositionExceptXY(ship, -1,-1);
     if(std::get<0>(ans) != -1) {
-        std::cout << "best: I have no options..." << std::endl;
+        //std::cout << "best: I have no options..." << std::endl;
         return std::tuple<int, int, int>{std::get<0>(ans), std::get<1>(ans), std::get<2>(ans) + 1};
     }
     return std::tuple<int,int,int>{-1,-1,-1}; // ship is full...
@@ -236,13 +236,13 @@ bool LoadProcedure(Ship* ship, Port* port, std::vector<Container*> toLoad, std::
     bool rejectBecauseFull = false;
     while(!toLoad.empty()) {
         if(checkContainer(ship, toLoad.front())) {
-            std::cout << "calculate best place for "<<toLoad.front()->getId() << std::endl;
+            //std::cout << "calculate best place for "<<toLoad.front()->getId() << std::endl;
             auto pos = findBestPlaceToLoad(toLoad.front()->getDest(), ship);
-            std::cout << "found" << toLoad.front()->getId() << ", " << std::get<2>(pos) << ", " << std::get<0>(pos) << ", " << std::get<1>(pos) << std::endl;
+            //std::cout << "found" << toLoad.front()->getId() << ", " << std::get<2>(pos) << ", " << std::get<0>(pos) << ", " << std::get<1>(pos) << std::endl;
             int x = std::get<0>(pos);
             int y = std::get<1>(pos);
             int height = std::get<2>(pos);
-            std::cout << "found" << toLoad.front()->getId() << ", " << height << ", " << x << ", " << y << std::endl;
+            //std::cout << "found" << toLoad.front()->getId() << ", " << height << ", " << x << ", " << y << std::endl;
             if(x != -1){
                 fs << "L, " << toLoad.front()->getId() << ", " << height << ", " << x << ", " << y << std::endl;
                 c.Load(toLoad.front()->getId(), height, x, y);
