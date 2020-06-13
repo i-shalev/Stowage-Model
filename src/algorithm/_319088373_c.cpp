@@ -149,7 +149,13 @@ std::tuple<int, int, int> findBestPlaceToLoad(const std::string dest, Ship* ship
 
 }
 
-
+int calculateHeight(Ship* ship, int x, int y){
+    for (int level = 0 ; level < ship->getPlan().getNumFloors(); level++) {
+        if (ship->getPlan().getFloor(level)->getContainerAtPosition(x, y) == nullptr)
+            return level;
+    }
+    return -1;
+}
 void unloadProcedure(Ship* ship, Port* port, std::fstream& fs){
     Crane c(ship,port);
     std::vector<std::tuple<char, std::string, int, int, int, int, int, int>> operations;
@@ -195,13 +201,13 @@ void unloadProcedure(Ship* ship, Port* port, std::fstream& fs){
                 auto op = operations.back();
                 if(std::get<0>(op) == 'U') {
                     c.Load(std::get<1>(op), std::get<2>(op), std::get<3>(op), std::get<4>(op));
-                    fs << "L, "<< std::get<1>(op) << ", " << std::get<2>(op) << ", " << std::get<3>(op) << ", " << std::get<4>(op) <<std::endl;
+                    fs << "L, "<< std::get<1>(op) << ", " << calculateHeight(ship, std::get<3>(op), std::get<4>(op)) << ", " << std::get<3>(op) << ", " << std::get<4>(op) <<std::endl;
                 }
                 else {
                     c.Move(std::get<1>(op), std::get<5>(op), std::get<6>(op), std::get<7>(op), std::get<2>(op),
                            std::get<3>(op), std::get<4>(op));
                     fs << "M, "<< std::get<1>(op) << ", " << std::get<5>(op) << ", " << std::get<6>(op) << ", " << std::get<7>(op) << ", "
-                            << std::get<2>(op) << ", " << std::get<3>(op) << ", " << std::get<4>(op) <<std::endl;
+                            << calculateHeight(ship, std::get<3>(op), std::get<4>(op)) << ", " << std::get<3>(op) << ", " << std::get<4>(op) <<std::endl;
 
                 }
                 operations.pop_back();
