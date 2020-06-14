@@ -83,13 +83,18 @@ int Crane::executeOperationList(const std::string& path, std::vector<std::string
     std::string line, id; int level, i, j;
     while(getline(fin, line)) {
         std::vector<std::string> vec; getArgsFromInstruction(vec, line);
-        if(vec.size() != 2 and vec.size() != 5 and vec.size() != 8){
+        if(vec.size()>1 && vec.at(0) == "R"){
+            id =  vec.at(1);
+            if(!(curPort->wasContainerWithID(id))){
+                errors.emplace_back("Error: bad instruction (reject non exist id).");
+                return -1;
+            }
+            continue;
+        }
+        if(vec.size() != 5 and vec.size() != 8){
             errors.emplace_back("Error: instruction wrong format (wrong number of parameters in line)."); return -1;
         }
-        if(vec.size() == 2 && vec.at(0) == "R"){
-            id =  vec.at(1);
-            if(!(curPort->wasContainerWithID(id))){errors.emplace_back("Error: bad instruction (reject non exist id)."); return -1;}
-        } else if (vec.size() == 5) {
+        if (vec.size() == 5) {
             id =  vec.at(1);
             try{
                 level = std::stoi(vec.at(2)); i =  std::stoi(vec.at(3)) ; j =  std::stoi(vec.at(4)) ;
