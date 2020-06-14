@@ -1,8 +1,8 @@
 COMP = g++-9.3.0
 
-SHARED_OBJS = _319088373_a.so _319088373_b.so _319088373_c.so
+SHARED_OBJS = _319088373_a.so _319088373_b.so _319088373_c.so _319088373_d.so
 COMMON_OBJS = WeightBalanceCalculator.o ShipRoute.o ShipPlan.o Ship.o Files.o  Crane.o Port.o Floor.o Container.o 
-OBJS = _319088373_a.o _319088373_b.o _319088373_c.o
+OBJS = _319088373_a.o _319088373_b.o _319088373_c.o _319088373_d.o
 CPP_COMP_FLAG = -std=c++2a -Wall -Wextra -Werror -pedantic-errors -DNDEBUG -fPIC -fvisibility=hidden
 CPP_LINK_FLAG = -shared
 COMMON = ../common/
@@ -26,6 +26,8 @@ _319088373_b.so: _319088373_b.o $(COMMON_OBJS) _319088373_b.o
 _319088373_c.so: _319088373_c.o $(COMMON_OBJS) _319088373_c.o
 	$(COMP) $(CPP_LINK_FLAG) -o $@ $^
 
+_319088373_d.so: _319088373_d.o $(COMMON_OBJS) _319088373_d.o
+	$(COMP) $(CPP_LINK_FLAG) -o $@ $^
 	
 clean:
 	rm -f $(OBJS) $(COMMON_OBJS) $(SHARED_OBJS)

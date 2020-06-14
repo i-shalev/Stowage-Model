@@ -37,7 +37,7 @@ public:
     }
     void wait_till_finish() {
         for(auto& t : workers) { t.join();}
-        std::cout << "thread pool finished/stopped after processing " << total_num_tasks_finished << " task(s)" << std::endl;
+        std::cout << "thread pool finished after processing " << total_num_tasks_finished << " task(s)" << std::endl;
     }
 };
 

@@ -1,10 +1,11 @@
 //
-// Created by zivco on 05/04/2020.
+// Created by itay on 13/06/2020.
 //
 
-#include "_319088373_c.h"
-REGISTER_ALGORITHM(_319088373_c)
-_319088373_c::_319088373_c(){
+#include "_319088373_d.h"
+
+REGISTER_ALGORITHM(_319088373_d)
+_319088373_d::_319088373_d(){
     this->shipRoute = nullptr;
     this->ship = nullptr;
     this->shipPlan = nullptr;
@@ -112,7 +113,6 @@ std::tuple<int, int, int> findEmptyLegalPositionExceptXY(Ship* ship, int x, int 
     return ans;
 }
 
-
 //return the position of the highest container, need to add 1 to height to get the position of the new one
 std::tuple<int, int, int> findEmptyLegalPositionInPlan(Ship* ship){
     std::tuple<int, int, int> res{-1, -1, -1};
@@ -168,7 +168,8 @@ std::tuple<int, int, int> findBestPlaceToLoad(const std::string dest, Ship* ship
         //std::cout << "best: I have no options..." << std::endl;
         return std::tuple<int, int, int>{std::get<0>(ans), std::get<1>(ans), std::get<2>(ans) + 1};
     }
-    ans = findEmptyLegalPositionExceptXY(ship, -1,-1);
+
+    ans = findEmptyLegalPositionExceptXY(ship, -1, -1);
     if(std::get<0>(ans) != -1) {
         //std::cout << "best: I have no options..." << std::endl;
         return std::tuple<int, int, int>{std::get<0>(ans), std::get<1>(ans), std::get<2>(ans) + 1};
@@ -184,6 +185,7 @@ int calculateHeight(Ship* ship, int x, int y){
     }
     return -1;
 }
+
 void unloadProcedure(Ship* ship, Port* port, std::fstream& fs){
     Crane c(ship,port);
     std::vector<std::tuple<char, std::string, int, int, int, int, int, int>> operations;
@@ -216,7 +218,7 @@ void unloadProcedure(Ship* ship, Port* port, std::fstream& fs){
                     c.Move(contId,level,i,j, std::get<2>(ans)+1, std::get<0>(ans), std::get<1>(ans));
                     operations.push_back(std::tuple<char, std::string, int, int, int, int, int, int>{'M', contId,level,i,j, std::get<2>(ans)+1, std::get<0>(ans), std::get<1>(ans)});
                     fs << "M, "<< contId << ", " << level << ", " << i << ", " << j << ", " <<
-                    (std::get<2>(ans) + 1) << ", " << std::get<0>(ans) << ", " << std::get<1>(ans)  << std::endl;
+                       (std::get<2>(ans) + 1) << ", " << std::get<0>(ans) << ", " << std::get<1>(ans)  << std::endl;
                 }
                 else{
                     c.Unload(contId,level,i,j);
@@ -234,26 +236,17 @@ void unloadProcedure(Ship* ship, Port* port, std::fstream& fs){
                     c.Load(std::get<1>(op), height, x, y);
                     fs << "L, "<< std::get<1>(op) << ", " << height << ", " << x << ", " << y <<std::endl;
                 }
-                else {
-                    int tox = std::get<3>(op);
-                    int toy = std::get<4>(op);
-                    int origHeight = std::get<5>(op);
-                    int x = std::get<6>(op);
-                    int y = std::get<7>(op);
-                    int height =  calculateHeight(ship, tox, toy);
-                    c.Move(std::get<1>(op), origHeight, x, y, height,tox, toy);
-                    fs << "M, "<< std::get<1>(op) << ", " << origHeight << ", " << x << ", " << y << ", " << height << ", " << tox << ", " << toy <<std::endl;
-
-                }
                 operations.pop_back();
             }
         }
     }
 }
+
 bool checkContainer(Ship* ship, Container* cont) {
     return cont->checkId() && ship->willVisit(cont->getDest()) &&
            (ship->getCurrentDestination().compare(cont->getDest()) != 0);
 }
+
 bool LoadProcedure(Ship* ship, Port* port, std::vector<Container*> toLoad, std::fstream& fs){
     Crane c(ship, port);
     bool rejectBecauseFull = false;
@@ -283,7 +276,7 @@ bool LoadProcedure(Ship* ship, Port* port, std::vector<Container*> toLoad, std::
     return rejectBecauseFull;
 }
 
-int _319088373_c::getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) {
+int _319088373_d::getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) {
     int rc = 0;
     if(ship == nullptr){
         if(shipPlan == nullptr){rc = turnToTrueBit(rc, 3);}
@@ -340,14 +333,11 @@ int _319088373_c::getInstructionsForCargo(const std::string& input_full_path_and
         rc = turnToTrueBit(rc, 18);
     fs.close();
     delete pathToDirChar;
-//    Crane crane(ship, &port);
-//    std::vector<std::string> err;
-//    crane.executeOperationList(output_full_path_and_file_name,err);
     ship->moveToNextPort();
     return rc;
 }
 
-int _319088373_c::emptyPlacesInPosition(int i, int j, const std::string& portSymbol){
+int _319088373_d::emptyPlacesInPosition(int i, int j, const std::string& portSymbol){
     int sum = 0;
     for(int level=0; level<ship->getPlan().getNumFloors(); level++){
         if(ship->getPlan().getFloor(level)->getContainerAtPosition(i,j)== nullptr ||
@@ -360,11 +350,11 @@ int _319088373_c::emptyPlacesInPosition(int i, int j, const std::string& portSym
     //sum last positions are empty
 }
 
-bool _319088373_c::checkContainer(Container* cont){
+bool _319088373_d::checkContainer(Container* cont){
     return cont->checkId() && ship->willVisit(cont->getDest()) && (ship->getCurrentDestination().compare(cont->getDest()) != 0);
 }
 
-int _319088373_c::readShipPlan(const std::string &full_path_and_file_name) {
+int _319088373_d::readShipPlan(const std::string &full_path_and_file_name) {
     int errorCode = 0;
     bool fatalError = false;
     int numFloors=0 , length=0, width=0, numLines;
@@ -401,7 +391,7 @@ int _319088373_c::readShipPlan(const std::string &full_path_and_file_name) {
     return errorCode;
 }
 
-int _319088373_c::readShipRoute(const std::string &full_path_and_file_name) {
+int _319088373_d::readShipRoute(const std::string &full_path_and_file_name) {
     int errorCode = 0;
     bool fatalError = false;
     auto ports = std::make_unique<std::vector<std::string>>();
@@ -429,21 +419,21 @@ int _319088373_c::readShipRoute(const std::string &full_path_and_file_name) {
     return errorCode;
 }
 
-void _319088373_c::createShip() {
+void _319088373_d::createShip() {
     if(this->shipPlan != nullptr and this->shipRoute != nullptr and this->calc != nullptr){
         ship = new Ship(shipRoute, shipPlan);
     }
 }
 
-void _319088373_c::printShipPlan(){
+void _319088373_d::printShipPlan(){
     this->shipPlan->printShipPlan();
 }
 
-void _319088373_c::printShipRoute() {
+void _319088373_d::printShipRoute() {
     this->shipRoute->printList();
 }
 
-int _319088373_c::setWeightBalanceCalculator(WeightBalanceCalculator& calculator){
+int _319088373_d::setWeightBalanceCalculator(WeightBalanceCalculator& calculator){
     this->calc = &calculator;
     createShip();
     return SUCCESS;
