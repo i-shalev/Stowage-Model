@@ -5,7 +5,7 @@
 #ifndef STOWAGE_MODEL_HELPERCLESES_H
 #define STOWAGE_MODEL_HELPERCLESES_H
 
-// helperer classes for named arguments
+// helper classes for named arguments
 template<typename T>
 class Named {
     T value;
