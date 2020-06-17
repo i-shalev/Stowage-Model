@@ -1,5 +1,5 @@
 //
-// Created by zivco on 08/05/2020.
+// Created by itay on 13/06/2020.
 //
 
 #ifndef STOWAGE_MODEL__319088373_B_H
@@ -14,7 +14,6 @@
 #include "../common/AbstractAlgorithm.h"
 #include "../common/AlgorithmRegistration.h"
 
-
 // this algorithm sort the Containers by their destinations from closest to farthest and Load them one by one.
 class _319088373_b : public AbstractAlgorithm{
     Ship* ship;
@@ -22,7 +21,6 @@ class _319088373_b : public AbstractAlgorithm{
     ShipRoute* shipRoute;
     WeightBalanceCalculator* calc;
 public:
-
     _319088373_b();
     ~_319088373_b(){delete ship;}
     int getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) override ;
@@ -38,6 +36,7 @@ private:
 };
 
 int turnToTrueBit(int num, int bit);
-int min(int x, int y);
+
 
 #endif //STOWAGE_MODEL__319088373_B_H
+

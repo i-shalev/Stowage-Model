@@ -21,7 +21,6 @@ class _319088373_a : public AbstractAlgorithm{
     ShipRoute* shipRoute;
     WeightBalanceCalculator* calc;
 public:
-//    explicit _319088373_a(Ship* _ship): ship(_ship){}
     _319088373_a();
     ~_319088373_a(){delete ship;}
     int getInstructionsForCargo(const std::string& input_full_path_and_file_name, const std::string& output_full_path_and_file_name) override ;

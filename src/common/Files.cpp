@@ -41,6 +41,8 @@ bool getSizesShipPlan(const std::string &path, int &numFloors, int &length, int 
                 numFloors = stoi(row[0]);
                 length = stoi(row[1]);
                 width = stoi(row[2]);
+                if(numFloors < 0 or length < 0 or width < 0)
+                    return false;
             } catch (const std::exception& e) {
                 return false;
             }
@@ -257,6 +259,7 @@ std::unique_ptr<std::vector<bool>> readPortContainers(Port *port, const std::str
             if(row.size() >= 3) {
                 weight = row.at(1);
                 dest = row.at(2);
+                for (auto & c: dest){c = toupper(c);}
             } else if(row.size() == 2) {
                 weight = row.at(1);
             }
