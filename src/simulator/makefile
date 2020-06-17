@@ -1,7 +1,7 @@
 COMP = g++-9.3.0
 #put all your object files here
-OBJS = AlgorithmRegistrar.o AlgorithmRegistration.o ThreadPoolExecuter.o TasksProducer.o RunnerHelper.o RunnerAllTravelsAllAlgo.o main.o
-COMMON_OBJS = WeightBalanceCalculator.o ShipRoute.o ShipPlan.o Ship.o Files.o  Crane.o Port.o Floor.o Container.o 
+OBJS = WeightBalanceCalculator.o AlgorithmRegistrar.o AlgorithmRegistration.o ThreadPoolExecuter.o TasksProducer.o RunnerHelper.o RunnerAllTravelsAllAlgo.o main.o
+COMMON_OBJS = ShipRoute.o ShipPlan.o Ship.o Files.o  Crane.o Port.o Floor.o Container.o
 
 #The executable filename DON'T CHANGE
 EXEC = simulator

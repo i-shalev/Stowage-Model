@@ -1,7 +1,7 @@
 COMP = g++-9.3.0
 
 SHARED_OBJS = _319088373_a.so _319088373_b.so
-COMMON_OBJS = WeightBalanceCalculator.o ShipRoute.o ShipPlan.o Ship.o Files.o  Crane.o Port.o Floor.o Container.o 
+COMMON_OBJS = ShipRoute.o ShipPlan.o Ship.o Files.o  Crane.o Port.o Floor.o Container.o
 OBJS = _319088373_a.o _319088373_b.o
 CPP_COMP_FLAG = -std=c++2a -Wall -Wextra -Werror -pedantic-errors -DNDEBUG -fPIC -fvisibility=hidden
 CPP_LINK_FLAG = -shared
