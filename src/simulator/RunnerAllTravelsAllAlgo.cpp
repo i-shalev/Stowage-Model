@@ -51,10 +51,16 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
 
     emptyFile(PATH_TO_EMPTY_FILE);
     emptyFile(outputPath + "/simulation.results");
-    auto dirs = getDirsNamesFromRootDir(travelPath);
+    auto dirsBeforeCheck = getDirsNamesFromRootDir(travelPath);
+    std::vector<std::string> dirs;
+    for(auto& dir:*dirsBeforeCheck){
+        if(validTravel(travelPath, outputPath, dir)) {
+            dirs.push_back(dir);
+        }
+    }
     std::vector<std::string> firstLine;
     firstLine.emplace_back("RESULTS");
-    for(const auto& dir:*dirs)
+    for(const auto& dir:dirs)
         firstLine.push_back(dir);
     firstLine.emplace_back("Sum");
     firstLine.emplace_back("Num Errors");
@@ -79,7 +85,7 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
     std::vector<std::vector<int>> results;
     std::vector<int> sums;
     std::vector<int> numErrs;
-    int numTravels = dirs->size();
+    int numTravels = dirs.size();
     int numAlgo = algoNames->size();
     for(int i = 0 ; i < numTravels ; i++){
         results.emplace_back();
@@ -92,7 +98,7 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
 
     int i = 0;
     for (auto algo_iter = registrar.begin(); algo_iter != registrar.end(); ++algo_iter) {
-        runAlgoForAllTravels(&algo_iter, travelPath, outputPath, vectorAlgoNames.at(i), dirs.get(), results, sums, numErrs, i);
+        runAlgoForAllTravels(&algo_iter, travelPath, outputPath, vectorAlgoNames.at(i), &dirs, results, sums, numErrs, i);
         i++;
     }
     std::vector<int> vec;
@@ -350,4 +356,62 @@ bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>&
 
     }
     return true;
+}
+
+bool validTravel(const std::string& travelPath, const std::string& outputPath, const std::string& dirName){
+    auto errors = std::make_unique<std::vector<std::string>>();
+    std::string pathToDir = travelPath + "/" + dirName;
+    std::string shipPlanPath, shipRoutePath;
+    getShipPlanAndRoutePaths(pathToDir, shipPlanPath, shipRoutePath);
+    ShipPlan* sp = nullptr;
+    ShipRoute* sr = nullptr;
+    bool spCreated = false;
+    bool srCreated = false;
+
+    // push the shipPlan for travel
+    if(shipPlanPath.empty()){
+        errors->push_back("There is no shipPlan file.");
+    } else {
+        int res = 0;
+        sp = createShipPlan(res, shipPlanPath);
+        if(containsFatalError(res)) {
+            std::string errorCodeStr;
+            getStringOfErrors(res, errorCodeStr);
+            errorCodeStr = "The was a fatal error in the shipPlan file. The error code is: " + errorCodeStr;
+            errors->push_back(errorCodeStr);
+        } else {
+            spCreated = true;
+        }
+    }
+
+    // push the shipRoute for travel
+    if(shipRoutePath.empty()){
+        errors->push_back("There is no shipRoute file.");
+    } else {
+        int res = 0;
+        sr = createShipRoute(res, shipRoutePath);
+        if(containsFatalError(res)) {
+            std::string errorCodeStr;
+            getStringOfErrors(res, errorCodeStr);
+            errorCodeStr = "The was a fatal error in the shipRoute file. The error code is: " + errorCodeStr;
+            errors->push_back(errorCodeStr);
+        } else {
+            srCreated = true;
+        }
+    }
+
+    if(srCreated and spCreated) {
+        delete sp;
+        delete sr;
+        return true;
+    }
+
+    if(spCreated){
+        delete sp;
+    }
+    if(srCreated) {
+        delete sr;
+    }
+    writeErrorsToFile(outputPath + "/errors/" + dirName + ".errors", outputPath + "/errors/", errors.get());
+    return false;
 }

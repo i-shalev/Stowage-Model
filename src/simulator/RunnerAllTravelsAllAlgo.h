@@ -34,6 +34,7 @@ int runAlgoForTravel(AbstractAlgorithm &algo, const std::string &pathToDir, cons
 int runAlgoOnPort(Ship *ship, const std::string& cargoDataPath, const std::string& instructionsPath,
         std::vector<std::string>& errorReason);
 bool validateFarRejected(std::vector<Container*>& left, std::vector<Container*>& was, std::vector<Container*> contByDist);
+bool validTravel(const std::string& travelPath, const std::string& outputPath, const std::string& dirName);
 
 
 #endif //STOWAGE_MODEL_RUNNERALLTRAVELSALLALGO_H
