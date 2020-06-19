@@ -20,6 +20,7 @@
 
 class TasksProducer {
     const std::vector<std::string>* dirs;
+    std::vector<std::string> dirsAfterCheck;
     const std::vector<std::string> algoNames;
     std::vector<ShipPlan*> shipPlans;
     std::vector<std::string> shipPlansPaths;
@@ -31,7 +32,6 @@ class TasksProducer {
     int numAlgo;
     const std::string outputPath;
     const std::string travelPath;
-
 
 
     std::atomic_int task_counter = 0;

@@ -40,7 +40,6 @@ void runThreads(int numThreads, const std::string& algoPath, const std::string &
     executer.start();
     executer.wait_till_finish();
     // end of Amir's code
-
 }
 
 void runAllAlgo(const std::string& algoPath, const std::string &travelPath, const std::string &outputPath){
