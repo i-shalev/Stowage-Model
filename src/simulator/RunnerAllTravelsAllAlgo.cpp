@@ -50,7 +50,6 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
     auto& registrar = AlgorithmRegistrar::getInstance();
 
     emptyFile(PATH_TO_EMPTY_FILE);
-    emptyFile(outputPath + "/simulation.results");
     auto dirsBeforeCheck = getDirsNamesFromRootDir(travelPath);
     std::vector<std::string> dirs;
     for(auto& dir:*dirsBeforeCheck){
@@ -58,6 +57,12 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
             dirs.push_back(dir);
         }
     }
+    if(dirs.empty()) {
+        std::cout << "There no legal travels in the travel_path" << std::endl;
+        return;
+    }
+    emptyFile(outputPath + "/simulation.results");
+
     std::vector<std::string> firstLine;
     firstLine.emplace_back("RESULTS");
     for(const auto& dir:dirs)
@@ -87,10 +92,12 @@ void runAllAlgo(const std::string& algoPath, const std::string &travelPath, cons
     std::vector<int> numErrs;
     int numTravels = dirs.size();
     int numAlgo = algoNames->size();
-    for(int i = 0 ; i < numTravels ; i++){
-        results.emplace_back();
+    for(int i = 0 ; i < numAlgo ; i++){
         sums.push_back(0);
         numErrs.push_back(0);
+    }
+    for(int i = 0 ; i < numTravels ; i++){
+        results.emplace_back();
         for(int j = 0 ; j < numAlgo ; j++){
             results.at(i).push_back(0);
         }
